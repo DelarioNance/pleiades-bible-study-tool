@@ -1,24 +1,31 @@
+# ------------------------------------------------------------
 # Standard library
+# ------------------------------------------------------------
 import os
 
+# ------------------------------------------------------------
 # Third‑party packages
+# ------------------------------------------------------------
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text, insert
+from sqlalchemy import (
+    create_engine, Column, Integer, String, 
+    ForeignKey, Text, insert
+)
 from sqlalchemy.orm import DeclarativeBase, Session
 import requests
-import asyncio
+import asyncio # essentially an async version of requests
 import aiohttp
 
-
-# Local application imports (none in this file)
-
+# ------------------------------------------------------------
+# Global Constants
+# ------------------------------------------------------------
 
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-BIBLE_API = 'https://bible.helloao.org/api/eng_kjv'   # Replace with your actual API
+BIBLE_API = 'https://bible.helloao.org/api/eng_kjv'
 PRINT_SQL_STATEMENTS = False
-LOG_MODE = True
+LOG_MODE = False
 
 
 # ------------------------------------------------------------
@@ -64,6 +71,18 @@ def log(message):
         print(message)
 
 
+def extract_verbiage(content_list):
+    # typical case
+    if isinstance(content_list[0], str):
+        return content_list[0]
+    
+    # edge case (https://bible.helloao.org/api/eng_kjv/PSA/3.json) (https://bible.helloao.org/api/eng_kjv/MAT/6.json)
+    if isinstance(content_list[0], dict): 
+        for content_dict in content_list:
+            if 'text' in content_dict:
+                return content_dict['text']
+
+
 # ------------------------------------------------------------
 # DB Helpers
 # ------------------------------------------------------------
@@ -77,28 +96,22 @@ def reset_schemas(engine):
 # ------------------------------------------------------------
 def fetch_books():
     response = requests.get(f'{BIBLE_API}/books.json')
-    books = response.json()['books']
-    return books
+    return response.json()['books']
 
 
-async def fetch_verses(api_book_id, api_chapter_number):
-    async with aiohttp.ClientSession() as http_session:
-        verses_url = f'{BIBLE_API}/{api_book_id}/{api_chapter_number}.json'
-        async with http_session.get(verses_url) as response:
-            json = await response.json()
-            verses = json['chapter']['content']
-            return verses
+async def fetch_verses(http_session, api_book_id, api_chapter_number):
+    verses_url = f'{BIBLE_API}/{api_book_id}/{api_chapter_number}.json'
+    async with http_session.get(verses_url) as response:
+        json = await response.json()
+        return json['chapter']['content']
 
-# for chapter_num in range(1, 151):
-#     res = asyncio.run(fetch_verses('ROM', chapter_num)) # test the async function
-#     print(res[0])
-#     print()
+
 # ------------------------------------------------------------
 # Main DB Initialization
 # ------------------------------------------------------------
 async def main():
     engine = create_engine(DATABASE_URL, echo=PRINT_SQL_STATEMENTS)
-    reset_schemas(engine) # immediately recreates schemas (i.e., does not wait until script finishes)
+    reset_schemas(engine)
 
     with Session(engine) as session:
         books = fetch_books()
@@ -107,7 +120,7 @@ async def main():
         for book_metadata in books:
             book_common_name = book_metadata['commonName']
 
-            # if book_common_name in 'Psalms':
+            # if book_common_name == 'Psalms':
             #     continue
 
             log("\n==============================")
@@ -118,8 +131,8 @@ async def main():
                 common_name=book_common_name,
                 canonical_order=book_metadata['order']
             )
-            session.add(book) # makes SQLAlchemy aware of the new book, but does not yet assign it an ID
-            session.flush() # forces SQLAlchemy to assign an ID to the book so we can use it for the chapters
+            session.add(book) # makes SQLAlchemy aware of the book object
+            session.flush() # assigns ID primary key to the book object
             log(f"→ Inserted Book: {book.common_name} (id={book.id})")
 
             api_book_id = book_metadata['id']
@@ -127,10 +140,12 @@ async def main():
             log(f"Book has {num_chapters} chapters")
 
             log("→ Fetching verses lists concurrently...")
-            verse_coroutines = [
-                fetch_verses(api_book_id, chapter_num)
-                for chapter_num in range(1, num_chapters + 1) # order will be used later to match verses to the correct chapter IDs when inserting into DB
-            ]
+            
+            async with aiohttp.ClientSession() as http_session:
+                verse_coroutines = [
+                    fetch_verses(http_session, api_book_id, chapter_num)
+                    for chapter_num in range(1, num_chapters + 1) # order will be used later to match verses to the correct chapter IDs when inserting into DB
+                ]
             
             verse_lists = await asyncio.gather(*verse_coroutines) # [[verse, verse, verse], [verse, verse], ...]
             log(f"✓ Received verse_lists!")
@@ -155,14 +170,14 @@ async def main():
 
             
             log(f"→ Inserting verses into DB...")
-            verse_insertion_data = []
-            for chapter_id, chapter_num in inserted_chapters:
+            for chapter_id, chapter_num in inserted_chapters: # constructing insertion data with loops for easier debugging
+                verse_insertion_data = []
                 for verse_metadata in verse_lists[chapter_num-1]: # assumes that verse_lists are in the same order as chapter numbers, which should be true since we generated them in that order
                     log(f'{chapter_id}, {chapter_num}, {verse_metadata}')
                     if verse_metadata['type'] != 'verse':
-                        continue # skip content like headings (e.g., Romans 28)
+                        continue # skips headers and other non-verse content
                     verse_number = verse_metadata['number']
-                    verbiage = verse_metadata['content'][0]
+                    verbiage = extract_verbiage(verse_metadata['content'])
                     verse_insertion_data.append({
                         'chapter_id': chapter_id,
                         'verse_number': verse_number,
@@ -174,7 +189,6 @@ async def main():
                 )
             log("✓ Inserted verses!")
     
-
             session.commit()
 
         log('🎉 Bible data successfully imported!')
