@@ -1,6 +1,7 @@
 # ------------------------------------------------------------
 # Standard library
 # ------------------------------------------------------------
+import argparse
 import os
 
 # ------------------------------------------------------------
@@ -23,16 +24,14 @@ import aiohttp
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-BIBLE_API = 'https://bible.helloao.org/api/eng_kjv'
-PRINT_SQL_STATEMENTS = False
-LOG_MODE = False
+BIBLE_API = 'https://bible.helloao.org/api/eng_kjv' # https://bible.helloao.org/docs/reference/
 
 
 # ------------------------------------------------------------
 # SQLAlchemy Base
 # ------------------------------------------------------------
 class Base(DeclarativeBase):
-    pass
+    pass # this is needed to create the SQLAlchemy base class, which our models will inherit from. It doesn't need to have any content.
 
 
 # ------------------------------------------------------------
@@ -66,6 +65,12 @@ class Verse(Base):
 # ------------------------------------------------------------
 # General Helpers
 # ------------------------------------------------------------
+def parse_args():
+    parser = argparse.ArgumentParser(description="Recreates Bible content tables in the Pleiades database")
+    parser.add_argument("--log", action="store_true", help="Flag to print execution events during run of script")
+    return parser.parse_args()
+
+
 def log(message):
     if LOG_MODE:
         print(message)
@@ -74,13 +79,17 @@ def log(message):
 def extract_verbiage(content_list):
     # typical case
     if isinstance(content_list[0], str):
-        return content_list[0]
-    
+        return clean(content_list[0])
+        
     # edge case (https://bible.helloao.org/api/eng_kjv/PSA/3.json) (https://bible.helloao.org/api/eng_kjv/MAT/6.json)
     if isinstance(content_list[0], dict): 
         for content_dict in content_list:
             if 'text' in content_dict:
-                return content_dict['text']
+                return clean(content_dict['text'])
+            
+
+def clean(verbiage):
+    return verbiage.replace("¶", "").strip() # some verses (e.g. GEN 1:4) have a "¶" character
 
 
 # ------------------------------------------------------------
@@ -105,12 +114,13 @@ async def fetch_verses(http_session, api_book_id, api_chapter_number):
         json = await response.json()
         return json['chapter']['content']
 
+json = requests.get(f'{BIBLE_API}/GEN/1.json').json()['chapter']['content'][13]
 
 # ------------------------------------------------------------
 # Main DB Initialization
 # ------------------------------------------------------------
 async def main():
-    engine = create_engine(DATABASE_URL, echo=PRINT_SQL_STATEMENTS)
+    engine = create_engine(DATABASE_URL)
     reset_schemas(engine)
 
     with Session(engine) as session:
@@ -146,8 +156,7 @@ async def main():
                     fetch_verses(http_session, api_book_id, chapter_num)
                     for chapter_num in range(1, num_chapters + 1) # order will be used later to match verses to the correct chapter IDs when inserting into DB
                 ]
-            
-            verse_lists = await asyncio.gather(*verse_coroutines) # [[verse, verse, verse], [verse, verse], ...]
+                verse_lists = await asyncio.gather(*verse_coroutines) # [[verse, verse, verse], [verse, verse], ...]
             log(f"✓ Received verse_lists!")
             
             log(f"→ Inserting {num_chapters} chapters into DB...")
@@ -193,5 +202,11 @@ async def main():
 
         log('🎉 Bible data successfully imported!')
 
+
 if __name__ == '__main__':
-    asyncio.run(main())
+    args = parse_args()
+
+    global LOG_MODE
+    LOG_MODE = args.log
+
+    asyncio.run(main()) # asyncio is needed to run the async main function without an async parent function
