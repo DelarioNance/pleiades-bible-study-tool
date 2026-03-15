@@ -8,3 +8,5 @@ createdb pleiades # Create a new PostgreSQL database named 'pleiades' that we wi
 sudo -u postgres psql -c "\du" # List all PostgreSQL users to verify that the 'delar' user was created successfully.
 sudo -u postgres psql # Connect to the PostgreSQL server using the 'postgres' user to perform further database operations if needed.
 ALTER USER delar WITH PASSWORD '<password>'; # Set a password for the 'delar' user
+
+# pip install psycopg2-binary <- needed for SQLAlchemy to connect to PostgreSQL

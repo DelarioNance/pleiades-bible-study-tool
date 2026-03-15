@@ -1,13 +1,20 @@
-# init_db.py
+# Standard library
+import os
 
+# Third‑party packages
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import DeclarativeBase, Session
-import os
 import requests
 
-PRINT_SQL_STATEMENTS = False
-DATABASE_URL = 'sqlite:///pleiades.db'
+# Local application imports (none in this file)
+
+
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 BIBLE_API = 'https://bible.helloao.org/api/eng_kjv'   # Replace with your actual API
+PRINT_SQL_STATEMENTS = False
 
 
 # ------------------------------------------------------------
