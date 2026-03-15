@@ -53,6 +53,14 @@ class Verse(Base):
 
 
 # ------------------------------------------------------------
+# DB Helpers
+# ------------------------------------------------------------
+def reset_schemas(engine):
+    Base.metadata.drop_all(engine) # drops existing tables (immediately)
+    Base.metadata.create_all(engine) # creates non-existent .db file and non-existent tables
+
+
+# ------------------------------------------------------------
 # API Helpers
 # ------------------------------------------------------------
 def fetch_books():
@@ -72,8 +80,7 @@ def fetch_verses(api_book_id, api_chapter_number):
 # ------------------------------------------------------------
 def main():
     engine = create_engine(DATABASE_URL, echo=PRINT_SQL_STATEMENTS)
-    Base.metadata.drop_all(engine) # drops existing tables
-    Base.metadata.create_all(engine) # creates non-existent .db file and non-existent tables
+    reset_schemas(engine) # immediately recreates schemas (i.e., does not wait until script finishes)
 
     with Session(engine) as session:
         # Books
@@ -84,8 +91,8 @@ def main():
                 common_name=book_common_name,
                 canonical_order=curr_book_api_data['order']
             )
-            session.add(book) # add let's SQLAlchemy know to keep track of this new book object
-            session.commit()
+            session.add(book) # makes SQLAlchemy aware of the new book, but does not yet assign it an ID
+            session.flush() # forces SQLAlchemy to assign an ID to the book so we can use it for the chapters
 
             print(f'   → {book.common_name}')
 
@@ -97,7 +104,7 @@ def main():
                     chapter_number=chapter_num
                 )
                 session.add(chapter)
-                session.commit()
+                session.flush() # forces SQLAlchemy to assign an ID to the chapter so we can use it for the verses
 
                 api_book_id = curr_book_api_data['id']
 
@@ -112,9 +119,10 @@ def main():
                         verbiage=curr_verse_api_data['content'][0]
                     )
                     session.add(verse)
-                    session.commit()
 
                     print(f'   → {book.common_name} {chapter_num}:{verse.verse_number}')
+
+            session.commit()
 
         print('🎉 Bible data successfully imported!')
 
