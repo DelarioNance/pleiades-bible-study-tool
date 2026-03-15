@@ -3,7 +3,7 @@ import os
 
 # Third‑party packages
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text, insert
 from sqlalchemy.orm import DeclarativeBase, Session
 import requests
 
@@ -112,20 +112,23 @@ def main():
 
                 # Verses
                 verses = fetch_verses(api_book_id, chapter_num)
-                for curr_verse_api_data in verses:
-                    verse = Verse(
-                        chapter_id=chapter.id,
-                        verse_number=curr_verse_api_data['number'],
-                        verbiage=curr_verse_api_data['content'][0]
-                    )
-                    session.add(verse)
 
-                    print(f'   → {book.common_name} {chapter_num}:{verse.verse_number}')
+                session.execute(
+                    insert(Verse),
+                    [
+                        {
+                            'chapter_id': chapter.id,
+                            'verse_number': curr_verse_api_data['number'],
+                            'verbiage': curr_verse_api_data['content'][0]
+                        }
+                        for curr_verse_api_data in verses
+                    ]
+                    )
+    
 
             session.commit()
 
         print('🎉 Bible data successfully imported!')
-
 
 if __name__ == '__main__':
     main()
