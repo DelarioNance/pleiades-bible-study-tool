@@ -10,3 +10,6 @@ sudo -u postgres psql # Connect to the PostgreSQL server using the 'postgres' us
 ALTER USER delar WITH PASSWORD '<password>'; # Set a password for the 'delar' user
 
 # pip install psycopg2-binary <- needed for SQLAlchemy to connect to PostgreSQL
+
+# When running sudo service postgresql start, it will ask for my WSL password, not the DB user password
+# Since delar is a superuser, it has access to all databases
