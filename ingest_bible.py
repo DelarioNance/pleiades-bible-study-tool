@@ -76,6 +76,11 @@ class Verse(Base):
 # ------------------------------------------------------------
 # General Helpers
 # ------------------------------------------------------------
+def normalize_book_name(book_name):
+    if book_name == 'Song of Songs':
+        return 'Song of Solomon'
+    return book_name
+
 def extract_verbiage(content_list):
     # typical case
     if isinstance(content_list[0], str):
@@ -137,7 +142,7 @@ async def initialize_bible_content(engine, log_mode=False):
             log("==============================")
 
             book = Book(
-                common_name=book_common_name,
+                common_name=normalize_book_name(book_common_name),
                 canonical_order=book_metadata['order']
             )
             session.add(book) # makes SQLAlchemy aware of the book object
