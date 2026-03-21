@@ -72,3 +72,22 @@ def test_canonical_book_list():
         db_books_in_num_order = [row[0] for row in db_books_in_num_order_raw]
     
     assert db_books_in_num_order == canon.BOOKS_IN_NUMBER_ORDER # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+
+
+def test_chapter_count_per_book():
+    sql = text("""
+            SELECT
+                b.common_name 
+                , count(c.id) AS num_chapters
+            FROM books b
+            INNER JOIN chapters c
+                ON c.book_id = b.id 
+            GROUP BY 
+                b.common_name
+            ;
+        """)
+    
+    with engine.connect() as conn:
+        db_chapter_count_per_book = dict(conn.execute(sql).fetchall())
+    
+    assert db_chapter_count_per_book == canon.BOOK_TO_NUM_CHAPTERS # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
