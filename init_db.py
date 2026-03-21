@@ -21,7 +21,6 @@ Bible content tables for development or testing.
 # Standard library
 # ------------------------------------------------------------
 import argparse
-import os
 
 # ------------------------------------------------------------
 # Third‑party packages
@@ -34,6 +33,7 @@ import asyncio # essentially an async version of requests
 # Local modules
 # ------------------------------------------------------------
 from ingest_bible import initialize_bible_content
+from util import get_db_url
 
 
 load_dotenv()
@@ -52,15 +52,6 @@ def parse_args():
         help="Flag to print execution events during run of script"
     ) # store_true treats the arg as a boolean flag
     return parser.parse_args()
-
-
-def get_db_url(env_alias):
-    if env_alias == 'test':
-        return os.getenv('DB_URL_TEST')
-    elif env_alias == 'prod':
-        return os.getenv('DB_URL_PROD')
-    else:
-        raise ValueError(f"Invalid environment alias '{env_alias}'.")
 
 
 if __name__ == '__main__':
