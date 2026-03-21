@@ -32,7 +32,7 @@ import asyncio # essentially an async version of requests
 # Local modules
 # ------------------------------------------------------------
 from ingest_bible import initialize_bible_content
-from util import get_db_url
+from util import get_db_engine
 
 
 def parse_args():
@@ -55,7 +55,6 @@ if __name__ == '__main__':
     env_alias = args.env
     include_logs = args.log
 
-    db_url = get_db_url(env_alias)
-    engine = create_engine(db_url)
+    engine = get_db_engine(env_alias)
 
     asyncio.run(initialize_bible_content(engine, log_mode=include_logs)) # asyncio is needed to run async functions from a main function
