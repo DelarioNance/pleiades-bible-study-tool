@@ -25,7 +25,6 @@ import argparse
 # ------------------------------------------------------------
 # Third‑party packages
 # ------------------------------------------------------------
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import asyncio # essentially an async version of requests
 
@@ -34,9 +33,6 @@ import asyncio # essentially an async version of requests
 # ------------------------------------------------------------
 from ingest_bible import initialize_bible_content
 from util import get_db_url
-
-
-load_dotenv()
 
 
 def parse_args():

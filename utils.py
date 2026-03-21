@@ -1,5 +1,10 @@
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 def get_db_url(env_alias):
     if env_alias == 'test':
         return os.getenv('DB_URL_TEST')
