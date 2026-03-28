@@ -91,3 +91,55 @@ def test_chapter_count_per_book():
         db_chapter_count_per_book = dict(conn.execute(sql).fetchall())
     
     assert db_chapter_count_per_book == canon.BOOK_TO_NUM_CHAPTERS # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+
+
+def test_chapter_sequencing():
+    sql = text("""
+            WITH chapter_sequences_against_expected AS (
+                SELECT
+                    c.chapter_number AS actual_chapter_num
+                    , ROW_NUMBER() OVER (
+                        PARTITION BY b.id
+                        ORDER BY c.chapter_number 
+                    ) AS expected_chapter_num
+                FROM books b
+                LEFT JOIN chapters c
+                    ON c.book_id = b.id 
+            )
+            SELECT 1 AS col_placeholder
+            FROM chapter_sequences_against_expected versus
+            WHERE coalesce(versus.actual_chapter_num, -1) <> expected_chapter_num
+            ;
+        """) # coalesce is used to handle the case where a book has no chapters
+    
+    with engine.connect() as conn:
+        exceptions = conn.execute(sql).fetchall()
+    
+    assert len(exceptions) == 0, f"Found {len(exceptions)} chapters with incorrect sequencing." # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+
+
+def test_verse_sequencing():
+    sql = text("""
+            WITH verse_sequences_against_expected AS (
+                SELECT
+                    v.verse_number AS actual_verse_num
+                    , ROW_NUMBER() OVER (
+                        PARTITION BY c.id
+                        ORDER BY v.verse_number 
+                    ) AS expected_verse_num
+                FROM chapters c
+                LEFT JOIN verses v
+                    ON v.chapter_id = c.id
+            )
+            SELECT 1 AS col_placeholder
+            FROM verse_sequences_against_expected versus
+            WHERE coalesce(versus.actual_verse_num, -1) <> expected_verse_num
+            ;
+        """) # coalesce is used to handle the case where a chapter has no verses
+    
+    with engine.connect() as conn:
+        exceptions = conn.execute(sql).fetchall()
+    
+    assert len(exceptions) == 0, f"Found {len(exceptions)} verses with incorrect sequencing." # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+
+
