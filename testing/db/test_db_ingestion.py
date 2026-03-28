@@ -21,6 +21,10 @@ engine = get_db_engine('test')
 asyncio.run(initialize_bible_content(engine, log_mode=False)) # asyncio is needed to run async functions from a main function
 
 
+# ------------------------------------------------------------
+# Domain Requirement Tests
+# ------------------------------------------------------------
+
 def test_canonical_book_count():    
     with engine.connect() as conn:
         num_books = query_scalar(conn, """
@@ -149,6 +153,9 @@ def test_verse_sequencing():
             ;
         """) 
 
+# ------------------------------------------------------------
+# Schema Integrity Tests
+# ------------------------------------------------------------
 
 def test_chapters_have_matching_book():
     with engine.connect() as conn:
@@ -249,6 +256,9 @@ def test_no_chapters_without_numbers():
             ;
         """)
 
+# ------------------------------------------------------------
+# Content Integrity Tests
+# ------------------------------------------------------------
 
 def test_no_verses_without_text():
     with engine.connect() as conn:
