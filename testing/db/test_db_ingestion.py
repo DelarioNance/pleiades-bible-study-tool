@@ -175,7 +175,7 @@ def test_verses_have_matching_chapter():
         """)
     
 
-def unique_book_names():
+def test_unique_book_names():
     with engine.connect() as conn:
         assert_no_results(conn, """
             SELECT
@@ -189,7 +189,7 @@ def unique_book_names():
         """)
 
 
-def unique_chapter_numbers():
+def test_unique_chapter_numbers():
     with engine.connect() as conn:
         assert_no_results(conn, """
             SELECT
@@ -207,7 +207,7 @@ def unique_chapter_numbers():
         """)
 
 
-def unique_verse_numbers():
+def test_unique_verse_numbers():
     with engine.connect() as conn:
         assert_no_results(conn, """
             SELECT
