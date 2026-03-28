@@ -184,7 +184,7 @@ def unique_book_names():
             group by
                 b.common_name
             having 
-                count(*) > 1
+                count(*) > 1 -- not sure if count(*) or count(<field>) should be used
             ;
         """)
 
@@ -202,7 +202,7 @@ def unique_chapter_numbers():
                 b.id
                 , c.chapter_number
             having 
-                count(*) > 1
+                count(*) > 1 -- not sure if count(*) or count(<field>) should be used
             ;
         """)
 
@@ -220,6 +220,6 @@ def unique_verse_numbers():
                 c.id
                 , v.verse_number
             having 
-                count(*) > 1
+                count(*) > 1 -- not sure if count(*) or count(<field>) should be used
             ;
         """)
