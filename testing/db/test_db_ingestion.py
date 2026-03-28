@@ -187,4 +187,39 @@ def unique_book_names():
                 count(*) > 1
             ;
         """)
-    
+
+
+def unique_chapter_numbers():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                b.id
+                , c.chapter_number
+            FROM books b
+            INNER JOIN chapters c
+                ON c.book_id = b.id
+            group BY
+                b.id
+                , c.chapter_number
+            having 
+                count(*) > 1
+            ;
+        """)
+
+
+def unique_verse_numbers():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                c.id
+                , v.verse_number 
+            FROM chapters c
+            INNER JOIN verses v
+                ON v.chapter_id = c.id
+            group BY
+                c.id
+                , v.verse_number
+            having 
+                count(*) > 1
+            ;
+        """)
