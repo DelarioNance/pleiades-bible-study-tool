@@ -223,3 +223,36 @@ def test_unique_verse_numbers():
                 count(*) > 1 -- not sure if count(*) or count(<field>) should be used
             ;
         """)
+
+
+def test_no_books_without_names():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM books b
+            WHERE b.common_name IS NULL
+            ;
+        """)
+
+
+def test_no_chapters_without_numbers():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM chapters c
+            WHERE c.chapter_number IS NULL
+            ;
+        """)
+
+
+def test_no_verses_without_text():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM verses v
+            WHERE v.verbiage IS NULL
+            ;
+        """)
