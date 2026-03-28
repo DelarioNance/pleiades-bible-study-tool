@@ -93,6 +93,10 @@ def test_chapter_count_per_book():
     assert db_chapter_count_per_book == canon.BOOK_TO_NUM_CHAPTERS # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
 
 
+def test_verse_count_per_chapter():
+    pass # this test is a bit more complex to implement, so I'm skipping it for now. It would involve comparing the verse counts for each chapter in the DB against the expected verse counts from the canonical data. This could be done with a SQL query that groups by chapter and counts verses, then comparing the results to the expected counts from the canonical data.
+
+
 def test_chapter_sequencing():
     sql = text("""
             WITH chapter_sequences_against_expected AS (
@@ -143,3 +147,19 @@ def test_verse_sequencing():
     assert len(exceptions) == 0, f"Found {len(exceptions)} verses with incorrect sequencing." # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
 
 
+def test_chapters_have_matching_book():
+    sql = text("""
+            SELECT *
+            FROM chapters c
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM books b
+                WHERE b.id = c.book_id 
+            )
+            ;
+        """)
+    
+    with engine.connect() as conn:
+        exceptions = conn.execute(sql).fetchall()
+    
+    assert len(exceptions) == 0, f"Found {len(exceptions)} chapters without a matching book." # pytest automatically handles list equality and will show a helpful diff if the assertion fails
