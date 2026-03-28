@@ -90,7 +90,12 @@ def test_chapter_count_per_book():
     with engine.connect() as conn:
         db_chapter_count_per_book = dict(conn.execute(sql).fetchall())
     
-    assert db_chapter_count_per_book == canon.BOOK_TO_NUM_CHAPTERS # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+    canonical_verse_counts_per_book = canon.NUM_VERSES_PER_ASCENDING_CHAPTER # defined outside for loop in case canon.NUM_VERSES_PER_ASCENDING_CHAPTER is an expensive operation
+    expected_chapter_count_per_book = {
+        book_name: len(verses_per_chapter) 
+        for book_name, verses_per_chapter in canonical_verse_counts_per_book.items()
+    }
+    assert db_chapter_count_per_book == expected_chapter_count_per_book # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
 
 
 def test_verse_count_per_chapter():
