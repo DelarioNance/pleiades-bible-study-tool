@@ -82,16 +82,17 @@ def normalize_book_name(book_name):
     return book_name
 
 def extract_verbiage(content_list):
+    first_item = content_list[0]
+
     # typical case
-    if isinstance(content_list[0], str):
-        return clean(content_list[0])
+    if isinstance(first_item, str) and clean(first_item) != "": # Luke 12:24 has an edge case where the first item is "¶"
+        return clean(first_item)
         
     # edge case (https://bible.helloao.org/api/eng_kjv/PSA/3.json) (https://bible.helloao.org/api/eng_kjv/MAT/6.json)
-    if isinstance(content_list[0], dict): 
-        for content_dict in content_list:
-            if 'text' in content_dict:
-                return clean(content_dict['text'])
-            
+    for item in content_list:
+        if isinstance(item, dict) and 'text' in item: # Luke 12:24 has an edge case where the second item is the dict we want
+            return clean(item['text'])
+        
 
 def clean(verbiage):
     return verbiage.replace("¶", "").strip() # some verses (e.g. GEN 1:4) have a "¶" character
