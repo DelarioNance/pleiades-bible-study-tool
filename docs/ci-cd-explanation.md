@@ -140,6 +140,41 @@ To be production‑safe, ingestion must eventually become:
 - **Production** is the real environment and must never be broken.  
 - **My current ingestion pipeline is destructive**, so it cannot run in production as‑is.
 
+Here’s a clean, polished subsection you can drop directly into your conclusion.  
+It fits the tone, structure, and clarity of the rest of your document.
+
+---
+
+## 🔧 My Deployment Plan Moving Forward (CI Now, CD Later)
+
+As I worked through CI/CD, I realized that my project needs a **phased rollout** rather than jumping straight into full automation. The database layer is still stabilizing, and the ingestion pipeline is currently destructive — so production updates must be handled carefully.
+
+### **Phase 1 — First PR: Manual Production Ingestion**
+For the initial database‑layer PR, I’ll keep things simple and safe:
+
+- CI will validate the PR using a **test database**  
+- Once CI passes and the PR is merged into `main`  
+- **I will manually run the ingestion pipeline in the production database**  
+
+This gives me full visibility into the first real production load and avoids automating something that isn’t production‑safe yet.
+
+### **Phase 2 — Second PR (API Layer): Automated Production Ingestion via CD**
+Once the ingestion pipeline becomes **non‑destructive** and the API layer is introduced, I’ll add a minimal CD workflow:
+
+- Triggered on **pushes to `main`**  
+- Connects to the **production database**  
+- Runs the **real ingestion pipeline** automatically  
+
+This is the smallest, safest form of CD — just enough automation to keep production in sync with `main`, without introducing unnecessary complexity.
+
+### **Why This Phased Approach Works**
+- CI protects `main` immediately  
+- Manual ingestion protects production during the early, unstable phase  
+- CD is introduced only once the system is stable enough to trust automation  
+- This mirrors how real engineering teams mature their deployment pipelines  
+
+It’s a clean, safe progression from **manual → automated**, aligned with the natural growth of the project.
+
 ---
 
 # Additional Sources
