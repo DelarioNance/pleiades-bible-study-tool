@@ -110,7 +110,8 @@ def test_chapter_sequencing():
                 LEFT JOIN chapters c
                     ON c.book_id = b.id 
             )
-            SELECT 1 AS col_placeholder
+            SELECT
+                1 as existence_placeholder
             FROM chapter_sequences_against_expected versus
             WHERE coalesce(versus.actual_chapter_num, -1) <> expected_chapter_num
             ;
@@ -135,7 +136,8 @@ def test_verse_sequencing():
                 LEFT JOIN verses v
                     ON v.chapter_id = c.id
             )
-            SELECT 1 AS col_placeholder
+            SELECT 
+                1 as existence_placeholder
             FROM verse_sequences_against_expected versus
             WHERE coalesce(versus.actual_verse_num, -1) <> expected_verse_num
             ;
@@ -150,7 +152,8 @@ def test_verse_sequencing():
 def test_chapters_have_matching_book():
     with engine.connect() as conn:
         assert_no_results(conn, """
-            SELECT *
+            SELECT
+                1 as existence_placeholder
             FROM chapters c
             WHERE NOT EXISTS (
                 SELECT 1
@@ -164,7 +167,8 @@ def test_chapters_have_matching_book():
 def test_verses_have_matching_chapter():
     with engine.connect() as conn:
         assert_no_results(conn, """
-            SELECT *
+            SELECT
+                1 as existence_placeholder
             FROM verses v
             WHERE NOT EXISTS (
                 SELECT 1
@@ -179,7 +183,7 @@ def test_unique_book_names():
     with engine.connect() as conn:
         assert_no_results(conn, """
             SELECT
-                b.common_name
+                1 as existence_placeholder
             FROM books b
             group by
                 b.common_name
@@ -193,8 +197,7 @@ def test_unique_chapter_numbers():
     with engine.connect() as conn:
         assert_no_results(conn, """
             SELECT
-                b.id
-                , c.chapter_number
+                1 as existence_placeholder
             FROM books b
             INNER JOIN chapters c
                 ON c.book_id = b.id
@@ -211,8 +214,7 @@ def test_unique_verse_numbers():
     with engine.connect() as conn:
         assert_no_results(conn, """
             SELECT
-                c.id
-                , v.verse_number 
+                1 as existence_placeholder
             FROM chapters c
             INNER JOIN verses v
                 ON v.chapter_id = c.id
