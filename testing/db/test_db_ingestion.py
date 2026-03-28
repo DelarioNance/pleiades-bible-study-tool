@@ -140,11 +140,11 @@ def test_verse_sequencing():
             SELECT 
                 1 as existence_placeholder
             FROM verse_sequences_against_expected versus
-            WHERE coalesce(versus.actual_verse_num, -1) <> expected_verse_num
+            WHERE coalesce(versus.actual_verse_num, -1) <> expected_verse_num -- coalesce is used to handle the case where a chapter has no verses
             ;
-        """) # coalesce is used to handle the case where a chapter has no verses
-        
+        """) 
 
+        
 def test_chapters_have_matching_book():
     with engine.connect() as conn:
         assert_no_results(conn, """
