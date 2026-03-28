@@ -124,7 +124,8 @@ def test_chapter_sequencing():
 
 
 def test_verse_sequencing():
-    sql = text("""
+    with engine.connect() as conn:
+        assert_no_results(conn, """
             WITH verse_sequences_against_expected AS (
                 SELECT
                     v.verse_number AS actual_verse_num
@@ -142,12 +143,7 @@ def test_verse_sequencing():
             WHERE coalesce(versus.actual_verse_num, -1) <> expected_verse_num
             ;
         """) # coalesce is used to handle the case where a chapter has no verses
-    
-    with engine.connect() as conn:
-        exceptions = conn.execute(sql).fetchall()
-    
-    assert len(exceptions) == 0, f"Found {len(exceptions)} verses with incorrect sequencing." # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
-
+        
 
 def test_chapters_have_matching_book():
     with engine.connect() as conn:
