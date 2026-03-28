@@ -144,7 +144,7 @@ def test_verse_sequencing():
             ;
         """) 
 
-        
+
 def test_chapters_have_matching_book():
     with engine.connect() as conn:
         assert_no_results(conn, """
@@ -252,5 +252,41 @@ def test_no_verses_without_text():
                 1 AS existence_placeholder
             FROM verses v
             WHERE v.verbiage IS NULL
+            ;
+        """)
+
+
+def test_blank_non_null_book_names():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM books b
+            WHERE trim(b.common_name) = ''
+            ;
+        """)
+
+
+def test_chapter_numbers_are_integers():
+    with engine.connect() as conn:
+        chapter_num_data_type = query_scalar(conn, """
+            SELECT
+                isc.data_type
+            FROM information_schema.COLUMNS isc
+            WHERE isc.table_name = 'chapters'
+            AND isc.column_name = 'chapter_number'
+            ;
+        """)
+    
+    assert chapter_num_data_type == 'integer', f"Expected integer type for chapter_number, but got {chapter_num_data_type}." 
+
+
+def test_blank_non_null_verse_text():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM verses v
+            WHERE trim(v.verbiage) = ''
             ;
         """)
