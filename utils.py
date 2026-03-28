@@ -41,3 +41,9 @@ def query_scalar(conn, sql):
         raise ValueError(f"Expected a single scalar value, but got {len(rows)} rows and {len(rows[0]) if rows else 0} columns.")
     
     return rows[0][0]
+
+
+def assert_no_results(conn, sql):
+    sql_text = text(sql)
+    exceptions = conn.execute(sql_text).fetchall()
+    assert len(exceptions) == 0, f"Expected no exceptions, but got {len(exceptions)}: {exceptions}"

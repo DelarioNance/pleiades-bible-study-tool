@@ -12,7 +12,7 @@ from sqlalchemy import text
 # Local modules
 # ------------------------------------------------------------
 from ingest_bible import initialize_bible_content
-from utils import get_db_engine, query_scalar
+from utils import get_db_engine, query_scalar, assert_no_results
 import bible_canonical_data as canon
 
 
@@ -148,7 +148,8 @@ def test_verse_sequencing():
 
 
 def test_chapters_have_matching_book():
-    sql = text("""
+    with engine.connect() as conn:
+        assert_no_results(conn, """
             SELECT *
             FROM chapters c
             WHERE NOT EXISTS (
@@ -158,15 +159,11 @@ def test_chapters_have_matching_book():
             )
             ;
         """)
-    
-    with engine.connect() as conn:
-        exceptions = conn.execute(sql).fetchall()
-    
-    assert len(exceptions) == 0, f"Found {len(exceptions)} chapters without a matching book." # pytest automatically handles list equality and will show a helpful diff if the assertion fails
 
 
 def test_verses_have_matching_chapter():
-    sql = text("""
+    with engine.connect() as conn:
+        assert_no_results(conn, """
             SELECT *
             FROM verses v
             WHERE NOT EXISTS (
@@ -177,14 +174,10 @@ def test_verses_have_matching_chapter():
             ;
         """)
     
-    with engine.connect() as conn:
-        exceptions = conn.execute(sql).fetchall()
-    
-    assert len(exceptions) == 0, f"Found {len(exceptions)} verses without a matching chapter." # pytest automatically handles list equality and will show a helpful diff if the assertion fails
-
 
 def unique_book_names():
-    sql = text("""
+    with engine.connect() as conn:
+        assert_no_results(conn, """
             SELECT
                 b.common_name
             FROM books b
@@ -195,7 +188,3 @@ def unique_book_names():
             ;
         """)
     
-    with engine.connect() as conn:
-        exceptions = conn.execute(sql).fetchall()
-    
-    assert len(exceptions) == 0, f"Found {len(exceptions)} verses without a matching chapter." # pytest automatically handles list equality and will show a helpful diff if the assertion fails
