@@ -163,3 +163,21 @@ def test_chapters_have_matching_book():
         exceptions = conn.execute(sql).fetchall()
     
     assert len(exceptions) == 0, f"Found {len(exceptions)} chapters without a matching book." # pytest automatically handles list equality and will show a helpful diff if the assertion fails
+
+
+def test_verses_have_matching_chapter():
+    sql = text("""
+            SELECT *
+            FROM verses v
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM chapters c
+                WHERE c.id = v.chapter_id 
+            )
+            ;
+        """)
+    
+    with engine.connect() as conn:
+        exceptions = conn.execute(sql).fetchall()
+    
+    assert len(exceptions) == 0, f"Found {len(exceptions)} verses without a matching chapter." # pytest automatically handles list equality and will show a helpful diff if the assertion fails
