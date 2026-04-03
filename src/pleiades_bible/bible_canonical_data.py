@@ -1,4 +1,4 @@
-from num_verses_per_ascending_chapter import NUM_VERSES_PER_ASCENDING_CHAPTER
+from pleiades_bible.num_verses_per_ascending_chapter import NUM_VERSES_PER_ASCENDING_CHAPTER
 
 NUM_BOOKS = 66
 
