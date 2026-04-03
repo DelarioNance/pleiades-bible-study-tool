@@ -1,0 +1,16 @@
+#  Template python-build
+
+#  This template allows you to validate your python code.
+#  The workflow allows running tests and code linting on the default branch.
+
+# Syntax: https://www.kailashsblogs.com/2025/10/understanding-bitbucket-pipeline-yaml-file.html
+
+image: python:3.12
+
+pipelines:
+  pull-requests:
+    "main":
+      - step:
+          name: Test PR to Main Branch
+          script:
+            - pytest
