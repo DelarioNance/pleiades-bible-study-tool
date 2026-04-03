@@ -1,17 +1,35 @@
-#  Template python-build
+# """
+# Bitbucket Pipeline: Python Test Runner with Postgres Service
+#
+# This pipeline validates all pull requests targeting the `main` branch by:
+#   1. Creating a fresh Python 3.12 build container from the official Docker image
+#       - Think of a container as a virtual Linux machine that is instantiated from the image blueprint (similar to OOP classes and objects)
+#   2. Cloning the repository into that container and executing the test suite.
+#   3. Spinning up a separate Postgres service container to provide an isolated test database, for the build container to use.
+#   4. Specifying terminal commands to run on the build container, such as installing dependencies and running tests.
 
-#  This template allows you to validate your python code.
-#  The workflow allows running tests and code linting on the default branch.
-
-# Syntax: https://www.kailashsblogs.com/2025/10/understanding-bitbucket-pipeline-yaml-file.html
+# """
 
 image: python:3.12
 
+# Syntax: https://www.kailashsblogs.com/2025/10/understanding-bitbucket-pipeline-yaml-file.html
 pipelines:
   pull-requests:
     "main":
       - step:
-          name: Test PR to Main Branch
+          name: Test PR to Main Branch # user-chosen name of the task
           script:
             - pip install -r requirements.txt
             - pytest
+          services:
+            - test-db
+
+# https://support.atlassian.com/bitbucket-cloud/docs/databases-and-service-containers/
+definitions:
+  services:
+    test-db: # user-chosen name of the service container
+      image: postgres:16.13
+      environment: # environment variables to set up the Postgres database ($... means to reference repo variables set up in Bitbucke)
+        POSTGRES_DB: $DB_NAME_TEST 
+        POSTGRES_USER: $DB_USER_TEST
+        POSTGRES_PASSWORD: $DB_PASSWORD_TEST
