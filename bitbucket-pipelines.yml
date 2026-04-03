@@ -20,7 +20,7 @@ pipelines:
           name: Test PR to Main Branch # user-chosen name of the task
           script:
             - pip install -r requirements.txt
-            - pytest
+            -  pytest --junitxml=./test-results/results.xml # https://support.atlassian.com/bitbucket-cloud/docs/test-reporting-in-pipelines/
           services:
             - test-db
 
