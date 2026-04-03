@@ -18,12 +18,23 @@ load_dotenv()
 
 
 def get_db_url(env_alias):
+    # Dynamically generate URL to avoid
+    # storing an URL repo variable 
+    # alongside the corresponding 
+    # name, user, and password repo
+    # variables in Bitbucket
     if env_alias == 'test':
-        return os.getenv('DB_URL_TEST')
+        user = os.getenv("DB_USER_TEST")
+        password = os.getenv("DB_PASSWORD_TEST")
+        name = os.getenv("DB_NAME_TEST")
     elif env_alias == 'prod':
-        return os.getenv('DB_URL_PROD')
+        user = os.getenv("DB_USER_PROD")
+        password = os.getenv("DB_PASSWORD_PROD")
+        name = os.getenv("DB_NAME_PROD")
     else:
         raise ValueError(f"Invalid environment alias '{env_alias}'.")
+    
+    return f"postgresql+psycopg2://{user}:{password}@localhost/{name}"
 
 
 def get_db_engine(env_alias):
