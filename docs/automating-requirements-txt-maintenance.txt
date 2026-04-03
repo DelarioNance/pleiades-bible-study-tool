@@ -16,10 +16,9 @@ Add the following script:
 ```bash
 #!/bin/bash
 
-echo "Updating requirements.txt using pipreqs..."
-pipreqs . --force
+echo "Updating requirements.txt using pip freeze..."
+pip freeze > requirements.txt
 
-# Stage the updated file
 git add requirements.txt
 echo "requirements.txt has been updated and staged for commit."
 ```
@@ -34,42 +33,11 @@ chmod +x .git/hooks/pre-commit
 
 ---
 
-## **2. Install pipreqs inside your virtual environment**
-
-Activate your virtual environment:
-
-```
-source venv/bin/activate
-```
-
-Install `pipreqs`:
-
-```
-pip install pipreqs
-```
-
----
-
-## **3. Initialize your requirements file**
-
-Generate the initial `requirements.txt`:
-
-```
-pip freeze > requirements.txt
-```
-
----
-
-## **4. Result**
+## **2. Result**
 
 From now on, every time you create a commit, the pre‑commit hook will automatically:
 
-- regenerate `requirements.txt` using `pipreqs`
 - stage the updated file
 - include it in your commit
 
 This ensures your dependency list stays up‑to‑date with the imports used in your project.
-
----
-
-If you want, I can also refine the hook further so it activates your venv automatically or only runs when Python files change.
