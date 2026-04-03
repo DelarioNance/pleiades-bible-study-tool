@@ -1,0 +1,307 @@
+# ------------------------------------------------------------
+# Standard library
+# ------------------------------------------------------------
+
+# ------------------------------------------------------------
+# Third‑party packages
+# ------------------------------------------------------------
+import asyncio # essentially an async version of requests
+from sqlalchemy import text
+
+# ------------------------------------------------------------
+# Local modules
+# ------------------------------------------------------------
+from pleiades_bible.ingest_bible import initialize_bible_content
+from pleiades_bible.utils import get_db_engine, query_scalar, assert_no_results
+import pleiades_bible.bible_canonical_data as canon
+
+
+# Test DB Setup
+engine = get_db_engine('test')
+asyncio.run(initialize_bible_content(engine, log_mode=False)) # asyncio is needed to run async functions from a main function
+
+
+# ------------------------------------------------------------
+# Domain Requirement Tests
+# ------------------------------------------------------------
+
+def test_canonical_book_count():    
+    with engine.connect() as conn:
+        num_books = query_scalar(conn, """
+            SELECT
+                count(b.id) as num_books
+            FROM books b
+            ;
+        """)
+    
+    assert num_books == canon.NUM_BOOKS, f"Expected 66 books, but got {num_books}." 
+
+
+def test_canonical_chapter_count():    
+    with engine.connect() as conn:
+        num_chapters = query_scalar(conn, """
+            SELECT
+                count(c.id) as num_chapters
+            FROM chapters c
+            ;
+        """)
+    
+    assert num_chapters == canon.NUM_CHAPTERS, f"Expected 1189 chapters, but got {num_chapters}." 
+
+
+def test_canonical_verse_count():
+    with engine.connect() as conn:
+        num_verses = query_scalar(conn, """
+            SELECT
+                count(v.id) as num_verses
+            FROM verses v
+            ;
+        """)
+    
+    assert num_verses == canon.NUM_VERSES, f"Expected 31102 verses, but got {num_verses}." 
+
+
+def test_canonical_book_list():
+    sql = text("""
+            SELECT
+                b.common_name 
+            FROM books b
+            ORDER BY
+                b.canonical_order  
+            ;
+        """)
+    
+    with engine.connect() as conn:
+        db_books_in_num_order_raw = conn.execute(sql).fetchall()
+        db_books_in_num_order = [row[0] for row in db_books_in_num_order_raw]
+    
+    assert db_books_in_num_order == canon.BOOKS_IN_NUMBER_ORDER # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+
+
+def test_chapter_count_per_book():
+    sql = text("""
+            SELECT
+                b.common_name 
+                , count(c.id) AS num_chapters
+            FROM books b
+            INNER JOIN chapters c
+                ON c.book_id = b.id 
+            GROUP BY 
+                b.common_name
+            ;
+        """)
+    
+    with engine.connect() as conn:
+        db_chapter_count_per_book = dict(conn.execute(sql).fetchall())
+    
+    canonical_verse_counts_per_book = canon.NUM_VERSES_PER_ASCENDING_CHAPTER # defined outside for loop in case canon.NUM_VERSES_PER_ASCENDING_CHAPTER is an expensive operation
+    expected_chapter_count_per_book = {
+        book_name: len(verses_per_chapter) 
+        for book_name, verses_per_chapter in canonical_verse_counts_per_book.items()
+    }
+    assert db_chapter_count_per_book == expected_chapter_count_per_book # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+
+
+def test_verse_count_per_chapter():
+    pass # this test is a bit more complex to implement, so I'm skipping it for now. It would involve comparing the verse counts for each chapter in the DB against the expected verse counts from the canonical data. This could be done with a SQL query that groups by chapter and counts verses, then comparing the results to the expected counts from the canonical data.
+
+
+def test_chapter_sequencing():
+    sql = text("""
+            WITH chapter_sequences_against_expected AS (
+                SELECT
+                    c.chapter_number AS actual_chapter_num
+                    , ROW_NUMBER() OVER (
+                        PARTITION BY b.id
+                        ORDER BY c.chapter_number 
+                    ) AS expected_chapter_num
+                FROM books b
+                LEFT JOIN chapters c
+                    ON c.book_id = b.id 
+            )
+            SELECT
+                1 as existence_placeholder
+            FROM chapter_sequences_against_expected versus
+            WHERE coalesce(versus.actual_chapter_num, -1) <> expected_chapter_num
+            ;
+        """) # coalesce is used to handle the case where a book has no chapters
+    
+    with engine.connect() as conn:
+        exceptions = conn.execute(sql).fetchall()
+    
+    assert len(exceptions) == 0, f"Found {len(exceptions)} chapters with incorrect sequencing." # pytest automatically handles list equality and will show a helpful diff if the assertion fails 
+
+
+def test_verse_sequencing():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            WITH verse_sequences_against_expected AS (
+                SELECT
+                    v.verse_number AS actual_verse_num
+                    , ROW_NUMBER() OVER (
+                        PARTITION BY c.id
+                        ORDER BY v.verse_number 
+                    ) AS expected_verse_num
+                FROM chapters c
+                LEFT JOIN verses v
+                    ON v.chapter_id = c.id
+            )
+            SELECT 
+                1 as existence_placeholder
+            FROM verse_sequences_against_expected versus
+            WHERE coalesce(versus.actual_verse_num, -1) <> expected_verse_num -- coalesce is used to handle the case where a chapter has no verses
+            ;
+        """) 
+
+# ------------------------------------------------------------
+# Schema Integrity Tests
+# ------------------------------------------------------------
+
+def test_chapters_have_matching_book():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 as existence_placeholder
+            FROM chapters c
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM books b
+                WHERE b.id = c.book_id 
+            )
+            ;
+        """)
+
+
+def test_verses_have_matching_chapter():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 as existence_placeholder
+            FROM verses v
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM chapters c
+                WHERE c.id = v.chapter_id 
+            )
+            ;
+        """)
+    
+
+def test_unique_book_names():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 as existence_placeholder
+            FROM books b
+            group by
+                b.common_name
+            having 
+                count(*) > 1 -- not sure if count(*) or count(<field>) should be used
+            ;
+        """)
+
+
+def test_unique_chapter_numbers():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 as existence_placeholder
+            FROM books b
+            INNER JOIN chapters c
+                ON c.book_id = b.id
+            group BY
+                b.id
+                , c.chapter_number
+            having 
+                count(*) > 1 -- not sure if count(*) or count(<field>) should be used
+            ;
+        """)
+
+
+def test_unique_verse_numbers():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 as existence_placeholder
+            FROM chapters c
+            INNER JOIN verses v
+                ON v.chapter_id = c.id
+            group BY
+                c.id
+                , v.verse_number
+            having 
+                count(*) > 1 -- not sure if count(*) or count(<field>) should be used
+            ;
+        """)
+
+
+def test_no_books_without_names():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM books b
+            WHERE b.common_name IS NULL
+            ;
+        """)
+
+
+def test_no_chapters_without_numbers():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM chapters c
+            WHERE c.chapter_number IS NULL
+            ;
+        """)
+
+# ------------------------------------------------------------
+# Content Integrity Tests
+# ------------------------------------------------------------
+
+def test_no_verses_without_text():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM verses v
+            WHERE v.verbiage IS NULL
+            ;
+        """)
+
+
+def test_blank_non_null_book_names():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM books b
+            WHERE trim(b.common_name) = ''
+            ;
+        """)
+
+
+def test_chapter_numbers_are_integers():
+    with engine.connect() as conn:
+        chapter_num_data_type = query_scalar(conn, """
+            SELECT
+                isc.data_type
+            FROM information_schema.COLUMNS isc
+            WHERE isc.table_name = 'chapters'
+            AND isc.column_name = 'chapter_number'
+            ;
+        """)
+    
+    assert chapter_num_data_type == 'integer', f"Expected integer type for chapter_number, but got {chapter_num_data_type}." 
+
+
+def test_blank_non_null_verse_text():
+    with engine.connect() as conn:
+        assert_no_results(conn, """
+            SELECT
+                1 AS existence_placeholder
+            FROM verses v
+            WHERE trim(v.verbiage) = ''
+            ;
+        """)
