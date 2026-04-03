@@ -58,3 +58,4 @@ def assert_no_results(conn, sql):
     sql_text = text(sql) # could possibly abstract the "SELECT 1 as existence_placeholder" pattern into this function, but this logic suffices for now
     exceptions = conn.execute(sql_text).fetchall()
     assert len(exceptions) == 0, f"Expected no exceptions, but got {len(exceptions)}: {exceptions}"
+    
