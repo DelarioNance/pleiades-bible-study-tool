@@ -13,4 +13,5 @@ pipelines:
       - step:
           name: Test PR to Main Branch
           script:
+            - pip install -r requirements.txt
             - pytest
