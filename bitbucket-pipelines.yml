@@ -15,7 +15,7 @@ image: python:3.12
 # Syntax: https://www.kailashsblogs.com/2025/10/understanding-bitbucket-pipeline-yaml-file.html
 pipelines:
   pull-requests:
-    "main":
+    "**":
       - step:
           name: Test PR to Main Branch # user-chosen name of the task
           script:
