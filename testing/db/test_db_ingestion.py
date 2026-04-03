@@ -11,9 +11,9 @@ from sqlalchemy import text
 # ------------------------------------------------------------
 # Local modules
 # ------------------------------------------------------------
-from ingest_bible import initialize_bible_content
-from utils import get_db_engine, query_scalar, assert_no_results
-import bible_canonical_data as canon
+from pleiades_bible.ingest_bible import initialize_bible_content
+from pleiades_bible.utils import get_db_engine, query_scalar, assert_no_results
+import pleiades_bible.bible_canonical_data as canon
 
 
 # Test DB Setup
