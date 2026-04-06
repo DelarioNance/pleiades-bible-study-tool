@@ -27,13 +27,20 @@ def get_db_url(env_alias):
         user = os.getenv("DB_USER_TEST")
         password = os.getenv("DB_PASSWORD_TEST")
         name = os.getenv("DB_NAME_TEST")
+        suffix = '_test'
     elif env_alias == 'prod':
         user = os.getenv("DB_USER_PROD")
         password = os.getenv("DB_PASSWORD_PROD")
         name = os.getenv("DB_NAME_PROD")
+        suffix = '_prod'
     else:
         raise ValueError(f"Invalid environment alias '{env_alias}'.")
-    
+
+    # At one point, the test and prod credentials were flip-flopped in the .env file.
+    # Maybe it's worth adding a regression unit test for this function which confirms
+    # that the assert works as expected?
+    assert name.endswith(suffix), f"The {env_alias} DB name does not end in '{suffix}'" 
+
     return f"postgresql+psycopg2://{user}:{password}@localhost/{name}"
 
 
