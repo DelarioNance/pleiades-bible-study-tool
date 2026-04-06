@@ -305,3 +305,4 @@ def test_blank_non_null_verse_text():
             WHERE trim(v.verbiage) = ''
             ;
         """)
+        
