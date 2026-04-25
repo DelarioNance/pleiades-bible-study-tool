@@ -21,13 +21,7 @@ def extract_books(
 ):
     response = requests.get(f"{api_base_url}/books.json")
     books_raw = response.json()['books']
-    books_filtered = {
-        book["id"]: {
-            "commonName": book["commonName"],
-            "order": book["order"],
-        }
-        for book in books_raw
-    }
 
-    return books_filtered
+    return books_raw
+
 
