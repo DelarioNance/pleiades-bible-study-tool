@@ -12,14 +12,14 @@ All loading happens inside a single atomic transaction to ensure that
 either the entire ingestion succeeds or none of it is applied.
 """
 
+import asyncio
 from sqlalchemy.orm import Session
 
 from src.etl.extract_books import extract_books
-from src.etl.extract_verses_in_chapter import extract_verses_in_chapter
+from src.etl.extract_verses_in_chapter import extract_all_verses
 from src.utils.db import get_db_engine
 
-
-def main(
+async def main(
     bible_api_url: str = "https://bible.helloao.org/api/eng_kjv",
     engine=None
 ):
@@ -27,31 +27,31 @@ def main(
     # Extract
     # -----------------------------
     books_raw = extract_books(bible_api_url)
-    verses_raw = []
-    for book in books_raw:
-        num_chapters = book['numberOfChapters']
-        for chapter in range(1, num_chapters + 1):
-            verses_raw.extend(extract_verses_in_chapter(book['id'], chapter))
-    refs_raw = extract_crossrefs()
+    all_verses_raw = await extract_all_verses(books_raw, bible_api_url)
+    # refs_raw = extract_crossrefs()
 
-    # -----------------------------
-    # Transform
-    # -----------------------------
-    books_transformed = transform_books(books_raw)
-    chapters_transformed = transform_chapters(chapters_raw)
-    verses_transformed = transform_verses(verses_raw)
-    refs_transformed = transform_crossrefs(refs_raw)
+    return all_verses_raw
 
-    # -----------------------------
-    # Load
-    # -----------------------------
-    if engine is None:
-        engine = get_db_engine('test')  # default to test environment for safety
+    # # -----------------------------
+    # # Transform
+    # # -----------------------------
+    # books_transformed = transform_books(books_raw)
+    # chapters_transformed = transform_chapters(chapters_raw)
+    # verses_transformed = transform_verses(verses_raw)
+    # refs_transformed = transform_crossrefs(refs_raw)
 
-    with Session(engine) as session:
-        with session.begin(): # using session.begin() for atomicity
-            clear_bible_database_data(session)
-            load_books(session, books_transformed)
-            load_chapters(session, chapters_transformed)
-            load_verses(session, verses_transformed)
-            load_crossrefs(session, refs_transformed)
+    # # -----------------------------
+    # # Load
+    # # -----------------------------
+    # if engine is None:
+    #     engine = get_db_engine('test')  # default to test environment for safety
+
+    # with Session(engine) as session:
+    #     with session.begin(): # using session.begin() for atomicity
+    #         clear_bible_database_data(session)
+    #         load_books(session, books_transformed)
+    #         load_chapters(session, chapters_transformed)
+    #         load_verses(session, verses_transformed)
+    #         load_crossrefs(session, refs_transformed)
+
+all_verses_raw = asyncio.run(main())
