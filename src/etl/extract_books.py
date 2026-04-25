@@ -17,7 +17,7 @@ import requests
 
 
 def extract_books(
-    api_base_url: str
+    api_base_url: str = "https://bible.helloao.org/api/eng_kjv"
 ):
     response = requests.get(f"{api_base_url}/books.json")
     books_raw = response.json()['books']

@@ -15,18 +15,7 @@ either the entire ingestion succeeds or none of it is applied.
 from sqlalchemy.orm import Session
 
 from extract_books import extract_books
-from bible_ingestion.extract_verses_in_chapter import extract_chapters
 from bible_ingestion.extract_verses_in_chapter import extract_verses_in_chapter
-from extract_crossrefs import extract_crossrefs
-from transform_books import transform_books
-from transform_chapters import transform_chapters
-from transform_verses import transform_verses
-from transform_crossrefs import transform_crossrefs
-from load_books import load_books
-from load_chapters import load_chapters
-from load_verses import load_verses
-from load_crossrefs import load_crossrefs
-from clear_bible_database_data import clear_bible_database_data
 from utils.db import get_db_engine
 
 
