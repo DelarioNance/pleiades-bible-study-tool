@@ -16,7 +16,7 @@ import asyncio
 from sqlalchemy.orm import Session
 
 from src.etl.extract_books import extract_books
-from src.etl.extract_verses_in_chapter import extract_all_verses_async
+from etl.extract_verses import extract_all_verses_async
 from src.utils.db import get_db_engine
 
 async def main(

@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, Mock
 
-from bible_ingestion.extract_verses_in_chapter import extract_verses_in_chapter
+from etl.extract_verses import extract_all_verses_async
 from .cases_extract_verses_in_chapter import ExtractCases
 
 

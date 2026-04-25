@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, Mock
 
-from bible_ingestion.extract_books import extract_books
+from src.etl.extract_books import extract_books
 from .cases_extract_books import ExtractCases
 
 
