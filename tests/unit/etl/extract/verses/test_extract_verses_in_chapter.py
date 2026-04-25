@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, Mock
 
-from etl.extract_verses import extract_all_verses_async
+from src.etl.extract_verses import extract_verses_in_chapter_async
 from .cases_extract_verses_in_chapter import ExtractCases
 
 
@@ -10,12 +10,12 @@ from .cases_extract_verses_in_chapter import ExtractCases
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.VALID)
 @patch("requests.get")
-def test_extract_verses_in_chapter_valid(mock_get, case):
+async def test_extract_verses_in_chapter_async_valid(mock_get, case):
     mock_response = Mock()
     mock_response.json.return_value = case["api_output"]
     mock_get.return_value = mock_response
 
-    assert extract_verses_in_chapter(
+    assert await extract_verses_in_chapter_async(
         case["book_id"], 
         case["chapter"], 
         "fake-url"
@@ -27,12 +27,12 @@ def test_extract_verses_in_chapter_valid(mock_get, case):
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.EDGE)
 @patch("requests.get")
-def test_extract_verses_in_chapter_edge(mock_get, case):
+async def test_extract_verses_in_chapter_async_edge(mock_get, case):
     mock_response = Mock()
     mock_response.json.return_value = case["api_output"]
     mock_get.return_value = mock_response
 
-    assert extract_verses_in_chapter(
+    assert await extract_verses_in_chapter_async(
         case["book_id"], 
         case["chapter"], 
         "fake-url"
@@ -44,13 +44,13 @@ def test_extract_verses_in_chapter_edge(mock_get, case):
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.ERROR)
 @patch("requests.get")
-def test_extract_verses_in_chapter_error(mock_get, case):
+async def test_extract_verses_in_chapter_async_error(mock_get, case):
     mock_response = Mock()
     mock_response.json.return_value = case["api_output"]
     mock_get.return_value = mock_response
 
     with pytest.raises(case["expected_exception"]):
-        extract_verses_in_chapter(
+        await extract_verses_in_chapter_async(
             case["book_id"], 
             case["chapter"], 
             "fake-url"

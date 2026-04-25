@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 
 from src.etl.extract_books import extract_books
 from etl.extract_verses import extract_all_verses_async
+from etl.extract_crossrefs import extract_verse_crossrefs
 from src.utils.db import get_db_engine
 
 async def main(
@@ -28,7 +29,7 @@ async def main(
     # -----------------------------
     books_raw = extract_books(bible_api_url)
     all_verses_raw = await extract_all_verses_async(books_raw, bible_api_url)
-    # refs_raw = extract_crossrefs()
+    verse_crossrefs_raw = extract_verse_crossrefs()
 
     return all_verses_raw
 

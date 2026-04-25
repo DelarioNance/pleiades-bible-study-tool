@@ -1,3 +1,0 @@
-NUM_CHAPTERS_PER_BOOK = {
-    
-}
