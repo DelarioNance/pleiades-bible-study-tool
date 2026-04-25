@@ -54,5 +54,3 @@ async def main(
     #         load_chapters(session, chapters_transformed)
     #         load_verses(session, verses_transformed)
     #         load_crossrefs(session, refs_transformed)
-
-all_verses_raw = asyncio.run(main())
