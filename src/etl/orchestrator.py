@@ -16,7 +16,7 @@ import asyncio
 from sqlalchemy.orm import Session
 
 from src.etl.extract_books import extract_books
-from src.etl.extract_verses_in_chapter import extract_all_verses
+from src.etl.extract_verses_in_chapter import extract_all_verses_async
 from src.utils.db import get_db_engine
 
 async def main(
@@ -27,7 +27,7 @@ async def main(
     # Extract
     # -----------------------------
     books_raw = extract_books(bible_api_url)
-    all_verses_raw = await extract_all_verses(books_raw, bible_api_url)
+    all_verses_raw = await extract_all_verses_async(books_raw, bible_api_url)
     # refs_raw = extract_crossrefs()
 
     return all_verses_raw
