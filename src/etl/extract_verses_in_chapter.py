@@ -38,7 +38,7 @@ async def extract_verses_in_chapter_async(
     return chapter_verses_raw
 
 
-async def extract_all_verses(books_raw, api_base_url):
+async def extract_all_verses_async(books_raw, api_base_url):
     async with aiohttp.ClientSession() as http_session:
         coroutines = [
             extract_verses_in_chapter_async(
@@ -51,7 +51,17 @@ async def extract_all_verses(books_raw, api_base_url):
             for chapter in range(1, book['numberOfChapters'] + 1)
         ]
         verses_per_chapter_raw = await asyncio.gather(*coroutines)
-        
+
     all_verses_raw = [verse for chapter_verses in verses_per_chapter_raw for verse in chapter_verses]
+
+    return all_verses_raw
+
+
+def extract_all_verses_sync(books_raw, api_base_url):
+    all_verses_raw = []
+    for book in books_raw:
+        num_chapters = book['numberOfChapters']
+        for chapter in range(1, num_chapters + 1):
+            all_verses_raw.extend(extract_verses_in_chapter_sync(book['id'], chapter))
 
     return all_verses_raw
