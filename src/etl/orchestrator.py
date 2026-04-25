@@ -14,9 +14,9 @@ either the entire ingestion succeeds or none of it is applied.
 
 from sqlalchemy.orm import Session
 
-from extract_books import extract_books
-from bible_ingestion.extract_verses_in_chapter import extract_verses_in_chapter
-from utils.db import get_db_engine
+from src.etl.extract_books import extract_books
+from src.etl.extract_verses_in_chapter import extract_verses_in_chapter
+from src.utils.db import get_db_engine
 
 
 def main(
