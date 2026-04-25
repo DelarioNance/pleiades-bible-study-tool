@@ -15,8 +15,8 @@ either the entire ingestion succeeds or none of it is applied.
 from sqlalchemy.orm import Session
 
 from extract_books import extract_books
-from extract_chapters import extract_chapters
-from extract_verses import extract_verses
+from bible_ingestion.extract_verses_in_chapter import extract_chapters
+from bible_ingestion.extract_verses_in_chapter import extract_verses_in_chapter
 from extract_crossrefs import extract_crossrefs
 from transform_books import transform_books
 from transform_chapters import transform_chapters
@@ -38,8 +38,11 @@ def main(
     # Extract
     # -----------------------------
     books_raw = extract_books(bible_api_url)
-    chapters_raw = extract_chapters(books_raw)
-    verses_raw = extract_verses(books_raw)
+    verses_raw = []
+    for book in books_raw:
+        num_chapters = book['numberOfChapters']
+        for chapter in range(1, num_chapters + 1):
+            verses_raw.extend(extract_verses_in_chapter(book['id'], chapter))
     refs_raw = extract_crossrefs()
 
     # -----------------------------
