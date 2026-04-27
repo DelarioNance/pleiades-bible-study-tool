@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, Mock
 
 from src.etl.extract_verses import extract_verses_in_chapter_async
-from .cases_extract_verses_in_chapter import ExtractCases
+from .cases_extract_verses_in_chapter_async import ExtractCases
 
 
 class MockAsyncResponse:
