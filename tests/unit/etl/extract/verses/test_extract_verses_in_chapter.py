@@ -52,17 +52,38 @@ class MockAsyncResponse:
         pass
 
 
+class MockAsyncSession:
+    """
+    A simple mock for aiohttp.ClientSession that allows us to control the
+    behavior of session.get() in our async tests.
+
+    Why this exists:
+        Some async functions receive an aiohttp.ClientSession as a parameter 
+        and call session.get(url). Therefore, we need a fake (mock) session
+        object that the test function can pass into the code under test. 
+        
+        Also, since our async functions call get(url) from the session object
+        but we don't want to make real HTTP requests during unit tests, 
+        this mock session must return a fake (mock) response object.
+    """
+
+    def __init__(self, mock_response):
+        self.mock_response = mock_response
+
+    def get(self, _):
+        return self.mock_response
+
 # ---------------------------------------------------------
 # Valid cases
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.VALID)
-@patch("aiohttp.ClientSession.get")
 @pytest.mark.asyncio
-async def test_extract_verses_in_chapter_async_valid(mock_async_get, case):
+async def test_extract_verses_in_chapter_async_valid(case):
     mock_response = MockAsyncResponse(case["api_output"])
-    mock_async_get.return_value = mock_response
+    mock_session = MockAsyncSession(mock_response)
 
     assert await extract_verses_in_chapter_async(
+        mock_session,
         case["book_id"], 
         case["chapter"], 
         "fake-url"
@@ -73,14 +94,13 @@ async def test_extract_verses_in_chapter_async_valid(mock_async_get, case):
 # Edge cases
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.EDGE)
-@patch("requests.get")
 @pytest.mark.asyncio
-async def test_extract_verses_in_chapter_async_edge(mock_get, case):
-    mock_response = Mock()
-    mock_response.json.return_value = case["api_output"]
-    mock_get.return_value = mock_response
+async def test_extract_verses_in_chapter_async_edge(case):
+    mock_response = MockAsyncResponse(case["api_output"])
+    mock_session = MockAsyncSession(mock_response)
 
     assert await extract_verses_in_chapter_async(
+        mock_session,
         case["book_id"], 
         case["chapter"], 
         "fake-url"
@@ -91,15 +111,14 @@ async def test_extract_verses_in_chapter_async_edge(mock_get, case):
 # Error cases
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.ERROR)
-@patch("requests.get")
 @pytest.mark.asyncio
-async def test_extract_verses_in_chapter_async_error(mock_get, case):
-    mock_response = Mock()
-    mock_response.json.return_value = case["api_output"]
-    mock_get.return_value = mock_response
+async def test_extract_verses_in_chapter_async_error(case):
+    mock_response = MockAsyncResponse(case["api_output"])
+    mock_session = MockAsyncSession(mock_response)
 
     with pytest.raises(case["expected_exception"]):
         await extract_verses_in_chapter_async(
+            mock_session,
             case["book_id"], 
             case["chapter"], 
             "fake-url"
