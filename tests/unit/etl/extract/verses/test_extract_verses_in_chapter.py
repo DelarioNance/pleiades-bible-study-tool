@@ -27,6 +27,7 @@ async def test_extract_verses_in_chapter_async_valid(mock_get, case):
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.EDGE)
 @patch("requests.get")
+@pytest.mark.asyncio
 async def test_extract_verses_in_chapter_async_edge(mock_get, case):
     mock_response = Mock()
     mock_response.json.return_value = case["api_output"]
@@ -44,6 +45,7 @@ async def test_extract_verses_in_chapter_async_edge(mock_get, case):
 # ---------------------------------------------------------
 @pytest.mark.parametrize("case", ExtractCases.ERROR)
 @patch("requests.get")
+@pytest.mark.asyncio
 async def test_extract_verses_in_chapter_async_error(mock_get, case):
     mock_response = Mock()
     mock_response.json.return_value = case["api_output"]
