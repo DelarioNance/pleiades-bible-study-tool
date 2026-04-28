@@ -1,0 +1,9 @@
+2026/04/28
+- Write "All Verse Extraction - Async" unit tests
+    - Write tests/unit/etl/extract/verses/test_extract_all_verses_async.py
+    - Write tests/unit/etl/extract/verses/cases_extract_all_verses_async.py
+
+2026/04/29
+- Write "Verse Cross-Reference Extraction" unit tests
+    - Write tests/unit/etl/extract/crossrefs/test_extract_verse_crossrefs.py
+    - Write tests/unit/etl/extract/crossrefs/test_extract_verse_crossrefs.py
