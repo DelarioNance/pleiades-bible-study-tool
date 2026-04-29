@@ -1,36 +1,25 @@
 import pytest
-from unittest.mock import patch, Mock
+from pandas.testing import assert_frame_equal
+from unittest.mock import patch
 
 from src.etl.extract_crossrefs import extract_verse_crossrefs
 from .cases_extract_verse_crossrefs import ExtractCases
 
 
 @pytest.mark.parametrize("case", ExtractCases.VALID)
-@patch("requests.get")
-def test_extract_books_valid(mock_get, case):
-    mock_response = Mock()
-    mock_response.json.return_value = case["api_output"]
-    mock_get.return_value = mock_response
+@patch("pandas.read_csv")
+def test_extract_verse_crossrefs_valid(mock_read_csv, case):
+    mock_read_csv.return_value = case["csv_read_output"]
+    
+    assert_frame_equal(extract_verse_crossrefs("fake-path"), case["expected"])
 
-    assert extract_books("fake-url") == case["expected"]
-
-
-@pytest.mark.parametrize("case", ExtractCases.EDGE)
-@patch("requests.get")
-def test_extract_books_edge(mock_get, case):
-    mock_response = Mock()
-    mock_response.json.return_value = case["api_output"]
-    mock_get.return_value = mock_response
-
-    assert extract_books("fake-url") == case["expected"]
-
-
-@pytest.mark.parametrize("case", ExtractCases.ERROR)
-@patch("requests.get")
-def test_extract_books_error(mock_get, case):
-    mock_response = Mock()
-    mock_response.json.return_value = case["api_output"]
-    mock_get.return_value = mock_response
-
-    with pytest.raises(case["expected_exception"]):
-        extract_books("fake-url")
+    mock_read_csv.assert_called_once_with(
+        "fake-path",
+        sep="\t",
+        usecols=[
+            "book", 
+            "chapter", 
+            "verse", 
+            "references"
+        ]
+    )
