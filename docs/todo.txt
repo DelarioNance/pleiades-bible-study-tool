@@ -1,9 +1,3 @@
-2026/04/28
-- Write "All Verse Extraction - Async" unit tests
-    - Write tests/unit/etl/extract/verses/test_extract_all_verses_async.py
-    - Write tests/unit/etl/extract/verses/cases_extract_all_verses_async.py
-
-2026/04/29
-- Write "Verse Cross-Reference Extraction" unit tests
-    - Write tests/unit/etl/extract/crossrefs/test_extract_verse_crossrefs.py
-    - Write tests/unit/etl/extract/crossrefs/test_extract_verse_crossrefs.py
+2026/05/01
+- Research how professional SDETs in industry utilize AI to outsource test case generation, 
+  so that they can focus on which tests are the most important to include
