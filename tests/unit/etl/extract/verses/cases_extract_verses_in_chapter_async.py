@@ -19,8 +19,8 @@ class ExtractCases:
                 }
             },
             "expected": [
-                {"type": "verse", "verse": 1, "text": "In the beginning..."},
-                {"type": "verse", "verse": 2, "text": "And the earth was..."},
+                {"book_id": "GEN", "chapter": 1, "type": "verse", "verse": 1, "text": "In the beginning..."},
+                {"book_id": "GEN", "chapter": 1, "type": "verse", "verse": 2, "text": "And the earth was..."},
             ],
         }
     ]
@@ -30,8 +30,8 @@ class ExtractCases:
     # -----------------------------------------------------
     EDGE = [
         {
-            "book_id": "GEN",
-            "chapter": 1,
+            "book_id": "EX",
+            "chapter": 9,
             "api_output": {
                 "chapter": {
                     "content": [
@@ -42,7 +42,7 @@ class ExtractCases:
                 }
             },
             "expected": [
-                {"type": "verse", "verse": 1, "text": "Only one verse"},
+                {"book_id": "EX", "chapter": 9, "type": "verse", "verse": 1, "text": "Only one verse"},
             ],
         }
     ]
