@@ -31,7 +31,11 @@ async def extract_verses_in_chapter_async(
         
     content_items = json['chapter']['content']
     chapter_verses_raw = [
-        item for item in content_items
+        {
+            "book_id": book_id,
+            "chapter_number": chapter,
+            **item
+        }for item in content_items
         if item.get("type") == "verse"
     ]
 
