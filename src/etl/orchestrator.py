@@ -20,7 +20,6 @@ from src.etl.derive_chapters import derive_chapters_from_books
 from src.etl.extract_verses import extract_all_verses_async
 from src.etl.extract_crossrefs import extract_verse_crossrefs
 
-from src.etl.transform_chapters import transform_chapters
 from src.etl.transfom_verses import transform_verses
 
 
@@ -40,7 +39,6 @@ async def main(
     # Transform
     # -----------------------------
     # books_transformed = transform_books(books_raw)
-    chapters_transformed = transform_chapters(chapters_derived)
     verses_transformed = transform_verses(verses_raw)
     # refs_transformed = transform_crossrefs(refs_raw)
 
