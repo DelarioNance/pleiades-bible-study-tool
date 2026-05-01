@@ -16,9 +16,13 @@ import asyncio
 from sqlalchemy.orm import Session
 
 from src.etl.extract_books import extract_books
+from src.etl.derive_chapters import derive_chapters_from_books
 from src.etl.extract_verses import extract_all_verses_async
 from src.etl.extract_crossrefs import extract_verse_crossrefs
-from src.utils.db import get_db_engine
+
+from src.etl.transform_chapters import transform_chapters
+from src.etl.transfom_verses import transform_verses
+
 
 async def main(
     bible_api_url: str = "https://bible.helloao.org/api/eng_kjv",
@@ -28,15 +32,16 @@ async def main(
     # Extract
     # -----------------------------
     books_raw = extract_books(bible_api_url)
-    all_verses_raw = await extract_all_verses_async(books_raw, bible_api_url)
+    chapters_derived = derive_chapters_from_books(books_raw)
+    verses_raw = await extract_all_verses_async(books_raw, bible_api_url)
     verse_crossrefs_raw = extract_verse_crossrefs()
 
-    # # -----------------------------
-    # # Transform
-    # # -----------------------------
+    # -----------------------------
+    # Transform
+    # -----------------------------
     # books_transformed = transform_books(books_raw)
-    # chapters_transformed = transform_chapters(chapters_raw)
-    # verses_transformed = transform_verses(verses_raw)
+    chapters_transformed = transform_chapters(chapters_derived)
+    verses_transformed = transform_verses(verses_raw)
     # refs_transformed = transform_crossrefs(refs_raw)
 
     # # -----------------------------
