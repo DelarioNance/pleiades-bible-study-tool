@@ -22,7 +22,7 @@ from src.etl.extract_crossrefs import extract_verse_crossrefs
 
 from src.etl.transform_books import transform_books
 from src.etl.transfom_verses import transform_verses
-
+from src.etl.transform_crossrefs import transform_verse_crossrefs
 
 async def main(
     bible_api_url: str = "https://bible.helloao.org/api/eng_kjv",
@@ -41,7 +41,7 @@ async def main(
     # -----------------------------
     books_transformed = transform_books(books_raw)
     verses_transformed = transform_verses(verses_raw)
-    # refs_transformed = transform_crossrefs(refs_raw)
+    refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
 
     # # -----------------------------
     # # Load
