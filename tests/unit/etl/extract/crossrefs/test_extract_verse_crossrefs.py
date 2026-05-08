@@ -21,5 +21,6 @@ def test_extract_verse_crossrefs_valid(mock_read_csv, case):
             "chapter", 
             "verse", 
             "references"
-        ]
+        ],
+        dtype=str
     )
