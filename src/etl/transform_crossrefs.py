@@ -1,4 +1,4 @@
-import re # regex module for string manipulation
+import re # using split method to split by multiple delimiters
 
 
 def transform_verse_crossrefs(
@@ -19,14 +19,29 @@ def transform_verse_crossrefs(
         ref_formatted=lambda df: df["ref"].apply(normalize_ref)
     )
 
-    crossrefs_selected = crossrefs_formatted[[
+    crossrefs_splitted = crossrefs_formatted.assign(
+        ref_book=lambda df: df["ref_formatted"].apply(get_book_from_normalized_ref),
+        ref_chapter=lambda df: df["ref_formatted"].apply(get_chapter_from_normalized_ref),
+        ref_verse=lambda df: df["ref_formatted"].apply(get_verse_from_normalized_ref),
+    )
+
+    crossrefs_selected = crossrefs_splitted[[
         "book", 
         "chapter", 
         "verse", 
-        "ref_formatted"
-    ]].rename(columns={"ref_formatted": "ref"})
+        "ref_book",
+        "ref_chapter",
+        "ref_verse",
+    ]].rename(columns={
+        "book": "from_book",
+        "chapter": "from_chapter",
+        "verse": "from_verse",
+        "ref_book": "to_book",
+        "ref_chapter": "to_chapter",
+        "ref_verse": "to_verse",
+    })
 
-    crossrefs_out = crossrefs_selected.to_dict(orient='records') # records orientation gives a list of dicsts
+    crossrefs_out = crossrefs_selected.to_dict(orient='records') # records orientation gives a list of dicts
 
     return crossrefs_out
 
@@ -36,3 +51,20 @@ def normalize_ref(ref):
     first_verse = re.split(r"[ ,\-]", verses)[0] # Ex: "1-3" → ["1", "3"] → first_verse = "1"
     ref_normalized = book_and_chapter + ':' + first_verse # Ex: "Genesis 1" + ":" + "1" → "Genesis 1:1"
     return ref_normalized
+
+
+def get_book_from_normalized_ref(ref):
+    book_and_chapter, _ = ref.split(':')
+    book, _ = book_and_chapter.rsplit(' ', 1)
+    return book
+
+
+def get_chapter_from_normalized_ref(ref):
+    book_and_chapter, _ = ref.split(':')
+    chapter = book_and_chapter.split()[-1]
+    return chapter
+
+
+def get_verse_from_normalized_ref(ref):
+    _, verse = ref.split(':')
+    return verse
