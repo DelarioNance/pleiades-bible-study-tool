@@ -34,8 +34,10 @@ async def extract_verses_in_chapter_async(
         {
             "book_id": book_id,
             "chapter_number": chapter,
-            **item
-        }for item in content_items
+            "verse_number": item.get("number"),
+            "content": item.get("content")
+        } 
+        for item in content_items
         if item.get("type") == "verse"
     ]
 
