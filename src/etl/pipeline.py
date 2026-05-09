@@ -24,6 +24,8 @@ from src.etl.transfom_verses import transform_verses
 from src.etl.transform_crossrefs import transform_verse_crossrefs
 
 from src.etl.drop_bible_db_tables import drop_bible_db_tables
+from src.etl.create_tables import create_table
+import src.etl.ddl_schemas as schemas
 
 from src.utils.db import get_db_engine
 
@@ -52,13 +54,21 @@ async def main(
     # -----------------------------
 
     # SQLAlchemy syntax for a transaction. After the transaction block closes, a commit is ran.
+    # We use a transaction so that the load phase never has X% completion where X% is neither 
+    # 0% nor 100%.
     # https://docs.sqlalchemy.org/en/13/core/connections.html#sqlalchemy.engine.Engine.begin
     with engine.begin() as conn:
         drop_bible_db_tables(conn, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
+
+        create_table(conn, schemas.books)
+        create_table(conn, schemas.chapters)
+        create_table(conn, schemas.verses)
+        create_table(conn, schemas.verse_references)
+
         # load_books(session, books_transformed)
         # load_chapters(session, chapters_transformed)
         # load_verses(session, verses_transformed)
         # load_crossrefs(session, refs_transformed)
 
 
-# asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
+asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
