@@ -24,10 +24,9 @@ from src.etl.transform_books import transform_books
 from src.etl.transfom_verses import transform_verses
 from src.etl.transform_crossrefs import transform_verse_crossrefs
 
-async def main(
-    bible_api_url: str = "https://bible.helloao.org/api/eng_kjv",
-    engine=None
-):
+from src.utils.db import get_db_engine
+
+async def main(bible_api_url="https://bible.helloao.org/api/eng_kjv"):
     # -----------------------------
     # Extract
     # -----------------------------
@@ -43,11 +42,11 @@ async def main(
     verses_transformed = transform_verses(verses_raw)
     refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
 
-    # # -----------------------------
-    # # Load
-    # # -----------------------------
-    # if engine is None:
-    #     engine = get_db_engine('test')  # default to test environment for safety
+    # -----------------------------
+    # Load
+    # -----------------------------
+    if engine is None:
+        engine = get_db_engine('test')  # default to test environment for safety
 
     # with Session(engine) as session:
     #     with session.begin(): # using session.begin() for atomicity

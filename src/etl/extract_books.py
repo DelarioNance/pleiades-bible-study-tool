@@ -16,9 +16,7 @@ the ETL orchestrator) is responsible for:
 import requests
 
 
-def extract_books(
-    api_base_url: str = "https://bible.helloao.org/api/eng_kjv"
-):
+def extract_books(api_base_url):
     response = requests.get(f"{api_base_url}/books.json")
     books_raw = response.json()['books']
 

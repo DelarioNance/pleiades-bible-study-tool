@@ -5,7 +5,7 @@ import aiohttp
 def extract_verses_in_chapter_sync(
     book_id: str,
     chapter: int,
-    api_base_url: str = "https://bible.helloao.org/api/eng_kjv"
+    api_base_url: str
 ):
     response = requests.get(f"{api_base_url}/{book_id}/{chapter}.json")
     data = response.json()
@@ -22,7 +22,7 @@ async def extract_verses_in_chapter_async(
     http_session,
     book_id: str,
     chapter: int,
-    api_base_url: str = "https://bible.helloao.org/api/eng_kjv"
+    api_base_url: str
 ):
     url = f"{api_base_url}/{book_id}/{chapter}.json"
 
