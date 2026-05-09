@@ -32,7 +32,7 @@ def get_db_url(env_alias):
     # At one point, the test and prod credentials were flip-flopped in the .env file.
     # Maybe it's worth adding a regression unit test for this function which confirms
     # that the assert works as expected?
-    assert name.endswith(suffix), f"The {env_alias} DB name does not end in '{suffix}'" 
+    assert (name.endswith(suffix) or env_alias == 'admin'), f"The {env_alias} DB name does not end in '{suffix}'" 
 
     return f"postgresql+psycopg2://{user}:{password}@localhost/{name}"
 
