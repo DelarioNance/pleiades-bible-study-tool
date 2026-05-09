@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.etl.drop_bible_db_tables import drop_bible_db_tables
 
 
-def test_get_book_valid(test_db_engine):
+def test_drop_bible_db_tables(test_db_engine):
     # Create tables
     table_names = ["books", "chapters", "verses", "verse_references"]
 
@@ -20,8 +20,8 @@ def test_get_book_valid(test_db_engine):
         
     assert {t[0] for t in tables_before} == set(table_names), "Setup failed to create the expected tables."
         
-    with Session(test_db_engine) as session:
-        drop_bible_db_tables(session, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
+    with test_db_engine.begin() as conn:
+        drop_bible_db_tables(conn, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
 
     with test_db_engine.connect() as conn:
         tables_after = conn.execute(text("""

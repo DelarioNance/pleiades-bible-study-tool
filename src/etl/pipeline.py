@@ -26,6 +26,8 @@ from src.etl.transform_crossrefs import transform_verse_crossrefs
 from sqlalchemy.orm import Session
 from src.etl.drop_bible_db_tables import drop_bible_db_tables
 
+from src.utils.db import get_db_engine
+
 
 async def main(
     bible_api_url,
@@ -49,10 +51,15 @@ async def main(
     # -----------------------------
     # Load
     # -----------------------------
-    with Session(engine) as session:
-        with session.begin(): # using session.begin() for atomicity
-            drop_bible_db_tables(session, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
-            # load_books(session, books_transformed)
-            # load_chapters(session, chapters_transformed)
-            # load_verses(session, verses_transformed)
-            # load_crossrefs(session, refs_transformed)
+
+    # SQLAlchemy syntax for a transaction. 
+    # After the transaction block closes,
+    # a commit is ran.
+    with engine.begin() as conn:
+        drop_bible_db_tables(conn, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
+        # load_books(session, books_transformed)
+        # load_chapters(session, chapters_transformed)
+        # load_verses(session, verses_transformed)
+        # load_crossrefs(session, refs_transformed)
+
+asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
