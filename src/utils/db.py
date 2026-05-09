@@ -21,6 +21,11 @@ def get_db_url(env_alias):
         password = os.getenv("DB_PASSWORD_PROD")
         name = os.getenv("DB_NAME_PROD")
         suffix = '_prod'
+    elif env_alias == 'admin':
+        user = os.getenv("DB_USER_ADMIN")
+        password = os.getenv("DB_PASSWORD_ADMIN")
+        name = os.getenv("DB_NAME_ADMIN")
+        suffix = '_admin'
     else:
         raise ValueError(f"Invalid environment alias '{env_alias}'.")
 
