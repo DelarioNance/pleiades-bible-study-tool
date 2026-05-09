@@ -71,4 +71,4 @@ async def main(
         # load_crossrefs(session, refs_transformed)
 
 
-asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
+# asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
