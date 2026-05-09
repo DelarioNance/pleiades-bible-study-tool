@@ -11,11 +11,11 @@ def get_db_url(env_alias):
     # alongside the corresponding 
     # name, user, and password repo
     # variables in Bitbucket
-    if env_alias == 'test':
-        user = os.getenv("DB_USER_TEST")
-        password = os.getenv("DB_PASSWORD_TEST")
-        name = os.getenv("DB_NAME_TEST")
-        suffix = '_test'
+    if env_alias == 'sandbox':
+        user = os.getenv("DB_USER_SANDBOX")
+        password = os.getenv("DB_PASSWORD_SANDBOX")
+        name = os.getenv("DB_NAME_SANDBOX")
+        suffix = '_sandbox'
     elif env_alias == 'prod':
         user = os.getenv("DB_USER_PROD")
         password = os.getenv("DB_PASSWORD_PROD")
