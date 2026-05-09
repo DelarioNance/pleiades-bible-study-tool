@@ -23,7 +23,6 @@ from src.etl.transform_books import transform_books
 from src.etl.transfom_verses import transform_verses
 from src.etl.transform_crossrefs import transform_verse_crossrefs
 
-from sqlalchemy.orm import Session
 from src.etl.drop_bible_db_tables import drop_bible_db_tables
 
 from src.utils.db import get_db_engine
@@ -44,17 +43,16 @@ async def main(
     # -----------------------------
     # Transform
     # -----------------------------
-    # books_transformed = transform_books(books_raw)
-    # verses_transformed = transform_verses(verses_raw)
-    # refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
+    books_transformed = transform_books(books_raw)
+    verses_transformed = transform_verses(verses_raw)
+    refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
 
     # -----------------------------
     # Load
     # -----------------------------
 
-    # SQLAlchemy syntax for a transaction. 
-    # After the transaction block closes,
-    # a commit is ran.
+    # SQLAlchemy syntax for a transaction. After the transaction block closes, a commit is ran.
+    # https://docs.sqlalchemy.org/en/13/core/connections.html#sqlalchemy.engine.Engine.begin
     with engine.begin() as conn:
         drop_bible_db_tables(conn, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
         # load_books(session, books_transformed)
@@ -62,4 +60,5 @@ async def main(
         # load_verses(session, verses_transformed)
         # load_crossrefs(session, refs_transformed)
 
-asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
+
+# asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
