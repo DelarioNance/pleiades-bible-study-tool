@@ -13,7 +13,6 @@ either the entire ingestion succeeds or none of it is applied.
 """
 
 import asyncio
-from sqlalchemy.orm import Session
 
 from src.etl.extract_books import extract_books
 from src.etl.derive_chapters import derive_chapters_from_books
@@ -24,9 +23,14 @@ from src.etl.transform_books import transform_books
 from src.etl.transfom_verses import transform_verses
 from src.etl.transform_crossrefs import transform_verse_crossrefs
 
-from src.utils.db import get_db_engine
+from sqlalchemy.orm import Session
+from src.etl.drop_bible_db_tables import drop_bible_db_tables
 
-async def main(bible_api_url="https://bible.helloao.org/api/eng_kjv"):
+
+async def main(
+    bible_api_url,
+    engine
+):
     # -----------------------------
     # Extract
     # -----------------------------
@@ -38,20 +42,17 @@ async def main(bible_api_url="https://bible.helloao.org/api/eng_kjv"):
     # -----------------------------
     # Transform
     # -----------------------------
-    books_transformed = transform_books(books_raw)
-    verses_transformed = transform_verses(verses_raw)
-    refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
+    # books_transformed = transform_books(books_raw)
+    # verses_transformed = transform_verses(verses_raw)
+    # refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
 
     # -----------------------------
     # Load
     # -----------------------------
-    if engine is None:
-        engine = get_db_engine('test')  # default to test environment for safety
-
-    # with Session(engine) as session:
-    #     with session.begin(): # using session.begin() for atomicity
-    #         clear_bible_database_data(session)
-    #         load_books(session, books_transformed)
-    #         load_chapters(session, chapters_transformed)
-    #         load_verses(session, verses_transformed)
-    #         load_crossrefs(session, refs_transformed)
+    with Session(engine) as session:
+        with session.begin(): # using session.begin() for atomicity
+            drop_bible_db_tables(session, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
+            # load_books(session, books_transformed)
+            # load_chapters(session, chapters_transformed)
+            # load_verses(session, verses_transformed)
+            # load_crossrefs(session, refs_transformed)
