@@ -27,6 +27,9 @@ from src.etl.drop_bible_db_tables import drop_bible_db_tables
 from src.etl.create_tables import create_table
 import src.etl.ddl_schemas as schemas
 
+from src.etl.load_books import load_books
+from src.etl.build_id_map import build_id_map
+
 from src.utils.db import get_db_engine
 
 
@@ -48,7 +51,7 @@ async def main(
     books_transformed = transform_books(books_raw)
     verses_transformed = transform_verses(verses_raw)
     refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
-
+    
     # -----------------------------
     # Load
     # -----------------------------
@@ -65,7 +68,8 @@ async def main(
         create_table(conn, schemas.verses)
         create_table(conn, schemas.verse_references)
 
-        # load_books(session, books_transformed)
+        db_book_ids = load_books(conn, books_transformed)
+        book_id_mapping_api_to_db = build_id_map(books_transformed, db_book_ids, 'book_id')        
         # load_chapters(session, chapters_transformed)
         # load_verses(session, verses_transformed)
         # load_crossrefs(session, refs_transformed)
