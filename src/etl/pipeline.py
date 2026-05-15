@@ -29,6 +29,7 @@ import src.etl.ddl_schemas as schemas
 
 from src.etl.load_books import load_books
 from src.etl.build_id_map import build_id_map
+from src.etl.load_chapters import load_chapters
 
 from src.utils.db import get_db_engine
 
@@ -70,9 +71,10 @@ async def main(
 
         db_book_ids = load_books(conn, books_transformed)
         book_id_mapping_api_to_db = build_id_map(books_transformed, db_book_ids, 'book_id')        
-        # load_chapters(session, chapters_transformed)
-        # load_verses(session, verses_transformed)
-        # load_crossrefs(session, refs_transformed)
+        db_chapter_ids = load_chapters(conn, chapters_derived, book_id_mapping_api_to_db)
+        chapter_id_mapping_api_to_db = build_id_map(chapters_derived, db_chapter_ids, ['book_id', 'chapter_number'])
+        # load_verses(conn, verses_transformed)
+        # load_crossrefs(conn, refs_transformed)
 
 
 # asyncio.run(main("https://bible.helloao.org/api/eng_kjv", get_db_engine('sandbox')))
