@@ -58,6 +58,25 @@ class TransformCases:
                     "verse_text": "Only one verse"
                 }
             ]
+        },
+        {
+            # 1st content value is a dict
+            "input": [
+                {
+                    "book_id": "EX",
+                    "chapter_number": 9,
+                    "verse_number": 1,
+                    "content": [{"text": "Only one verse"}, "Extra text ignored"]
+                }
+            ],
+            "expected": [
+                {
+                    "book_id": "EX",
+                    "chapter_number": 9,
+                    "verse_number": 1,
+                    "verse_text": "Only one verse"
+                }
+            ]
         }
     ]
 
