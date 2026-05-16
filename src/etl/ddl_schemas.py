@@ -23,7 +23,7 @@ CREATE TABLE verses (
     id SERIAL PRIMARY KEY,
     chapter_id INT NOT NULL,
     verse_number INT NOT NULL,
-    verse_text VARCHAR(500) NOT NULL,
+    verse_text VARCHAR(528) NOT NULL,
 
     CONSTRAINT fk_verses_chapters
         FOREIGN KEY (chapter_id)

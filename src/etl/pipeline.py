@@ -12,8 +12,6 @@ All loading happens inside a single atomic transaction to ensure that
 either the entire ingestion succeeds or none of it is applied.
 """
 
-import asyncio
-
 from src.etl.extract_books import extract_books
 from src.etl.derive_chapters import derive_chapters_from_books
 from src.etl.extract_verses import extract_all_verses_async
@@ -30,7 +28,9 @@ import src.etl.ddl_schemas as schemas
 from src.etl.load_books import load_books
 from src.etl.build_id_map import build_id_map
 from src.etl.load_chapters import load_chapters
+from src.etl.load_verses import load_verses
 
+import asyncio
 from src.utils.db import get_db_engine
 
 
@@ -73,7 +73,8 @@ async def main(
         book_id_mapping_api_to_db = build_id_map(books_transformed, db_book_ids, 'book_id')        
         db_chapter_ids = load_chapters(conn, chapters_derived, book_id_mapping_api_to_db)
         chapter_id_mapping_api_to_db = build_id_map(chapters_derived, db_chapter_ids, ['book_id', 'chapter_number'])
-        # load_verses(conn, verses_transformed)
+        db_verse_ids = load_verses(conn, verses_transformed, chapter_id_mapping_api_to_db)
+        
         # load_crossrefs(conn, refs_transformed)
 
 
