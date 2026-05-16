@@ -17,11 +17,21 @@ def transform_verses(
 def extract_text(content_item):
         # Case 1: already a string
         if isinstance(content_item, str):
-            return content_item
+            text = content_item
 
         # Case 2: dict with a 'text' field
-        if isinstance(content_item, dict) and "text" in content_item:
-            return content_item["text"]
+        elif isinstance(content_item, dict) and "text" in content_item:
+            text = content_item["text"]
 
         # Unsupported shape
-        raise TypeError(f"Unsupported verse content format: {content_item}")
+        else:
+            raise TypeError(f"Unsupported verse content format: {content_item}")
+
+        # Normalize whitespace
+        text = text.strip()
+
+        # Remove leading pilcrow ¶ if present (doesn't handle case where there are multiple pilcrows)
+        if text.startswith("¶"):
+            text = text[1:].lstrip()
+
+        return text

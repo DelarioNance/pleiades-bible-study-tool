@@ -33,6 +33,25 @@ class TransformCases:
                     "verse_text": "And the earth was..."
                 }
             ]
+        },
+        {
+            # Verse text begins with ¶ — transform should strip it
+            "input": [
+                {
+                    "book_id": "PSA",
+                    "chapter_number": 23,
+                    "verse_number": 1,
+                    "content": ["¶The Lord is my shepherd"]
+                }
+            ],
+            "expected": [
+                {
+                    "book_id": "PSA",
+                    "chapter_number": 23,
+                    "verse_number": 1,
+                    "verse_text": "The Lord is my shepherd"
+                }
+            ]
         }
     ]
 
@@ -75,6 +94,25 @@ class TransformCases:
                     "chapter_number": 9,
                     "verse_number": 1,
                     "verse_text": "Only one verse"
+                }
+            ]
+        },
+        {
+            # 1st content value is a dict AND begins with ¶
+            "input": [
+                {
+                    "book_id": "PSA",
+                    "chapter_number": 23,
+                    "verse_number": 2,
+                    "content": [{"text": "¶He maketh me to lie down in green pastures"}]
+                }
+            ],
+            "expected": [
+                {
+                    "book_id": "PSA",
+                    "chapter_number": 23,
+                    "verse_number": 2,
+                    "verse_text": "He maketh me to lie down in green pastures"
                 }
             ]
         }
