@@ -73,7 +73,7 @@ async def main(
     print("Transforming cross-references...")
     refs_transformed = transform_verse_crossrefs(verse_crossrefs_raw)
     
-    with engine.begin() as conn:
+    with engine.begin() as conn: # Atomic transaction block (https://docs.sqlalchemy.org/en/13/core/connections.html#sqlalchemy.engine.Engine.begin)
         # -----------------------------
         # Pre-Load
         # -----------------------------
