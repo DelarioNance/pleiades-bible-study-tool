@@ -74,77 +74,6 @@ BOOKS_IN_NUMBER_ORDER = [
 ]
 
 
-
-NUM_CHAPTERS_PER_BOOK = {
-    "Genesis": 50,
-    "Exodus": 40,
-    "Leviticus": 27,
-    "Numbers": 36,
-    "Deuteronomy": 34,
-    "Joshua": 24,
-    "Judges": 21,
-    "Ruth": 4,
-    "1 Samuel": 31,
-    "2 Samuel": 24,
-    "1 Kings": 22,
-    "2 Kings": 25,
-    "1 Chronicles": 29,
-    "2 Chronicles": 36,
-    "Ezra": 10,
-    "Nehemiah": 13,
-    "Esther": 10,
-    "Job": 42,
-    "Psalms": 150,
-    "Proverbs": 31,
-    "Ecclesiastes": 12,
-    "Song of Solomon": 8,
-    "Isaiah": 66,
-    "Jeremiah": 52,
-    "Lamentations": 5,
-    "Ezekiel": 48,
-    "Daniel": 12,
-    "Hosea": 14,
-    "Joel": 3,
-    "Amos": 9,
-    "Obadiah": 1,
-    "Jonah": 4,
-    "Micah": 7,
-    "Nahum": 3,
-    "Habakkuk": 3,
-    "Zephaniah": 3,
-    "Haggai": 2,
-    "Zechariah": 14,
-    "Malachi": 4,
-    "Matthew": 28,
-    "Mark": 16,
-    "Luke": 24,
-    "John": 21,
-    "Acts": 28,
-    "Romans": 16,
-    "1 Corinthians": 16,
-    "2 Corinthians": 13,
-    "Galatians": 6,
-    "Ephesians": 6,
-    "Philippians": 4,
-    "Colossians": 4,
-    "1 Thessalonians": 5,
-    "2 Thessalonians": 3,
-    "1 Timothy": 6,
-    "2 Timothy": 4,
-    "Titus": 3,
-    "Philemon": 1,
-    "Hebrews": 13,
-    "James": 5,
-    "1 Peter": 5,
-    "2 Peter": 3,
-    "1 John": 5,
-    "2 John": 1,
-    "3 John": 1,
-    "Jude": 1,
-    "Revelation": 22,
-}
-
-
 NUM_VERSES_PER_ASCENDING_CHAPTER = {
     "Genesis": [
         31, 25, 24, 26, 32,
@@ -240,7 +169,7 @@ NUM_VERSES_PER_ASCENDING_CHAPTER = {
     ],
     "1 Chronicles": [
         54, 55, 24, 43, 26,
-        27, 40, 40, 44, 14,
+        81, 40, 40, 44, 14,
         47, 40, 14, 17, 29,
         43, 27, 17, 19, 8,
         30, 19, 32, 31, 31,
@@ -248,7 +177,7 @@ NUM_VERSES_PER_ASCENDING_CHAPTER = {
     ],
     "2 Chronicles": [
         17, 18, 17, 22, 14,
-        27, 22, 18, 31, 19,
+        42, 22, 18, 31, 19,
         23, 16, 22, 15, 19,
         14, 19, 34, 11, 37,
         20, 12, 21, 27, 28,
@@ -302,7 +231,7 @@ NUM_VERSES_PER_ASCENDING_CHAPTER = {
         16, 15, 5, 23, 11,
         13, 12, 9, 9, 5,
         8, 28, 22, 35, 45,
-        48, 43, 14, 31, 7,
+        48, 43, 13, 31, 7,
         10, 10, 9, 8, 18,
         19, 2, 29, 176, 7,
         8, 9, 4, 8, 5,
@@ -313,7 +242,7 @@ NUM_VERSES_PER_ASCENDING_CHAPTER = {
         10, 20, 14, 9, 6
     ],    "Proverbs": [
         33, 22, 35, 27, 23,
-        33, 27, 36, 18, 32,
+        35, 27, 36, 18, 32,
         31, 28, 25, 35, 33,
         33, 28, 24, 29, 30,
         31, 29, 35, 34, 28,
@@ -539,3 +468,5 @@ NUM_VERSES_PER_ASCENDING_CHAPTER = {
         27, 21
     ]
 }
+
+NUM_CHAPTERS_PER_BOOK = {book: len(chapters) for book, chapters in NUM_VERSES_PER_ASCENDING_CHAPTER.items()}

@@ -6,7 +6,7 @@ def transform_verses(
             "book_id": verse_info["book_id"],
             "chapter_number": verse_info["chapter_number"],
             "verse_number": verse_info["verse_number"],
-            "verse_text": extract_text(verse_info["content"][0])
+            "verse_text": extract_text(verse_info["content"])
         }
         for verse_info in verses_in
     ]
@@ -14,24 +14,24 @@ def transform_verses(
     return verses_out
 
 
-def extract_text(content_item):
-        # Case 1: already a string
-        if isinstance(content_item, str):
-            text = content_item
+def extract_text(content_list):
+        # 1. Prefer dicts with a 'text' field (used to handle verses like Luke 13:24)
+        for item in content_list:
+            if isinstance(item, dict) and "text" in item:
+                return normalize_text(item["text"])
+        
+        # 2. Otherwise, fall back to the first non-empty string
+        for item in content_list:
+            if isinstance(item, str):
+                return normalize_text(item)
 
-        # Case 2: dict with a 'text' field
-        elif isinstance(content_item, dict) and "text" in content_item:
-            text = content_item["text"]
+        raise ValueError("No valid text found in content_list")
 
-        # Unsupported shape
-        else:
-            raise TypeError(f"Unsupported verse content format: {content_item}")
 
-        # Normalize whitespace
-        text = text.strip()
+def normalize_text(text):
+    text_normalized = text.strip()
 
-        # Remove leading pilcrow ¶ if present (doesn't handle case where there are multiple pilcrows)
-        if text.startswith("¶"):
-            text = text[1:].lstrip()
+    if text.startswith("¶"):
+        text_normalized = text[1:].strip()
 
-        return text
+    return text_normalized.strip()
