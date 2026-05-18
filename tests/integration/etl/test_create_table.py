@@ -2,7 +2,7 @@ from sqlalchemy import text, inspect
 from src.etl.create_tables import create_table
 
 
-def test_create_table(test_db_engine):
+def test_create_table(fresh_test_db_engine):
     table_sql = """
         CREATE TABLE example_table (
             id SERIAL PRIMARY KEY,
@@ -13,7 +13,7 @@ def test_create_table(test_db_engine):
     table_name = "example_table"
     expected_columns = {"id", "name", "value"}
 
-    with test_db_engine.begin() as conn:
+    with fresh_test_db_engine.begin() as conn:
         create_table(conn, table_sql)
 
         inspector = inspect(conn)
