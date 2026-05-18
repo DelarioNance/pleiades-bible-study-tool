@@ -7,6 +7,7 @@ class TransformVerseCrossrefsCases:
     # -----------------------------------------------------
     VALID = [
         {
+            # No loop here — keep as-is
             "input": pd.DataFrame([
                 {
                     "book": "John",
@@ -16,14 +17,8 @@ class TransformVerseCrossrefsCases:
                 }
             ]),
             "expected": [
-                {
-                    "from_book": "John",
-                    "from_chapter": "3",
-                    "from_verse": "16",
-                    "to_book": "John",
-                    "to_chapter": "3",
-                    "to_verse": "16"
-                }
+                # ❌ This is a loop (John 3:16 → John 3:16)
+                # Since loops are now removed, expected output is EMPTY.
             ]
         },
 
@@ -37,14 +32,7 @@ class TransformVerseCrossrefsCases:
                 }
             ]),
             "expected": [
-                {
-                    "from_book": "1 Thess",
-                    "from_chapter": "4",
-                    "from_verse": "5",
-                    "to_book": "1 Thess",
-                    "to_chapter": "4",
-                    "to_verse": "5"
-                },
+                # ❌ Remove the loop (1 Thess 4:5 → 1 Thess 4:5)
                 {
                     "from_book": "1 Thess",
                     "from_chapter": "4",
@@ -57,6 +45,7 @@ class TransformVerseCrossrefsCases:
         },
 
         {
+            # No loops here — keep both
             "input": pd.DataFrame([
                 {
                     "book": "Genesis",
@@ -86,6 +75,7 @@ class TransformVerseCrossrefsCases:
         },
 
         {
+            # No loops here — keep all
             "input": pd.DataFrame([
                 {
                     "book": "Romans",
