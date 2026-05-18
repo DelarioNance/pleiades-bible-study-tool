@@ -26,7 +26,7 @@ from sqlalchemy import text
 
 from src.utils.db import get_db_engine, create_engine
 
-@pytest.fixture 
+@pytest.fixture(scope="session") # using 'session' scope because e2e etl fixtures with 'session' scope call it (may need refactoring if we want this fixture to have function scope)
 def test_db_engine():
    # To create a new database, we need to connect to an existing database.
    # The admin database was chosen to avoid damaging the test or prod database.
