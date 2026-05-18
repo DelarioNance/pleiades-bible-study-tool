@@ -23,7 +23,7 @@ from src.utils.db import get_db_engine
 from src.etl.pipeline import main
 
 
-def run():
+def main():
     if len(sys.argv) != 2:
         print("Usage: python run_etl.py <environment>")
         print("Example: python run_etl.py sandbox")
@@ -49,4 +49,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    main()
