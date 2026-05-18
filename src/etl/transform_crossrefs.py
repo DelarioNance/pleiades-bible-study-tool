@@ -41,7 +41,16 @@ def transform_verse_crossrefs(
         "ref_verse": "to_verse",
     })
 
-    crossrefs_out = crossrefs_selected.to_dict(orient='records') # records orientation gives a list of dicts
+    # Could be worth creating an integration test for this even though the e2e test should catch it
+    crossrefs_filtered = crossrefs_selected[
+        ~(
+            (crossrefs_selected["from_book"] == crossrefs_selected["to_book"]) &
+            (crossrefs_selected["from_chapter"] == crossrefs_selected["to_chapter"]) &
+            (crossrefs_selected["from_verse"] == crossrefs_selected["to_verse"])
+        )
+    ]
+
+    crossrefs_out = crossrefs_filtered.to_dict(orient='records') # records orientation gives a list of dicts
 
     return crossrefs_out
 
