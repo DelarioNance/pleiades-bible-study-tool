@@ -20,7 +20,7 @@ import time
 import asyncio
 
 from src.utils.db import get_db_engine
-from src.etl.pipeline import main
+from src.etl.pipeline import pipeline
 
 
 def main():
@@ -38,7 +38,7 @@ def main():
     engine = get_db_engine(env)
 
     start = time.perf_counter()
-    asyncio.run(main(
+    asyncio.run(pipeline(
         bible_api_url="https://bible.helloao.org/api/eng_kjv", 
         engine=engine
     ))

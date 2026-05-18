@@ -42,7 +42,7 @@ from src.etl.load_verses import load_verses
 from src.etl.load_crossrefs import load_verse_crossrefs
 
 
-async def main(
+async def pipeline(
     bible_api_url,
     engine
 ):
