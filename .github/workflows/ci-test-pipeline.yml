@@ -20,6 +20,17 @@ run-name: ${{ github.actor }} is validating PR against test suite
 # trigger event
 on: pull_request
 
+env:
+  DB_USER_ADMIN: ${{ secrets.DB_USER_ADMIN }}
+  DB_PASSWORD_ADMIN: ${{ secrets.DB_PASSWORD_ADMIN }}
+  DB_NAME_ADMIN: ${{ secrets.DB_NAME_ADMIN }}
+  DB_USER_SANDBOX: ${{ secrets.DB_USER_SANDBOX }}
+  DB_PASSWORD_SANDBOX: ${{ secrets.DB_PASSWORD_SANDBOX }}
+  DB_NAME_SANDBOX: ${{ secrets.DB_NAME_SANDBOX }}
+  DB_USER_PROD: ${{ secrets.DB_USER_PROD }}
+  DB_PASSWORD_PROD: ${{ secrets.DB_PASSWORD_PROD }}
+  DB_NAME_PROD: ${{ secrets.DB_NAME_PROD }}
+
 jobs:
   # name of job
   tests:
