@@ -46,7 +46,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          - 9999:5432 # Map the runner's port 5432 to the container's port 5432 so the runner can connect to Postgres at "postgres:5432" (the left port is arbitrary and can be changed)
+          - 5432:5432 # Map the runner's port 5432 to the container's port 5432 so the runner can connect to Postgres at "postgres:5432" (for some reason, the src or code tries to use port 5432, so the left port must be 5432; the right port must also be 5432 because that's the default Postgres port and the container expects it to be 5432)
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - uses: actions/setup-python@v5 # Install Python 3.12 on the runner (https://github.com/actions/setup-python) 
