@@ -53,7 +53,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
-      - run: docker ps -a # Debugging step to verify the Postgres service container is running
+      # - run: docker ps -a # Debugging step to verify the Postgres service container is running
       # - run: getent hosts localhost || echo "DNS not ready" # Debugging step to verify the runner can resolve the "postgres" hostname
       - run: pytest
 
