@@ -29,7 +29,7 @@ jobs:
   tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env:
-      DB_HOST_ADMIN: postgres # The Postgres service container is reachable at host "postgres"
+      DB_HOST_ADMIN: localhost # The Postgres service container is reachable at host "postgres"
       DB_USER_ADMIN: ${{ secrets.CI_DB_USER }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
       DB_PASSWORD_ADMIN: ${{ secrets.CI_DB_PASSWORD }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
       DB_NAME_ADMIN: ${{ secrets.CI_DB_NAME }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
@@ -41,7 +41,6 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.CI_DB_NAME }}
         options: >-
-          --network-alias postgres
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
@@ -55,6 +54,6 @@ jobs:
           python-version: '3.12'
       - run: pip install -r requirements.txt
       - run: docker ps -a # Debugging step to verify the Postgres service container is running
-      - run: getent hosts postgres || echo "DNS not ready" # Debugging step to verify the runner can resolve the "postgres" hostname
+      - run: getent hosts localhost || echo "DNS not ready" # Debugging step to verify the runner can resolve the "postgres" hostname
       - run: pytest
 
