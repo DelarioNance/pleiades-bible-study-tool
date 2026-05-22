@@ -46,5 +46,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
+      - run: |
+          echo "DB_HOST_ADMIN=$DB_HOST_ADMIN"
+          echo "DB_USER_ADMIN=$DB_USER_ADMIN"
+          echo "DB_PASSWORD_ADMIN=$DB_PASSWORD_ADMIN"
+          echo "DB_NAME_ADMIN=$DB_NAME_ADMIN"
       - run: pytest
 
