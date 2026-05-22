@@ -1,10 +1,17 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 from sqlalchemy import text
 from src.utils.db import get_db_engine
+from src.utils.traversal import bfs_verse_refs
 import os
 
 app = FastAPI() # fastapi dev src/api/main.py 
+
+class TraversalRequestBody(BaseModel): # https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel
+    from_verse: int
+    depth: int
+
 
 env = os.getenv("PLEIADES_ENV", "sandbox")
 engine = get_db_engine(env)
@@ -16,8 +23,8 @@ def get_books():
         rows = conn.execute(text("""
             SELECT
                 b.id
-                , b.common_name AS name
-                , b.canonical_order AS order
+                , b.common_name
+                , b.canonical_order
             FROM books b
             ORDER BY 
                 b.canonical_order
@@ -27,8 +34,8 @@ def get_books():
     return [
         {
             "id": row.id,
-            "name": row.name,
-            "order": row.order
+            "name": row.common_name,
+            "order": row.canonical_order
         } for row in rows
     ]
 
@@ -37,9 +44,8 @@ def get_chapters(book_id: int): # gives a 400-level error if the path parameter 
     with engine.connect() as conn:
         rows = conn.execute(text("""
             SELECT
-                v.id 
-                , v.verse_number 
-                , v.verse_text 
+                c.id 
+                , c.chapter_number 
             FROM books b 
             INNER JOIN chapters c
                 ON c.book_id = b.id 
@@ -54,7 +60,7 @@ def get_chapters(book_id: int): # gives a 400-level error if the path parameter 
     return [
         {
             "id": row.id,
-            "chapter_number": row.chapter_number
+            "number": row.chapter_number
         } for row in rows
     ]
 
@@ -79,13 +85,20 @@ def get_verses(book_id: int, chapter_number: int):
             ;
         """), {
             "book_id": book_id,
-            "chapter_id": chapter_number
+            "chapter_number": chapter_number
         }).fetchall()
 
     return [
         {
             "id": row.id,
-            "verse_number": row.verse_number,
-            "text": row.text
+            "number": row.verse_number,
+            "text": row.verse_text
         } for row in rows
     ]
+
+@app.post("/v1/traverse")
+def traverse(request_body: TraversalRequestBody): # https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel
+    return bfs_verse_refs(
+        from_id=request_body.from_verse,
+        depth=request_body.depth
+    )
