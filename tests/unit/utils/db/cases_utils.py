@@ -11,6 +11,7 @@ class GetDbUrlCases:
             "user": "sandbox_user",
             "password": "sandbox_pass",
             "name": "mydb_sandbox",
+            "host": "localhost",
             "expected": "postgresql+psycopg2://sandbox_user:sandbox_pass@localhost/mydb_sandbox",
         },
         {
@@ -18,6 +19,7 @@ class GetDbUrlCases:
             "user": "prod_user",
             "password": "prod_pass",
             "name": "mydb_prod",
+            "host": "localhost",
             "expected": "postgresql+psycopg2://prod_user:prod_pass@localhost/mydb_prod",
         },
     ]
