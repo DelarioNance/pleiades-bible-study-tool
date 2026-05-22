@@ -41,7 +41,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.CI_DB_NAME }}
         options: >-
-          --network-alias postgres # Make the container reachable at hostname "postgres" (the alias can be changed, but must match the DB_HOST_ADMIN environment variable used by the runner)
+          --network-alias postgres
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
