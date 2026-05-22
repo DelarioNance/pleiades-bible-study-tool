@@ -17,7 +17,7 @@
 
 
 # Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
-name: Run Unit Test via Pytest
+name: Run Test Suite with Postgres Service
 
 # Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
 run-name: ${{ github.actor }} is validating PR against test suite  
