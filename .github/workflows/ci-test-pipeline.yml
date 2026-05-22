@@ -1,47 +1,49 @@
 # """
 # Python Test Runner with Postgres Service
 #
-# This pipeline validates all pull requests targeting the `main` branch by:
-#  1. Creating a GitHub runner (a virtual Linux machine) 
-#  2. Installing Python on the virtual Linux machine
-#  3. Running a sequence of terminal commands
-# Links:
-# - https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onevent_nametypes
-# - https://coderivers.org/blog/github-actions-python/
+# This workflow runs the project's Python test suite inside GitHub Actions.
+# GitHub Actions provides a fresh Ubuntu runner (virtual machine) 
+# for each job, and service containers allow additional processes—such as 
+# a Postgres database—to run alongside the runner in isolated Docker containers.
+#
+# In this workflow:
+#   - A Postgres 16 service container is started and made reachable at the
+#     hostname `postgres`.
+#   - The runner installs Python, project dependencies, and executes pytest.
+#
+# This setup ensures tests run against a real Postgres instance in a clean,
+# reproducible environment for every pull request.
 # """
 
 
-# name for workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
+# Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
 name: Run Unit Test via Pytest
 
-# name for generated workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
+# Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
 run-name: ${{ github.actor }} is validating PR against test suite  
 
-# trigger event
+# Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
 on: pull_request
 
 env:
-  DB_USER_ADMIN: ${{ secrets.DB_USER_ADMIN }}
-  DB_PASSWORD_ADMIN: ${{ secrets.DB_PASSWORD_ADMIN }}
-  DB_NAME_ADMIN: ${{ secrets.DB_NAME_ADMIN }}
-  DB_USER_SANDBOX: ${{ secrets.DB_USER_SANDBOX }}
-  DB_PASSWORD_SANDBOX: ${{ secrets.DB_PASSWORD_SANDBOX }}
-  DB_NAME_SANDBOX: ${{ secrets.DB_NAME_SANDBOX }}
-  DB_USER_PROD: ${{ secrets.DB_USER_PROD }}
-  DB_PASSWORD_PROD: ${{ secrets.DB_PASSWORD_PROD }}
-  DB_NAME_PROD: ${{ secrets.DB_NAME_PROD }}
+  DB_HOST_ADMIN: postgres # The Postgres service container is reachable at host "postgres"
+  DB_USER_ADMIN: ${{ secrets.DB_USER_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+  DB_PASSWORD_ADMIN: ${{ secrets.DB_PASSWORD_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+  DB_NAME_ADMIN: ${{ secrets.DB_NAME_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
 
 jobs:
-  # name of job
-  tests:
-    # specifies the type of virtual machine to use (e.g., latest Ubuntu version)
-    runs-on: ubuntu-latest
-    # steps of job
-    steps:
-      # lets the runner access the repository code (https://github.com/actions/checkout)
-      - uses: actions/checkout@v4  
-      # Installs Python on the runner (https://github.com/actions/setup-python)
-      - uses: actions/setup-python@v5 
+  tests: # Job definition
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    services:
+      postgres: # Start a Postgres 16 service container for the test suite
+        image: postgres:16
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USER_ADMIN }} # Credentials used to initialize the Postgres service (the values are arbitrary)
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD_ADMIN }}
+          POSTGRES_DB: ${{ secrets.DB_NAME_ADMIN }}
+    steps: # Steps executed on the runner
+      - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
+      - uses: actions/setup-python@v5 # Install Python 3.12 on the runner (https://github.com/actions/setup-python) 
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
