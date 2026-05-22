@@ -11,6 +11,10 @@ def create_random_test_db():
     admin_db_engine = get_db_engine("admin")
     test_db_name = f'test_{uuid.uuid4().hex}' # hex is used to remove dashes from the UUID string, which are not allowed in Postgres DB names
    
+    import os
+    print("ADMIN HOST =", repr(admin_db_engine.url.host))
+    print("ENV HOST   =", repr(os.getenv("DB_HOST_ADMIN")))
+
     # AUTOCOMMIT is needed to allow CREATE DATABASE and DROP DATABASE commands to run
     # in what is a transaction by default.
     with admin_db_engine.connect().execution_options(isolation_level='AUTOCOMMIT') as conn:
@@ -20,10 +24,6 @@ def create_random_test_db():
     admin_db_user = admin_db_engine.url.username
     admin_db_password = admin_db_engine.url.password
     admin_db_host = admin_db_engine.url.host
-
-    import os
-    print("ADMIN HOST =", repr(admin_db_engine.url.host))
-    print("ENV HOST   =", repr(os.getenv("DB_HOST_ADMIN")))
 
     test_db_engine = create_engine(f"postgresql+psycopg2://{admin_db_user}:{admin_db_password}@{admin_db_host}/{test_db_name}")
 
