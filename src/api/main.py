@@ -1,9 +1,7 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 
 from sqlalchemy import text
 from src.utils.db import get_db_engine
-from src.utils.traversal import bfs_verse_refs
 import os
 
 app = FastAPI() # fastapi dev src/api/main.py 
