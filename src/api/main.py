@@ -8,10 +8,6 @@ import os
 
 app = FastAPI() # fastapi dev src/api/main.py 
 
-class TraversalRequestBody(BaseModel): # https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel
-    from_verse: int
-    depth: int
-
 
 env = os.getenv("PLEIADES_ENV", "sandbox")
 engine = get_db_engine(env)
@@ -95,10 +91,3 @@ def get_verses(book_id: int, chapter_number: int):
             "text": row.verse_text
         } for row in rows
     ]
-
-@app.post("/v1/traverse")
-def traverse(request_body: TraversalRequestBody): # https://fastapi.tiangolo.com/tutorial/body/#import-pydantics-basemodel
-    return bfs_verse_refs(
-        from_id=request_body.from_verse,
-        depth=request_body.depth
-    )
