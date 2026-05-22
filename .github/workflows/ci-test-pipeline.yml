@@ -30,16 +30,16 @@ jobs:
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env:
       DB_HOST_ADMIN: postgres # The Postgres service container is reachable at host "postgres"
-      DB_USER_ADMIN: ${{ secrets.DB_USER_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-      DB_PASSWORD_ADMIN: ${{ secrets.DB_PASSWORD_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-      DB_NAME_ADMIN: ${{ secrets.DB_NAME_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+      DB_USER_ADMIN: ${{ secrets.CI_DB_USER }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+      DB_PASSWORD_ADMIN: ${{ secrets.CI_DB_PASSWORD }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+      DB_NAME_ADMIN: ${{ secrets.CI_DB_NAME }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
     services:
       postgres: # Start a Postgres 16 service container for the test suite
         image: postgres:16
         env:
-          POSTGRES_USER: ${{ secrets.DB_USER_ADMIN }} # Credentials used to initialize the Postgres service (the values are arbitrary)
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD_ADMIN }}
-          POSTGRES_DB: ${{ secrets.DB_NAME_ADMIN }}
+          POSTGRES_USER: ${{ secrets.CI_DB_USER }} # Credentials used to initialize the Postgres service (the values are arbitrary)
+          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.CI_DB_NAME }}
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - uses: actions/setup-python@v5 # Install Python 3.12 on the runner (https://github.com/actions/setup-python) 
