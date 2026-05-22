@@ -4,7 +4,7 @@ from sqlalchemy import text
 from src.utils.db import get_db_engine
 import os
 
-app = FastAPI()
+app = FastAPI() # fastapi dev src/api/main.py 
 
 env = os.getenv("PLEIADES_ENV", "sandbox")
 engine = get_db_engine(env)
@@ -29,5 +29,63 @@ def get_books():
             "id": row.id,
             "name": row.name,
             "order": row.order
+        } for row in rows
+    ]
+
+@app.get("/v1/books/{book_id}/chapters") # https://fastapi.tiangolo.com/tutorial/path-params/
+def get_chapters(book_id: int): # gives a 400-level error if the path parameter is not an integer
+    with engine.connect() as conn:
+        rows = conn.execute(text("""
+            SELECT
+                v.id 
+                , v.verse_number 
+                , v.verse_text 
+            FROM books b 
+            INNER JOIN chapters c
+                ON c.book_id = b.id 
+            WHERE b.id = :book_id
+            ORDER BY
+                c.id
+            ;
+        """), {
+            "book_id": book_id
+        }).fetchall()
+
+    return [
+        {
+            "id": row.id,
+            "chapter_number": row.chapter_number
+        } for row in rows
+    ]
+
+
+@app.get("/v1/books/{book_id}/chapters/{chapter_number}/verses")
+def get_verses(book_id: int, chapter_number: int):
+    with engine.connect() as conn:
+        rows = conn.execute(text("""
+            SELECT
+                v.id 
+                , v.verse_number 
+                , v.verse_text 
+            FROM books b 
+            INNER JOIN chapters c
+                ON c.book_id = b.id 
+            INNER JOIN verses v
+                ON v.chapter_id = c.id 
+            WHERE b.id = :book_id
+                AND c.chapter_number = :chapter_number
+            ORDER BY
+                v.id
+            ;
+        """), {
+            "book_id": book_id,
+            "chapter_id": chapter_number
+        }).fetchall()
+
+    return [
+        {
+            "id": row.id,
+            "verse_number": row.verse_number,
+            "text": row.text
         } for row in rows
     ]
