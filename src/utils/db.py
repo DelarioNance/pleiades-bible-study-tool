@@ -15,16 +15,19 @@ def get_db_url(env_alias):
         user = os.getenv("DB_USER_SANDBOX")
         password = os.getenv("DB_PASSWORD_SANDBOX")
         name = os.getenv("DB_NAME_SANDBOX")
+        host = os.getenv("DB_HOST_SANDBOX")
         suffix = '_sandbox'
     elif env_alias == 'prod':
         user = os.getenv("DB_USER_PROD")
         password = os.getenv("DB_PASSWORD_PROD")
         name = os.getenv("DB_NAME_PROD")
+        host = os.getenv("DB_HOST_PROD")
         suffix = '_prod'
     elif env_alias == 'admin':
         user = os.getenv("DB_USER_ADMIN")
         password = os.getenv("DB_PASSWORD_ADMIN")
         name = os.getenv("DB_NAME_ADMIN")
+        host = os.getenv("DB_HOST_ADMIN")
         suffix = '_admin'
     else:
         raise ValueError(f"Invalid environment alias '{env_alias}'.")
@@ -34,7 +37,7 @@ def get_db_url(env_alias):
     # that the assert works as expected?
     assert (name.endswith(suffix) or env_alias == 'admin'), f"The {env_alias} DB name does not end in '{suffix}'" 
 
-    return f"postgresql+psycopg2://{user}:{password}@localhost/{name}"
+    return f"postgresql+psycopg2://{user}:{password}@{host}/{name}"
 
 
 def get_db_engine(env_alias):
