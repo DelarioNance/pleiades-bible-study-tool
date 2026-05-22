@@ -18,8 +18,9 @@ def create_random_test_db():
 
     admin_db_user = admin_db_engine.url.username
     admin_db_password = admin_db_engine.url.password
+    admin_db_host = admin_db_engine.url.host
 
-    test_db_engine = create_engine(f"postgresql+psycopg2://{admin_db_user}:{admin_db_password}@localhost/{test_db_name}")
+    test_db_engine = create_engine(f"postgresql+psycopg2://{admin_db_user}:{admin_db_password}@{admin_db_host}/{test_db_name}")
 
     return test_db_engine 
 

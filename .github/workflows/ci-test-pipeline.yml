@@ -40,8 +40,6 @@ jobs:
           POSTGRES_USER: ${{ secrets.CI_DB_USER }} # Credentials used to initialize the Postgres service (the values are arbitrary)
           POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.CI_DB_NAME }}
-        ports:
-          - 5432:5432 # Map the runner's port 5432 to the container's port 5432 so the runner can connect to Postgres at "postgres:5432" (the left port is arbitrary and can be changed)
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - uses: actions/setup-python@v5 # Install Python 3.12 on the runner (https://github.com/actions/setup-python) 
