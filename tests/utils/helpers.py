@@ -1,3 +1,4 @@
+import os
 import uuid # used to generate random test database names
 from sqlalchemy import text
 
@@ -19,6 +20,10 @@ def create_random_test_db():
     admin_db_user = admin_db_engine.url.username
     admin_db_password = admin_db_engine.url.password
     admin_db_host = admin_db_engine.url.host
+
+    import os
+    print("ADMIN HOST =", repr(admin_db_engine.url.host))
+    print("ENV HOST   =", repr(os.getenv("DB_HOST_ADMIN")))
 
     test_db_engine = create_engine(f"postgresql+psycopg2://{admin_db_user}:{admin_db_password}@{admin_db_host}/{test_db_name}")
 
