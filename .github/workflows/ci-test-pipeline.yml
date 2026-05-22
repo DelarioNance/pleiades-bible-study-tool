@@ -25,15 +25,14 @@ run-name: ${{ github.actor }} is validating PR against test suite
 # Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
 on: pull_request
 
-env:
-  DB_HOST_ADMIN: postgres # The Postgres service container is reachable at host "postgres"
-  DB_USER_ADMIN: ${{ secrets.DB_USER_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-  DB_PASSWORD_ADMIN: ${{ secrets.DB_PASSWORD_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-  DB_NAME_ADMIN: ${{ secrets.DB_NAME_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-
 jobs:
   tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    env:
+      DB_HOST_ADMIN: postgres # The Postgres service container is reachable at host "postgres"
+      DB_USER_ADMIN: ${{ secrets.DB_USER_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+      DB_PASSWORD_ADMIN: ${{ secrets.DB_PASSWORD_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+      DB_NAME_ADMIN: ${{ secrets.DB_NAME_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
     services:
       postgres: # Start a Postgres 16 service container for the test suite
         image: postgres:16
