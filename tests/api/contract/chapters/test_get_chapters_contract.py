@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 import pytest
 from src.api.main import app
+from fastapi import status 
 
 client = TestClient(app)
 
@@ -8,13 +9,22 @@ client = TestClient(app)
 @pytest.mark.parametrize("case", [
     {
         "book_id": 1,
+        "status_code": status.HTTP_200_OK
+    },
+    {
+        "book_id": -999,
+        "status_code": status.HTTP_200_OK
+    },
+    {
+        "book_id": 1.0,
+        "status_code": status.HTTP_200_OK
     }
 ])
 def test_get_chapters_contract(case):
     response = client.get(f"/v1/books/{case['book_id']}/chapters")
 
     # status code check
-    assert response.status_code == 200
+    assert response.status_code == case["status_code"]
 
     data = response.json()
 
