@@ -34,12 +34,17 @@ jobs:
       DB_PASSWORD_ADMIN: ${{ secrets.CI_DB_PASSWORD }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
       DB_NAME_ADMIN: ${{ secrets.CI_DB_NAME }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
     services:
-      postgres: # Start a Postgres 16 service container for the test suite
+      postgres: # Start a Postgres 16 service container for the test suite (https://docs.github.com/en/actions/tutorials/use-containerized-services/create-postgresql-service-containers)
         image: postgres:16
         env:
           POSTGRES_USER: ${{ secrets.CI_DB_USER }} # Credentials used to initialize the Postgres service (the values are arbitrary)
           POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.CI_DB_NAME }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         ports:
           - 5432:5432 # Map the runner's port 5432 to the container's port 5432 so the runner can connect to Postgres at "postgres:5432" (the left port is arbitrary and can be changed)
     steps: # Steps executed on the runner
