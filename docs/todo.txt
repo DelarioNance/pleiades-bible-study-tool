@@ -1,0 +1,3 @@
+2026/05/02
+- Research how professional SDETs in industry utilize AI to outsource test case generation, 
+  so that they can focus on which tests are the most important to include

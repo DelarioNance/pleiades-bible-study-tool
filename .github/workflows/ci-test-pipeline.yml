@@ -17,7 +17,7 @@
 
 
 # Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
-name: Run Unit Test via Pytest
+name: Run Test Suite with Postgres Service
 
 # Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
 run-name: ${{ github.actor }} is validating PR against test suite  
@@ -25,26 +25,35 @@ run-name: ${{ github.actor }} is validating PR against test suite
 # Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
 on: pull_request
 
-env:
-  DB_HOST_ADMIN: postgres # The Postgres service container is reachable at host "postgres"
-  DB_USER_ADMIN: ${{ secrets.DB_USER_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-  DB_PASSWORD_ADMIN: ${{ secrets.DB_PASSWORD_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-  DB_NAME_ADMIN: ${{ secrets.DB_NAME_ADMIN }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
-
 jobs:
   tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    env:
+      DB_HOST_ADMIN: localhost # The Postgres service container is reachable at host "postgres"
+      DB_USER_ADMIN: ${{ secrets.CI_DB_USER }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+      DB_PASSWORD_ADMIN: ${{ secrets.CI_DB_PASSWORD }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
+      DB_NAME_ADMIN: ${{ secrets.CI_DB_NAME }} # must match credential chosen when creating Postgres service container (needed for local code to know the container's ADMIN credentials)
     services:
-      postgres: # Start a Postgres 16 service container for the test suite
+      postgres: # Start a Postgres 16 service container for the test suite (https://docs.github.com/en/actions/tutorials/use-containerized-services/create-postgresql-service-containers)
         image: postgres:16
         env:
-          POSTGRES_USER: ${{ secrets.DB_USER_ADMIN }} # Credentials used to initialize the Postgres service (the values are arbitrary)
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD_ADMIN }}
-          POSTGRES_DB: ${{ secrets.DB_NAME_ADMIN }}
+          POSTGRES_USER: ${{ secrets.CI_DB_USER }} # Credentials used to initialize the Postgres service (the values are arbitrary)
+          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.CI_DB_NAME }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432 # Map the runner's port 5432 to the container's port 5432 so the runner can connect to Postgres at "postgres:5432" (for some reason, the src or code tries to use port 5432, so the left port must be 5432; the right port must also be 5432 because that's the default Postgres port and the container expects it to be 5432)
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - uses: actions/setup-python@v5 # Install Python 3.12 on the runner (https://github.com/actions/setup-python) 
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
+      # - run: docker ps -a # Debugging step to verify the Postgres service container is running
+      # - run: getent hosts localhost || echo "DNS not ready" # Debugging step to verify the runner can resolve the "postgres" hostname
       - run: pytest
+

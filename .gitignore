@@ -6,6 +6,8 @@
 pleiades.db
 .env
 venv/
+*/__pycache__/
+*.pytest_cache/
 
 # Node artifact files
 node_modules/
