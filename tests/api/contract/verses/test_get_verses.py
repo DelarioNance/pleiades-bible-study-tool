@@ -44,3 +44,7 @@ def test_get_verses_contract(case):
         assert isinstance(item["id"], int)
         assert isinstance(item["number"], int)
         assert isinstance(item["text"], str)
+
+    # ordering check
+    orders = [item["number"] for item in data]
+    assert orders == sorted(orders)

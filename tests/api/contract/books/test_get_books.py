@@ -25,3 +25,7 @@ def test_get_books_contract():
         assert isinstance(item["id"], int)
         assert isinstance(item["name"], str)
         assert isinstance(item["order"], int)
+
+    # ordering check
+    orders = [item["order"] for item in data]
+    assert orders == sorted(orders)

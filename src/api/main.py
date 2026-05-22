@@ -46,7 +46,7 @@ def get_chapters(book_id: int): # gives a 400-level error if the path parameter 
                     ON c.book_id = b.id 
                 WHERE b.id = :book_id
                 ORDER BY
-                    c.id
+                    c.chapter_number
                 ;
             """), {
                 "book_id": book_id
@@ -79,7 +79,7 @@ def get_verses(book_id: int, chapter_number: int):
                 WHERE b.id = :book_id
                     AND c.chapter_number = :chapter_number
                 ORDER BY
-                    v.id
+                    v.verse_number
                 ;
             """), {
                 "book_id": book_id,
