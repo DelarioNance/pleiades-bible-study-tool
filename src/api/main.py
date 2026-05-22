@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from sqlalchemy import text
 from src.utils.db import get_db_engine
@@ -35,22 +35,25 @@ def get_books():
 
 @app.get("/v1/books/{book_id}/chapters") # https://fastapi.tiangolo.com/tutorial/path-params/
 def get_chapters(book_id: int): # gives a 400-level error if the path parameter is not an integer
-    with engine.connect() as conn:
-        rows = conn.execute(text("""
-            SELECT
-                c.id 
-                , c.chapter_number 
-            FROM books b 
-            INNER JOIN chapters c
-                ON c.book_id = b.id 
-            WHERE b.id = :book_id
-            ORDER BY
-                c.id
-            ;
-        """), {
-            "book_id": book_id
-        }).fetchall()
-
+    try:
+        with engine.connect() as conn:
+            rows = conn.execute(text("""
+                SELECT
+                    c.id 
+                    , c.chapter_number 
+                FROM books b 
+                INNER JOIN chapters c
+                    ON c.book_id = b.id 
+                WHERE b.id = :book_id
+                ORDER BY
+                    c.id
+                ;
+            """), {
+                "book_id": book_id
+            }).fetchall()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
     return [
         {
             "id": row.id,
@@ -61,27 +64,30 @@ def get_chapters(book_id: int): # gives a 400-level error if the path parameter 
 
 @app.get("/v1/books/{book_id}/chapters/{chapter_number}/verses")
 def get_verses(book_id: int, chapter_number: int):
-    with engine.connect() as conn:
-        rows = conn.execute(text("""
-            SELECT
-                v.id 
-                , v.verse_number 
-                , v.verse_text 
-            FROM books b 
-            INNER JOIN chapters c
-                ON c.book_id = b.id 
-            INNER JOIN verses v
-                ON v.chapter_id = c.id 
-            WHERE b.id = :book_id
-                AND c.chapter_number = :chapter_number
-            ORDER BY
-                v.id
-            ;
-        """), {
-            "book_id": book_id,
-            "chapter_number": chapter_number
-        }).fetchall()
-
+    try:
+        with engine.connect() as conn:
+            rows = conn.execute(text("""
+                SELECT
+                    v.id 
+                    , v.verse_number 
+                    , v.verse_text 
+                FROM books b 
+                INNER JOIN chapters c
+                    ON c.book_id = b.id 
+                INNER JOIN verses v
+                    ON v.chapter_id = c.id 
+                WHERE b.id = :book_id
+                    AND c.chapter_number = :chapter_number
+                ORDER BY
+                    v.id
+                ;
+            """), {
+                "book_id": book_id,
+                "chapter_number": chapter_number
+            }).fetchall()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
     return [
         {
             "id": row.id,
