@@ -1,0 +1,18 @@
+def get_books(test_client):
+    return test_client.get("/v1/books").json()
+
+
+def get_book_by_order(test_client, book_order):
+    books = test_client.get("/v1/books/").json()
+    chosen_book = next(book for book in books if book["order"] == book_order)
+    return chosen_book
+
+
+def get_chapters_by_book(test_client, book_id):
+    chapters = test_client.get(f"/v1/books/{book_id}/chapters").json()
+    return chapters
+
+
+def get_verses_by_book_and_chapter(test_client, book_id, chapter_number):
+    verses = test_client.get(f"/v1/books/{book_id}/chapters/{chapter_number}/verses").json()
+    return verses

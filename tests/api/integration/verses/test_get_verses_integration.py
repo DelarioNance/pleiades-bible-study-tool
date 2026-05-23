@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 import pytest
 from src.api.main import app
+from tests.api.utils import get_book_by_order, get_verses_by_book_and_chapter
 from tests.utils.constants import NUM_VERSES_PER_ASCENDING_CHAPTER
 
 
@@ -33,18 +34,16 @@ client = TestClient(app)
     },
 ])
 def test_get_verses_in_existing_chapter(case):
-    books = client.get("/v1/books/").json()
-    chosen_book = next(book for book in books if book["order"] == case["book_order"])
-
-    verses = client.get(f"/v1/books/{chosen_book['id']}/chapters/{case['chapter_number']}/verses").json()
+    chosen_book = get_book_by_order(client, case["book_order"])
+    verses = get_verses_by_book_and_chapter(client, chosen_book["id"], case["chapter_number"])
 
     verse_numbers = [verse["number"] for verse in verses]
-    chosen_book_name = chosen_book["name"]
-    assert verse_numbers == list(range(1, NUM_VERSES_PER_ASCENDING_CHAPTER[chosen_book_name][case['chapter_number']-1] + 1))
+    assert verse_numbers == list(range(1, NUM_VERSES_PER_ASCENDING_CHAPTER[chosen_book["name"]][case['chapter_number']-1] + 1))
 
     first_verse_text = verses[0]["text"]
-    last_verse_text = verses[-1]["text"]
     assert first_verse_text == case["first_verse_text"]
+
+    last_verse_text = verses[-1]["text"]
     assert last_verse_text == case["last_verse_text"]
 
 
@@ -59,6 +58,6 @@ def test_get_verses_in_existing_chapter(case):
     },
 ])
 def test_get_verses_in_nonexisting_chapter(case):
-    verses = client.get(f"/v1/books/{case['book_id']}/chapters/{case['chapter_number']}/verses").json()
+    verses = get_verses_by_book_and_chapter(client, case["book_id"], case["chapter_number"])
 
     assert verses == []

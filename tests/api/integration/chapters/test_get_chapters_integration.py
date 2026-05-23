@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 import pytest
 from src.api.main import app
+from tests.api.utils import get_book_by_order, get_chapters_by_book
 from tests.utils.constants import BOOKS_IN_NUMBER_ORDER, NUM_CHAPTERS_PER_BOOK
 
 
@@ -15,13 +16,10 @@ client = TestClient(app)
     },
 ])
 def test_get_chapters_in_existing_book(case):
-    books = client.get("/v1/books/").json()
-    chosen_book = next(book for book in books if book["order"] == case["book_order"])
-
-    chapters = client.get(f"/v1/books/{chosen_book['id']}/chapters").json()
+    chosen_book = get_book_by_order(client, case["book_order"])
+    chapters = get_chapters_by_book(client, chosen_book["id"])
 
     chapter_numbers = [chapter["number"] for chapter in chapters]
-
     assert chapter_numbers == list(range(1, NUM_CHAPTERS_PER_BOOK[chosen_book["name"]] + 1))
 
 
@@ -31,6 +29,6 @@ def test_get_chapters_in_existing_book(case):
     },
 ])
 def test_get_chapters_in_nonexisting_book(case):
-    chapters = client.get(f"/v1/books/{case['book_id']}/chapters").json()
+    chapters = get_chapters_by_book(client, case["book_id"])
 
     assert chapters == []
