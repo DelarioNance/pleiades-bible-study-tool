@@ -1,11 +1,51 @@
 from fastapi.testclient import TestClient
-import pytest
 from src.api.main import app
-from tests.api.utils import get_book_by_order, get_verses_by_book_and_chapter
+from tests.utils.constants import BOOKS_IN_NUMBER_ORDER
+from tests.api.utils import get_books, get_verses_by_book_id_and_chapter_number
+from tests.api.utils import get_book_by_order, get_chapters_by_book_id
+from tests.utils.constants import BOOKS_IN_NUMBER_ORDER, NUM_CHAPTERS_PER_BOOK
+import pytest
 from tests.utils.constants import NUM_VERSES_PER_ASCENDING_CHAPTER
 
-
 client = TestClient(app)
+
+
+def test_get_books_integration():
+    books = get_books(client)
+
+    orders = [book["order"] for book in books]    
+    assert orders == list(range(1, len(BOOKS_IN_NUMBER_ORDER) + 1))
+
+    names = [book["name"] for book in books]
+    assert names == BOOKS_IN_NUMBER_ORDER
+
+
+@pytest.mark.parametrize("case", [
+    {
+        "book_order": 1,
+    },
+    {
+        "book_order": 66,
+    },
+])
+def test_get_chapters_from_book_id_existing_integration(case):
+    chosen_book = get_book_by_order(client, case["book_order"])
+    chapters = get_chapters_by_book_id(client, chosen_book["id"])
+
+    chapter_numbers = [chapter["number"] for chapter in chapters]
+    assert chapter_numbers == list(range(1, NUM_CHAPTERS_PER_BOOK[chosen_book["name"]] + 1))
+
+
+@pytest.mark.parametrize("case", [
+    {
+        "book_id": -1,
+    },
+])
+def test_get_chapters_from_book_id_nonexistent_integration(case):
+    chapters = get_chapters_by_book_id(client, case["book_id"])
+
+    assert chapters == []
+
 
 @pytest.mark.parametrize("case", [
     {
@@ -33,9 +73,9 @@ client = TestClient(app)
         "last_verse_text": "The grace of our Lord Jesus Christ be with you all. Amen.",
     },
 ])
-def test_get_verses_in_existing_chapter(case):
+def test_get_verses_from_book_id_and_chapter_number_existing(case):
     chosen_book = get_book_by_order(client, case["book_order"])
-    verses = get_verses_by_book_and_chapter(client, chosen_book["id"], case["chapter_number"])
+    verses = get_verses_by_book_id_and_chapter_number(client, chosen_book["id"], case["chapter_number"])
 
     verse_numbers = [verse["number"] for verse in verses]
     assert verse_numbers == list(range(1, NUM_VERSES_PER_ASCENDING_CHAPTER[chosen_book["name"]][case['chapter_number']-1] + 1))
@@ -57,7 +97,7 @@ def test_get_verses_in_existing_chapter(case):
         "chapter_number": -1,
     },
 ])
-def test_get_verses_in_nonexisting_chapter(case):
-    verses = get_verses_by_book_and_chapter(client, case["book_id"], case["chapter_number"])
+def test_get_verses_from_book_id_and_chapter_number_nonexistent_integration(case):
+    verses = get_verses_by_book_id_and_chapter_number(client, case["book_id"], case["chapter_number"])
 
     assert verses == []

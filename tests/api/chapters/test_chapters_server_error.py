@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 from src.api.main import app
 from fastapi import status 
-from unittest.mock import patch
 import pytest
+from unittest.mock import patch
 
 client = TestClient(app)
 

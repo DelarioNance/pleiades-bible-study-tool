@@ -33,7 +33,7 @@ client = TestClient(app)
         "last_verse_text": "The grace of our Lord Jesus Christ be with you all. Amen.",
     },
 ])
-def test_get_verses_in_existing_chapter(case):
+def test_get_verses_from_chapter_id_existing_integration(case):
     chosen_book = get_book_by_order(client, case["book_order"])
     chosen_chapter = get_chapter_by_book_order_and_chapter_number(client, chosen_book["order"], case["chapter_number"])
     verses = get_verses_by_chapter_id(client, chosen_chapter["id"])
@@ -53,7 +53,7 @@ def test_get_verses_in_existing_chapter(case):
         "chapter_id": -1,
     },
 ])
-def test_get_verses_in_nonexisting_chapter(case):
+def test_get_verses_from_chapter_id_nonexistent_integration(case):
     verses = get_verses_by_chapter_id(client, case["chapter_id"])
 
     assert verses == []
