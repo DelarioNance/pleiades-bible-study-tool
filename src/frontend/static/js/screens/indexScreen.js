@@ -23,12 +23,12 @@ export async function getIndexScreen() {
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
-        <br>
-        <br>
+        <p>"<span id="selectedVerseDisplay"/></span>"</p>
         <button id="submitButton">Submit</button>
     `;
 
     await initSelects();
+    await displaySelectedVerse();
     attachEventListeners();
 }
 
@@ -44,11 +44,21 @@ async function initSelects() {
 }   
 
 
+function displaySelectedVerse() {
+    const verseSelect = document.getElementById("verseSelect");
+    const selectedVerseText = verseSelect.options[verseSelect.selectedIndex].dataset.text;
+
+    const selectedVerseDisplay = document.getElementById("selectedVerseDisplay");
+    selectedVerseDisplay.textContent = selectedVerseText;
+}
+
 async function attachEventListeners() {
     document.getElementById("bookSelect")
         .addEventListener("change", handleBookSelectChange);   
     document.getElementById("chapterSelect")
         .addEventListener("change", handleChapterSelectChange);
+    document.getElementById("verseSelect")
+        .addEventListener("change", handleVerseSelectChange);
     document.getElementById("submitButton")
         .addEventListener("click", submitSelections);
 }
@@ -94,6 +104,7 @@ async function populateVerseSelect(selectedChapterID) {
         const option = document.createElement("option");
         option.value = verse.id;
         option.textContent = verse.number;
+        option.dataset.text = verse.text; // Store verse text for later displa
         verseSelect.appendChild(option);
     })
 }
@@ -114,15 +125,22 @@ async function handleBookSelectChange() {
     const bookID = getSelectedBookID();
     await populateChapterSelect(bookID);
 
-    const chapterID = getSelectedChapterID();
-    await populateVerseSelect(chapterID);
+    await handleChapterSelectChange();
 }
 
 
 async function handleChapterSelectChange() {
     const chapterID = getSelectedChapterID();
     await populateVerseSelect(chapterID);
+
+    handleVerseSelectChange();
 }
+
+
+function handleVerseSelectChange() {
+    displaySelectedVerse();
+}
+
 
 
 async function submitSelections() {
