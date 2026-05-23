@@ -15,9 +15,7 @@ class Router {
 
     handleRouteChange() {
         const currPath = window.location.hash.slice(1);
-        console.log(`Current path: ${window.location.hash}`);
         const routeFunction = this.routes[currPath];
-        console.log(`routeFunction: ${routeFunction}`);
         routeFunction();
     }
 }

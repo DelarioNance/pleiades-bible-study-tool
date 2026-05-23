@@ -14,6 +14,6 @@ client = TestClient(app)
     },
 ])
 def test_get_verses_from_chapter_id_server_error(case):
-    with patch("src.api.main.engine.connect", side_effect=Exception("Database error")):
+    with patch("src.api.services.chapter_service.engine.connect", side_effect=Exception("Database error")):
         response = client.get(f"/v1/chapters/{case['chapter_id']}/verses")
         assert response.status_code == case["status_code"]

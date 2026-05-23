@@ -4,7 +4,7 @@ export async function getIndexScreen() {
     const app = document.getElementById("app");
 
     app.innerHTML = `
-        <h2>Select a Verse</h2>
+        <h2>Select a Verse and Connection Depth</h2>
 
         <label>Book:</label>
         <select id="bookSelect"></select>
@@ -14,31 +14,44 @@ export async function getIndexScreen() {
         <br>
         <label>Verse:</label>
         <select id="verseSelect"></select>
+        <br>
+        <label>Depth:</label>
+        <select id="depthSelect">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <br>
+        <br>
+        <button id="submitButton">Submit</button>
     `;
 
-    await initSelectors();
+    await initSelects();
+    attachEventListeners();
 }
 
 
-async function initSelectors() {
+async function initSelects() {
     await populateBookSelect();
 
-    let selectedBookID = getSelectedBookID();
-
+    const selectedBookID = getSelectedBookID();
     await populateChapterSelect(selectedBookID);
 
-    selectedBookID = getSelectedBookID();
-    let selectedChapterID = getSelectedChapterID();
-
-    await populateVerseSelect(selectedChapterID);
-
-    const bookSelect = document.getElementById("bookSelect");
-    const chapterSelect = document.getElementById("chapterSelect");
-    const verseSelect = document.getElementById("verseSelect");
-
-    bookSelect.addEventListener("change", populateBookChildrenSelects);
-    chapterSelect.addEventListener("change", populateChapterChildrenSelects);
+    const selectedChapterID = getSelectedChapterID();
+    await populateVerseSelect(selectedChapterID); 
 }   
+
+
+async function attachEventListeners() {
+    document.getElementById("bookSelect")
+        .addEventListener("change", handleBookSelectChange);   
+    document.getElementById("chapterSelect")
+        .addEventListener("change", handleChapterSelectChange);
+    document.getElementById("submitButton")
+        .addEventListener("click", submitSelections);
+}
 
 
 async function populateBookSelect() {    
@@ -88,26 +101,45 @@ async function populateVerseSelect(selectedChapterID) {
 
 
 function getSelectedBookID() {
-    const selectedBook = document.getElementById("bookSelect");
-    return selectedBook.value; // ID for API, not the HTML ID
+    return document.getElementById("bookSelect").value; // ID for API, not the HTML ID
 }
 
 
 function getSelectedChapterID() {
-    const selectedChapter = document.getElementById("chapterSelect");
-    return selectedChapter.value;
+    return document.getElementById("chapterSelect").value;
 }
 
 
-async function populateBookChildrenSelects() {
-    const selectedBookID = getSelectedBookID();
-    await populateChapterSelect(selectedBookID);
-    const selectedChapterID = getSelectedChapterID();
-    await populateVerseSelect(selectedChapterID);
+async function handleBookSelectChange() {
+    const bookID = getSelectedBookID();
+    await populateChapterSelect(bookID);
+
+    const chapterID = getSelectedChapterID();
+    await populateVerseSelect(chapterID);
 }
 
 
-async function populateChapterChildrenSelects() {
-    const selectedChapterID = getSelectedChapterID();
-    await populateVerseSelect(selectedChapterID);
+async function handleChapterSelectChange() {
+    const chapterID = getSelectedChapterID();
+    await populateVerseSelect(chapterID);
+}
+
+
+async function submitSelections() {
+    const verseID = document.getElementById("verseSelect").value;  
+    const depth = document.getElementById("depthSelect").value;
+    
+    const response = await fetch("/v1/submit-selections", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            verse_id: verseID,
+            depth: depth
+        })
+    });
+
+    const result = await response.json();
+    console.log(result);
 }
