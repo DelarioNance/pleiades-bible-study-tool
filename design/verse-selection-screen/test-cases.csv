@@ -1,0 +1,15 @@
+Event,Given,When,Then
+Select Same Book,Given I am on Screen #1,I select the same book,The UI does not change
+Select Same Chapter,Given I am on Screen #1,I select the same chapter,The UI does not change
+Select Same Verse,Given I am on Screen #1,I select the same verse,The UI does not change
+Select Same Depth,Given I am on Screen #1,I select the same depth,The UI does not change
+Select New Book,Given I am on Screen #1,I select a new book,"The Chapter selections change
+The Verse selections change
+The Depth selections do not change"
+Select New Chapter,Given I am on Screen #1,I select a new chapter,"The Book selections do not change
+The Verse selections change
+The Depth selections do not change"
+Select New Verse,Given I am on Screen #1,I select a new verse,"The Book selections do not change
+The Chapter selections not change change
+The Depth selections do not change"
+Select New Depth,Given I am on Screen #1,I select a new depth,The UI does not change
