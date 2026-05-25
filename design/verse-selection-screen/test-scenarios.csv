@@ -1,6 +1,6 @@
 Event,Given,When,Then (UI Options),Then (UI Selections),Then (API Calls)
-Select Same Book,Given I am on Screen #1,I select the same book,Changed: None,Changed: None,Changed: None
-Select Same Chapter,Given I am on Screen #1,I select the same chapter,Changed: None,Changed: None,Changed: None
+Select Same Book,"Given I am on Screen #1",I select the same book,Changed: None,Changed: None,Changed: None
+Select Same Chapter,Given I am on Screen #1 ,I select the same chapter,Changed: None,Changed: None,Changed: None
 Select Same Verse,Given I am on Screen #1,I select the same verse,Changed: None,Changed: None,Changed: None
 Select Same Depth,Given I am on Screen #1,I select the same depth,Changed: None,Changed: None,Changed: None
 Select New Book,Given I am on Screen #1,I select a new book,"Changed: Chapter, Verse","Changed: Book, Chapter, Verse","Called: Chapters, Verses"
