@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from tests.utils.constants import NUM_VERSES
+from tests.backend.utils.constants import NUM_VERSES
 
 
 def test_correct_number_of_verses(conn_from_etl_run):

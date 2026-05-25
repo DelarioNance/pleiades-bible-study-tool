@@ -1,11 +1,11 @@
 from fastapi.testclient import TestClient
 from src.api.main import app
-from tests.utils.constants import BOOKS_IN_NUMBER_ORDER
-from tests.api.utils import get_books, get_verses_by_book_id_and_chapter_number
-from tests.api.utils import get_book_by_order, get_chapters_by_book_id
-from tests.utils.constants import BOOKS_IN_NUMBER_ORDER, NUM_CHAPTERS_PER_BOOK
+from tests.backend.utils.constants import BOOKS_IN_NUMBER_ORDER
+from tests.backend.api.utils import get_books, get_verses_by_book_id_and_chapter_number
+from tests.backend.api.utils import get_book_by_order, get_chapters_by_book_id
+from tests.backend.utils.constants import BOOKS_IN_NUMBER_ORDER, NUM_CHAPTERS_PER_BOOK
 import pytest
-from tests.utils.constants import NUM_VERSES_PER_ASCENDING_CHAPTER
+from tests.backend.utils.constants import NUM_VERSES_PER_ASCENDING_CHAPTER
 
 client = TestClient(app)
 

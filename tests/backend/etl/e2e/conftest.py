@@ -1,7 +1,7 @@
 import pytest
 import asyncio
 from src.etl.pipeline import pipeline
-from tests.utils.helpers import create_random_test_db, dispose_random_test_db
+from tests.backend.utils.helpers import create_random_test_db, dispose_random_test_db
 
 
 @pytest.fixture(scope="session") # so tests in the same pytest run can share the same ETL result instead of each running the ETL pipeline separately

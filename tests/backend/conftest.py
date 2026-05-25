@@ -1,6 +1,6 @@
 import pytest
 
-from tests.utils.helpers import create_random_test_db, dispose_random_test_db
+from tests.backend.utils.helpers import create_random_test_db, dispose_random_test_db
 
 
 @pytest.fixture(scope="function") # function is default scope, but explicitly stating it here to contrast with session-scoped fixtures

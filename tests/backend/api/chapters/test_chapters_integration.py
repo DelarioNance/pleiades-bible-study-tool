@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 import pytest
 from src.api.main import app
-from tests.api.utils import get_book_by_order, get_chapter_by_book_order_and_chapter_number, get_verses_by_chapter_id
-from tests.utils.constants import NUM_VERSES_PER_ASCENDING_CHAPTER
+from tests.backend.api.utils import get_book_by_order, get_chapter_by_book_order_and_chapter_number, get_verses_by_chapter_id
+from tests.backend.utils.constants import NUM_VERSES_PER_ASCENDING_CHAPTER
 
 
 client = TestClient(app)

@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock
 
 from src.etl.extract_verses import extract_verses_in_chapter_async
 from .cases_extract_verses_in_chapter_async import ExtractCases
-from tests.utils.mocks import MockAsyncResponse, MockAsyncSession
+from tests.backend.utils.mocks import MockAsyncResponse, MockAsyncSession
 
 # ---------------------------------------------------------
 # Valid cases

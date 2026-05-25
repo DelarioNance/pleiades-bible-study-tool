@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from tests.utils.constants import (
+from tests.backend.utils.constants import (
     NUM_CHAPTERS,
     NUM_VERSES_PER_ASCENDING_CHAPTER,
 )
