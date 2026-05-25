@@ -1,71 +1,9 @@
-Event,Given,When,Then
-Select Same Book,Given I am on Screen #1,I select the same book,"The Book options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names; 
-The Verse options do not change values, ids, nor names; 
-The Depth options do not change values, ids, nor names;
-The Book selection does not change;
-The Chapter selection does not change;
-The Verse selection does not change;
-The Depth selection does not change;
-No API calls are made​;
-"
-Select Same Chapter,Given I am on Screen #1,I select the same chapter,"The Book options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names; 
-The Verse options do not change values, ids, nor names; 
-The Depth options do not change values, ids, nor names;
-The Book selection does not change;
-The Chapter selection does not change;
-The Verse selection does not change;
-The Depth selection does not change;
-No API calls are made​;"
-Select Same Verse,Given I am on Screen #1,I select the same verse,"The Book options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names; 
-The Verse options do not change values, ids, nor names; 
-The Depth options do not change values, ids, nor names;
-The Book selection does not change;
-The Chapter selection does not change;
-The Verse selection does not change;
-The Depth selection does not change;
-No API calls are made​;"
-Select Same Depth,Given I am on Screen #1,I select the same depth,"The Book options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names; 
-The Verse options do not change values, ids, nor names; 
-The Depth options do not change values, ids, nor names;
-The Book selection does not change;
-The Chapter selection does not change;
-The Verse selection does not change;
-The Depth selection does not change;
-No API calls are made​;"
-Select New Book,Given I am on Screen #1,I select a new book,"The Book options do not change values, ids, nor names; 
-The Chapter options change; 
-The Verse options change; 
-The Depth options do not change values, ids, nor names;
-The Book selecion changes;
-The Chapter selection changes to 1;
-The Verse selection changes to 1;
-The Depth selection do not change;"
-Select New Chapter,Given I am on Screen #1,I select a new chapter,"The Book options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names; 
-The Verse options change; 
-The Depth options do not change values, ids, nor names;
-The Book selection does not change;
-The Chapter selection changes;
-The Verse selection changes to 1;
-The Depth selection do not change;"
-Select New Verse,Given I am on Screen #1,I select a new verse,"The Book options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names;
-The Depth options do not change values, ids, nor names;
-The Book selection does not change;
-The Chapter does not change;
-The Verse selection changes;
-The Depth selection do not change;"
-Select New Depth,Given I am on Screen #1,I select a new depth,"The Book options do not change values, ids, nor names; 
-The Chapter options do not change values, ids, nor names; 
-The Verse options do not change values, ids, nor names; 
-The Depth options do not change values, ids, nor names;
-The Book selection does not change;
-The Chapter selection does not change;
-The Verse selection does not change;
-The Depth selection does not change;
-No API calls are made​;"
+Event,Given,When,Then (UI Options),Then (UI Selections),Then (API Calls)
+Select Same Book,Given I am on Screen #1,I select the same book,Changed: None,Changed: None,Changed: None
+Select Same Chapter,Given I am on Screen #1,I select the same chapter,Changed: None,Changed: None,Changed: None
+Select Same Verse,Given I am on Screen #1,I select the same verse,Changed: None,Changed: None,Changed: None
+Select Same Depth,Given I am on Screen #1,I select the same depth,Changed: None,Changed: None,Changed: None
+Select New Book,Given I am on Screen #1,I select a new book,"Changed: Chapter, Verse","Changed: Book, Chapter, Verse","Called: Chapters, Verses"
+Select New Chapter,Given I am on Screen #1,I select a new chapter,Changed: Verse,"Changed: Chapter, Verse",Called: Verses
+Select New Verse,Given I am on Screen #1,I select a new verse,Changed: None,Changed: Verse,Changed: None
+Select New Depth,Given I am on Screen #1,I select a new depth,Changed: None,Changed: None,Changed: None
