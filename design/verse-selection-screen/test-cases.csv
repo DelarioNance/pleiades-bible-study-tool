@@ -1,0 +1,92 @@
+Test Case,Test Scenario,Pre-Conditions,Inputs,Steps,Expected (UI Options),Expected (UI Selections),Expected (API Calls)
+Select Same Book (1st Book),Select Same Book,"Book: Genesis
+Chapter: 1
+Verse: 1
+Depth: 3",Book: Genesis
+Select Same Book (Last Book),Select Same Book,"Book: Revelation
+Chapter: 1
+Verse: 1
+Depth: 3",Book: Revelation,,,,
+Select Same Chapter (1st Chapter of Book),Select Same Chapter,"Book: Mark
+Chapter: 1
+Verse: 1
+Depth: 3
+",Chapter: 1,,,,
+Select Same Chapter (Last Chapter of Book),Select Same Chapter,"Book: Mark
+Chapter: 16
+Verse: 1
+Depth: 3",Chapter: 16,,,,
+Select Same Verse (1st Verse of Chapter),Select Same Verse,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth: 3
+",Verse: 1,,,,
+Select Same Verse (Last Verse of Chapter),Select Same Verse,"Book: Mark
+Chapter: 4
+Verse: 41
+Depth: 3
+",Verse: 41,,,,
+Select Same Depth (Smallest Depth),Select Same Depth,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth 1",Depth: 1,,,,
+Select Same Depth (2nd Smallest Depth),Select Same Depth,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth 2",Depth: 2,,,,
+Select Same Depth (Largest Depth),Select Same Depth,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth 5",Depth: 5,,,,
+Select New Book (1st Book),Select New Book,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth 5",Book: Genesis (1st book),,,,
+Select New Book (Last Book),Select New Book,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth 5",Book: Revelation (last book),,,,
+Select New Book (Fewest Chapters),Select New Book,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth 5",Book: Obadiah (1 chapter)
+Select New Book (Most Chapters),Select New Book,"Book: Mark
+Chapter: 4
+Verse: 1
+Depth 5",Book: Psalm (most chapters)
+Select New Chapter (1st Chapter in Book),Select New Chapter,"Book: Psalm
+Chapter: 5
+Verse: 1
+Depth 5",Chapter: 1 (1st chapter)
+Select New Chapter (Last Chapter in Verse),Select New Chapter,"Book: Psalm
+Chapter: 5
+Verse: 1
+Depth 5",Chapter: 150 (last chapter)
+Select New Chapter (Fewest Verses),Select New Chapter,"Book: Psalm
+Chapter: 5
+Verse: 1
+Depth 5",Chapter: 2 (fewest verses)
+Select New Chapter (Most Verses),Select New Chapter,"Book: Psalm
+Chapter: 5
+Verse: 1
+Depth 5",Chapter: 119 (most verses)
+Select New Verse (1st Verse in Chapter),Select New Verse,"Book: Jonah
+Chapter: 2
+Verse: 5
+Depth 5",Verse: 1 (1st verse)
+Select New Verse (Last Verse in Chapter),Select New Verse,"Book: Jonah
+Chapter: 2
+Verse: 5
+Depth 5",Verse: 10 (last verse)
+Select New Depth (Smallest Depth),Select New Depth,"Book: Jonah
+Chapter: 2
+Verse: 5
+Depth 3",Depth: 1
+Select New Depth (2nd Smallest Depth),Select New Depth,"Book: Jonah
+Chapter: 2
+Verse: 5
+Depth 3",Depth: 2
+Select New Depth (Largest Depth),Select New Depth,"Book: Jonah
+Chapter: 2
+Verse: 5
+Depth 3",Depth: 5
