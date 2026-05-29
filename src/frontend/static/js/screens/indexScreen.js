@@ -17,23 +17,30 @@ export async function getIndexScreen() {
         <br>
         <label>Depth:</label>
         <select id="depthSelect">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option value=3>3</option>
+            <option value=4>4</option>
+            <option value=5>5</option>
         </select>
         <p>"<span id="selectedVerseDisplay"/></span>"</p>
         <button id="submitButton">Submit</button>
     `;
 
-    await initSelects();
-    await displaySelectedVerse();
+    
+    await initializeSelections();
     attachEventListeners();
+    await displaySelectedVerse();
 }
 
 
-async function initSelects() {
+async function initializeSelections() {
+    await populateSelections(); 
+    selectDefaultOptions();
+}
+
+
+async function populateSelections() {
     await populateBookSelect();
 
     const selectedBookID = getSelectedBookID();
@@ -42,26 +49,6 @@ async function initSelects() {
     const selectedChapterID = getSelectedChapterID();
     await populateVerseSelect(selectedChapterID); 
 }   
-
-
-function displaySelectedVerse() {
-    const verseSelect = document.getElementById("verseSelect");
-    const selectedVerseText = verseSelect.options[verseSelect.selectedIndex].dataset.text;
-
-    const selectedVerseDisplay = document.getElementById("selectedVerseDisplay");
-    selectedVerseDisplay.textContent = selectedVerseText;
-}
-
-async function attachEventListeners() {
-    document.getElementById("bookSelect")
-        .addEventListener("change", handleBookSelectChange);   
-    document.getElementById("chapterSelect")
-        .addEventListener("change", handleChapterSelectChange);
-    document.getElementById("verseSelect")
-        .addEventListener("change", handleVerseSelectChange);
-    document.getElementById("submitButton")
-        .addEventListener("click", submitSelections);
-}
 
 
 async function populateBookSelect() {    
@@ -111,6 +98,52 @@ async function populateVerseSelect(selectedChapterID) {
 ;
 
 
+function selectDefaultOptions() {
+    const defaultSelections = window.defaultSelections;
+    
+    const defaultBookName = defaultSelections["bookName"];
+    const defaultChapterNumber = defaultSelections["chapterNumber"];
+    const defaultVerseNumber = defaultSelections["verseNumber"];
+    const defaultDepth = defaultSelections["depth"];
+
+    const bookSelect = document.getElementById("bookSelect");
+    const chapterSelect = document.getElementById("chapterSelect");
+    const verseSelect = document.getElementById("verseSelect");
+    const depthSelect = document.getElementById("depthSelect");
+
+    const defaultBookOption = Array.from(bookSelect.options).find(option => option.textContent === defaultBookName);
+    const defaultChapterOption = Array.from(chapterSelect.options).find(option => Number(option.textContent) === defaultChapterNumber);
+    const defaultVerseOption = Array.from(verseSelect.options).find(option => Number(option.textContent) === defaultVerseNumber);
+    const defaultDepthOption = Array.from(depthSelect.options).find(option => Number(option.textContent) === defaultDepth);
+
+    defaultBookOption.selected = true;
+    defaultChapterOption.selected = true;
+    defaultVerseOption.selected = true;
+    defaultDepthOption.selected = true;
+}
+
+
+function displaySelectedVerse() {
+    const verseSelect = document.getElementById("verseSelect");
+    console.log(verseSelect)
+    const selectedVerseText = verseSelect.options[verseSelect.selectedIndex].dataset.text;
+    console.log(selectedVerseText)
+    const selectedVerseDisplay = document.getElementById("selectedVerseDisplay");
+    console.log(selectedVerseDisplay);
+    selectedVerseDisplay.textContent = selectedVerseText;
+}
+
+
+async function attachEventListeners() {
+    document.getElementById("bookSelect")
+        .addEventListener("change", handleBookSelectChange);   
+    document.getElementById("chapterSelect")
+        .addEventListener("change", handleChapterSelectChange);
+    document.getElementById("verseSelect")
+        .addEventListener("change", handleVerseSelectChange);
+}
+
+
 function getSelectedBookID() {
     return document.getElementById("bookSelect").value; // ID for API, not the HTML ID
 }
@@ -139,25 +172,4 @@ async function handleChapterSelectChange() {
 
 function handleVerseSelectChange() {
     displaySelectedVerse();
-}
-
-
-
-async function submitSelections() {
-    const verseID = document.getElementById("verseSelect").value;  
-    const depth = document.getElementById("depthSelect").value;
-    
-    const response = await fetch("/v1/submit-selections", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            verse_id: verseID,
-            depth: depth
-        })
-    });
-
-    const result = await response.json();
-    console.log(result);
 }

@@ -12,6 +12,16 @@
         <!-- Dynamic content will be put here-->
     </div>
 
+    <script>
+        window.defaultSelections = Object.freeze({
+            bookName: "{{ defaultBookName }}",
+            chapterNumber: {{ defaultChapterNumber }},
+            verseNumber: {{ defaultVerseNumber }},
+            depth: {{ defaultDepth }}
+        })
+        
+    </script>
+
     <script type="module" src="src/frontend/static/js/app.js"></script>
 </body>
 </html>
