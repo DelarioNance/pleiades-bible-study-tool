@@ -13,13 +13,14 @@ public abstract class AbstractScreenOneInitializationTest {
     protected Playwright playwright;
     protected Browser browser;
     protected Page page; 
+    protected String baseURL;
 
     @BeforeEach
     public void init() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new com.microsoft.playwright.BrowserType.LaunchOptions().setSlowMo(50));
         page = browser.newPage();
-        page.navigate("http://127.0.0.1:8000");
+        baseURL = "http://127.0.0.1:8000";
     }
 
     @AfterEach
