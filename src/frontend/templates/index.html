@@ -14,11 +14,11 @@
 
     <script>
         window.defaultSelections = Object.freeze({
-            bookName: "{{ defaultBookName }}",
-            chapterNumber: {{ defaultChapterNumber }},
-            verseNumber: {{ defaultVerseNumber }},
-            depth: {{ defaultDepth }}
-        })
+            bookID: "{{ defaultBookID }}",
+            chapterID: "{{ defaultChapterID }}",
+            verseID: "{{ defaultVerseID }}",
+            depth: "{{ defaultDepth }}"
+        }) // freeze is used to make the object contents immutable instead of just the object reference
         
     </script>
 

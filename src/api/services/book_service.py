@@ -85,3 +85,29 @@ def fetch_verses_from_book_id_and_chapter_number(book_id, chapter_number):
             "text": row.verse_text
         } for row in rows
     ]
+
+def get_book_info_from_book_name(book_name):
+    try:
+        with engine.connect() as conn:
+            row = conn.execute(text("""
+                SELECT
+                    b.id
+                    , b.common_name
+                    , b.canonical_order
+                FROM books b 
+                WHERE b.common_name = :book_name
+                ;
+            """), {
+                "book_name": book_name
+            }).fetchone()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    if row is None:
+        raise HTTPException(status_code=404, detail=f"Book with name {book_name} not found")
+    
+    return {
+        "id": row.id,
+        "name": row.common_name,
+        "order": row.canonical_order
+    }

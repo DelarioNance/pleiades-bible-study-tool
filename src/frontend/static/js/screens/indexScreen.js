@@ -26,34 +26,36 @@ export async function getIndexScreen() {
         <p>"<span id="selectedVerseDisplay"/></span>"</p>
         <button id="submitButton">Submit</button>
     `;
-
     
     await initializeSelections();
-    attachEventListeners();
     await displaySelectedVerse();
+    attachEventListeners();
 }
 
 
 async function initializeSelections() {
-    await populateSelections(); 
-    selectDefaultOptions();
-}
+    const defaultSelections = window.defaultSelections;
 
-
-async function populateSelections() {
     await populateBookSelect();
 
-    const selectedBookID = getSelectedBookID();
-    await populateChapterSelect(selectedBookID);
+    const bookSelect = getBookSelectElement();
+    bookSelect.value = defaultSelections.bookID;
 
-    const selectedChapterID = getSelectedChapterID();
-    await populateVerseSelect(selectedChapterID); 
+    await populateChapterSelect(bookSelect.value);
+
+    const chapterSelect = getChapterSelectElement();
+    chapterSelect.value = defaultSelections.chapterID;
+
+    await populateVerseSelect(chapterSelect.value); 
+
+    const verseSelect = getVerseSelectElement();
+    verseSelect.value = defaultSelections.verseID;
 }   
 
 
 async function populateBookSelect() {    
     const books = await getAllBooks();
-    const bookSelect = document.getElementById("bookSelect");
+    const bookSelect = getBookSelectElement();
     
     bookSelect.innerHTML = ""; // prevents accidentally appending to the list instead of replacing it
     books.forEach(book => {
@@ -66,9 +68,9 @@ async function populateBookSelect() {
 ;
 
 
-async function populateChapterSelect(selectedBookID) {
-    const chapters = await getChaptersFromBookID(selectedBookID);
-    const chapterSelect = document.getElementById("chapterSelect");
+async function populateChapterSelect(bookOptionValue) {
+    const chapters = await getChaptersFromBookID(bookOptionValue);
+    const chapterSelect = getChapterSelectElement();
 
     chapterSelect.innerHTML = "";
     chapters.forEach(chapter => {
@@ -77,54 +79,28 @@ async function populateChapterSelect(selectedBookID) {
         option.textContent = chapter.number;
         chapterSelect.appendChild(option);
     })
-
 }
 ;
 
 
-async function populateVerseSelect(selectedChapterID) {
-    const verses = await getVersesFromChapterID(selectedChapterID);
-    const verseSelect = document.getElementById("verseSelect");
+async function populateVerseSelect(chapterOptionValue) {
+    const verses = await getVersesFromChapterID(chapterOptionValue);
+    const verseSelect = getVerseSelectElement();
 
     verseSelect.innerHTML = "";
     verses.forEach(verse => {
         const option = document.createElement("option");
         option.value = verse.id;
         option.textContent = verse.number;
-        option.dataset.text = verse.text; // Store verse text for later displa
+        option.dataset.text = verse.text; // Store verse text for later display
         verseSelect.appendChild(option);
     })
 }
 ;
 
 
-function selectDefaultOptions() {
-    const defaultSelections = window.defaultSelections;
-    
-    const defaultBookName = defaultSelections["bookName"];
-    const defaultChapterNumber = defaultSelections["chapterNumber"];
-    const defaultVerseNumber = defaultSelections["verseNumber"];
-    const defaultDepth = defaultSelections["depth"];
-
-    const bookSelect = document.getElementById("bookSelect");
-    const chapterSelect = document.getElementById("chapterSelect");
-    const verseSelect = document.getElementById("verseSelect");
-    const depthSelect = document.getElementById("depthSelect");
-
-    const defaultBookOption = Array.from(bookSelect.options).find(option => option.textContent === defaultBookName);
-    const defaultChapterOption = Array.from(chapterSelect.options).find(option => Number(option.textContent) === defaultChapterNumber);
-    const defaultVerseOption = Array.from(verseSelect.options).find(option => Number(option.textContent) === defaultVerseNumber);
-    const defaultDepthOption = Array.from(depthSelect.options).find(option => Number(option.textContent) === defaultDepth);
-
-    defaultBookOption.selected = true;
-    defaultChapterOption.selected = true;
-    defaultVerseOption.selected = true;
-    defaultDepthOption.selected = true;
-}
-
-
 function displaySelectedVerse() {
-    const verseSelect = document.getElementById("verseSelect");
+    const verseSelect = getVerseSelectElement();
     console.log(verseSelect)
     const selectedVerseText = verseSelect.options[verseSelect.selectedIndex].dataset.text;
     console.log(selectedVerseText)
@@ -144,27 +120,47 @@ async function attachEventListeners() {
 }
 
 
-function getSelectedBookID() {
-    return document.getElementById("bookSelect").value; // ID for API, not the HTML ID
+
+function getBookSelectElement() {
+    return document.getElementById("bookSelect");
 }
 
 
-function getSelectedChapterID() {
-    return document.getElementById("chapterSelect").value;
+function getSelectedBookValue() {
+    return getBookSelectElement().value;
+}
+
+
+function getChapterSelectElement() {
+    return document.getElementById("chapterSelect");
+}
+
+
+function getSelectedChapterValue() {
+    return getChapterSelectElement().value;
+}
+
+
+function getVerseSelectElement() {
+    return document.getElementById("verseSelect");
+}
+
+function getSelectedVerseValue() {
+    return getVerseSelectElement().value;
 }
 
 
 async function handleBookSelectChange() {
-    const bookID = getSelectedBookID();
-    await populateChapterSelect(bookID);
+    const selectedBookValue = getSelectedBookValue();
+    await populateChapterSelect(selectedBookValue);
 
     await handleChapterSelectChange();
 }
 
 
 async function handleChapterSelectChange() {
-    const chapterID = getSelectedChapterID();
-    await populateVerseSelect(chapterID);
+    const selectedChapterValue = getSelectedChapterValue();
+    await populateVerseSelect(selectedChapterValue);
 
     handleVerseSelectChange();
 }
