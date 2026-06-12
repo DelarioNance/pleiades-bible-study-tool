@@ -6,16 +6,16 @@ export async function getIndexScreen() {
     app.innerHTML = `
         <h2>Select a Verse and Connection Depth</h2>
 
-        <label>Book:</label>
+        <label for="bookSelect">Book:</label>
         <select id="bookSelect"></select>
         <br>
-        <label>Chapter:</label>
+        <label for="chapterSelect">Chapter:</label>
         <select id="chapterSelect"></select>
         <br>
-        <label>Verse:</label>
+        <label for="verseSelect">Verse:</label>
         <select id="verseSelect"></select>
         <br>
-        <label>Depth:</label>
+        <label for="depthSelect">Depth:</label>
         <select id="depthSelect">
             <option value=1>1</option>
             <option value=2>2</option>

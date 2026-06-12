@@ -1,0 +1,9 @@
+mvn archetype:generate -DgroupId=io.delario.pleiades -DartifactId={top-folder-name} -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.5 -DinteractiveMode=false # Builds a Maven project inside of a folder named {top-folder-name} and uses the namespace "io.delario.pleiades" for app and test code
+cd {top-folder-name}
+sudo apt update
+sudo apt install openjdk-17-jdk # install Java 17
+mvn package # runs tests and organizes the project into a JAR file
+java -cp target/{top-folder-name}-1.0-SNAPSHOT.jar io.delario.pleiades.App # run the App class inside the io.delario.pleiades package, using the compiled code in a specified JAR 
+...
+mvn clean package # re-run mvn package as if it wasn't ran before
+mvn exec:java -Dexec.mainClass=io.delario.pleiades.App # run a Java class and let Maven handle the classpath, dependencies, and setup
