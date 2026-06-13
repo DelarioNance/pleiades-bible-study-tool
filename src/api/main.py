@@ -47,6 +47,7 @@ def read_index(
             "defaultChapterID": default_chapter_id,
             "defaultChapterNumber": default_chapter_number,
             "defaultVerseID": default_verse_id,
+            "defaultVerseNumber": default_verse_number,
             "defaultDepth": default_depth,
         }
     )
