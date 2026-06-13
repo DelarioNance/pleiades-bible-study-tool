@@ -48,6 +48,9 @@ async function initializeSelections() {
 
     const verseSelect = getVerseSelectElement();
     verseSelect.value = document.getElementById("defaultVerseID").value;
+
+    const depthSelect = getDepthSelectElement();
+    depthSelect.value = document.getElementById("defaultDepth").value;
 }   
 
 
@@ -141,6 +144,10 @@ function getSelectedChapterValue() {
 
 function getVerseSelectElement() {
     return document.getElementById("verseSelect");
+}
+
+function getDepthSelectElement() {
+    return document.getElementById("depthSelect");
 }
 
 function getSelectedVerseValue() {
