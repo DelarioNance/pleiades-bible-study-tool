@@ -12,15 +12,12 @@
         <!-- Dynamic content will be put here-->
     </div>
 
-    <script>
-        window.defaultSelections = Object.freeze({
-            bookID: "{{ defaultBookID }}",
-            chapterID: "{{ defaultChapterID }}",
-            verseID: "{{ defaultVerseID }}",
-            depth: "{{ defaultDepth }}"
-        }) // freeze is used to make the object contents immutable instead of just the object reference
-        
-    </script>
+    <input type="hidden" id="defaultBookID" placeholder="defaultBookIDPlaceholder" value="{{ defaultBookID }}">
+    <input type="hidden" id="defaultBookName" placeholder="defaultBookNamePlaceholder" value="{{ defaultBookName }}">
+    <input type="hidden" id="defaultChapterID" placeholder="defaultChapterIDPlaceholder" value="{{ defaultChapterID }}">
+    <input type="hidden" id="defaultChapterNumber" placeholder="defaultChapterNumberPlaceholder" value="{{ defaultChapterNumber }}"
+    <input type="hidden" id="defaultVerseID" placeholder="defaultVerseIDPlaceholder" value="{{ defaultVerseID }}">
+    <input type="hidden" id="defaultDepth" placeholder="defaultDepthPlaceholder" value="{{ defaultDepth }}">
 
     <script type="module" src="src/frontend/static/js/app.js"></script>
 </body>

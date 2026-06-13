@@ -43,7 +43,9 @@ def read_index(
         name="index.html",
         context={
             "defaultBookID": default_book_id,
+            "defaultBookName": default_book_name,
             "defaultChapterID": default_chapter_id,
+            "defaultChapterNumber": default_chapter_number,
             "defaultVerseID": default_verse_id,
             "defaultDepth": default_depth,
         }

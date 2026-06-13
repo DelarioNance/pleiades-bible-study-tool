@@ -7,3 +7,4 @@ java -cp target/{top-folder-name}-1.0-SNAPSHOT.jar io.delario.pleiades.App # run
 ...
 mvn clean package # re-run mvn package as if it wasn't ran before
 mvn exec:java -Dexec.mainClass=io.delario.pleiades.App # run a Java class and let Maven handle the classpath, dependencies, and setup
+mvn test # run the tests

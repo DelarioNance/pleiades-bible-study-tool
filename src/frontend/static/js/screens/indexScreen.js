@@ -34,22 +34,20 @@ export async function getIndexScreen() {
 
 
 async function initializeSelections() {
-    const defaultSelections = window.defaultSelections;
-
     await populateBookSelect();
 
     const bookSelect = getBookSelectElement();
-    bookSelect.value = defaultSelections.bookID;
+    bookSelect.value = document.getElementById("defaultBookID").value;
 
     await populateChapterSelect(bookSelect.value);
 
     const chapterSelect = getChapterSelectElement();
-    chapterSelect.value = defaultSelections.chapterID;
+    chapterSelect.value = document.getElementById("defaultChapterID").value;
 
     await populateVerseSelect(chapterSelect.value); 
 
     const verseSelect = getVerseSelectElement();
-    verseSelect.value = defaultSelections.verseID;
+    verseSelect.value = document.getElementById("defaultVerseID").value;
 }   
 
 
