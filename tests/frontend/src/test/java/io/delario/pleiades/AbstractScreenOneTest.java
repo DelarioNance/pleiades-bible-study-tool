@@ -11,7 +11,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.WaitForSelectorState;
 
-public abstract class AbstractScreenOneInitializationTest {
+public abstract class AbstractScreenOneTest {
     protected static Playwright playwright;
     protected static Browser browser;
     protected Page page; 

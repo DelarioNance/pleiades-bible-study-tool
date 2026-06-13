@@ -11,7 +11,7 @@ import com.microsoft.playwright.Locator;
 /**
  * Unit test for simple App.
  */
-public class ScreenOneBookInitializationTest extends AbstractScreenOneInitializationTest{
+public class ScreenOneBookInitializationTest extends AbstractScreenOneTest{
     @Test
     public void testBookDrowndownIsVisibleWhenDefaultsProvided() {
         super.navigateToIndexPage("Genesis", "1", "1", "1");
@@ -63,9 +63,6 @@ public class ScreenOneBookInitializationTest extends AbstractScreenOneInitializa
         assertTrue(selectedOptionLocator.innerText().equals(defaultBook), "The default selected book should be " + defaultBook + ".");
     }
 
-    // maybe have a test to ensure that the book id is correct when given a book name
-
-    // need to retrieve default
     @Test
     public void testCorrectDefaultBookSelectedWhenDefaultsNotProvided() {
         super.navigateToIndexPage();
@@ -75,6 +72,4 @@ public class ScreenOneBookInitializationTest extends AbstractScreenOneInitializa
         Locator selectedOptionLocator = bookDropdownLocator.locator("option:checked"); // CSS pseudo-class to get the currently selected option in the dropdown
         assertTrue(selectedOptionLocator.innerText().equals(defaultBookName), "The default selected book should be " + defaultBookName + ".");
     }
-
-    // maybe have a test to ensure that the book name is correct when given a book name
 }
