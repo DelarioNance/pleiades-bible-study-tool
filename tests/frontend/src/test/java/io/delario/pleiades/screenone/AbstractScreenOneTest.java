@@ -1,4 +1,4 @@
-package io.delario.pleiades;
+package io.delario.pleiades.screenone;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

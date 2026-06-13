@@ -1,6 +1,7 @@
-package io.delario.pleiades;
+package io.delario.pleiades.screenone.initialization;
 
-import static io.delario.pleiades.BibleCanon.BOOKS_IN_NUMBER_ORDER;
+import io.delario.pleiades.screenone.AbstractScreenOneTest;
+import static io.delario.pleiades.utils.BibleCanon.BOOKS_IN_NUMBER_ORDER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

@@ -1,4 +1,4 @@
-package io.delario.pleiades;
+package io.delario.pleiades.utils;
 
 import java.util.List;
 import java.util.Map;
