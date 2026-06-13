@@ -69,10 +69,11 @@ public class ScreenOneBookInitializationTest extends AbstractScreenOneInitializa
     @Test
     public void testCorrectDefaultBookSelectedWhenDefaultsNotProvided() {
         super.navigateToIndexPage();
-        String fallbackBookID = (String) page.evaluate("() => window.defaultSelections.bookID");
+        Locator defaultBookNameLocator = super.page.getByPlaceholder("defaultBookNamePlaceholder");
+        String defaultBookName = defaultBookNameLocator.inputValue();
         Locator bookDropdownLocator = super.page.getByLabel("Book:");
         Locator selectedOptionLocator = bookDropdownLocator.locator("option:checked"); // CSS pseudo-class to get the currently selected option in the dropdown
-        assertTrue(selectedOptionLocator.getAttribute("value").equals(fallbackBookID), "The default selected book should be " + fallbackBookID + ".");
+        assertTrue(selectedOptionLocator.innerText().equals(defaultBookName), "The default selected book should be " + defaultBookName + ".");
     }
 
     // maybe have a test to ensure that the book name is correct when given a book name
