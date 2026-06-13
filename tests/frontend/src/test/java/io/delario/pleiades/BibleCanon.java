@@ -475,6 +475,10 @@ public class BibleCanon {
         return NUM_VERSES_PER_ASCENDING_CHAPTER.get(bookName).size();
     }
 
+    public static int getNumberVersesInChapter(String bookName, int chapterNumber) {
+        return NUM_VERSES_PER_ASCENDING_CHAPTER.get(bookName).get(chapterNumber - 1);
+    }
+
     public static List<Integer> getOrderedChapterNumbersInBook(String bookName) {
         int numChapters = getNumberChaptersInBook(bookName);
         return IntStream.range(1, numChapters + 1)
@@ -487,5 +491,29 @@ public class BibleCanon {
             .stream()
             .map(String::valueOf)
             .collect(Collectors.toList());
+    }
+
+    public static List<Integer> getOrderedVerseNumbersInChapter(String bookName, int chapterNumber) {
+        int numVerses = getNumberVersesInChapter(bookName, chapterNumber);
+        return IntStream.range(1, numVerses + 1)
+            .boxed() // used to get a Stream<Integer>
+            .collect(Collectors.toList());
+    }
+
+    public static List<Integer> getOrderedVerseNumbersInChapter(String bookName, String chapterNumber) {
+        int chapter = Integer.parseInt(chapterNumber.trim());
+        return getOrderedVerseNumbersInChapter(bookName, chapter);
+    }
+
+    public static List<String> getOrderedVerseNumberStringsInChapter(String bookName, int chapterNumber) {
+        return getOrderedVerseNumbersInChapter(bookName, chapterNumber)
+            .stream()
+            .map(String::valueOf)
+            .collect(Collectors.toList());
+    }
+
+    public static List<String> getOrderedVerseNumberStringsInChapter(String bookName, String chapterNumber) {
+        int chapter = Integer.parseInt(chapterNumber.trim());
+        return getOrderedVerseNumberStringsInChapter(bookName, chapter);
     }
 }
