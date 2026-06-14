@@ -27,7 +27,7 @@ public abstract class AbstractScreenOneTest {
 
     @BeforeEach
     public void initializeTestCase() {
-        this.page = browser.newPage();
+        this.page = browser.newPage(); // may be worth splitting this method up into newContext and newPage for possibly faster runtimes
         this.baseURL = "http://127.0.0.1:8000";
     }
 
