@@ -1,5 +1,13 @@
 import { getAllBooks, getChaptersFromBookID, getVersesFromChapterID } from "../apiHelpers.js";
 
+let currentSelections = {
+    book:   { value: null, name: null },
+    chapter:{ value: null, name: null },
+    verse:  { value: null, name: null },
+    depth:  { value: null, name: null }
+};
+
+
 export async function getIndexScreen() {
     const app = document.getElementById("app");
 
@@ -32,25 +40,28 @@ export async function getIndexScreen() {
     attachEventListeners();
 }
 
-
 async function initializeSelections() {
     await populateBookSelect();
 
     const bookSelect = getBookSelectElement();
-    bookSelect.value = document.getElementById("defaultBookID").value;
+    const defaultBookID = document.getElementById("defaultBookID").value
+    selectBookByValue(defaultBookID, bookSelect);
 
     await populateChapterSelect(bookSelect.value);
 
     const chapterSelect = getChapterSelectElement();
-    chapterSelect.value = document.getElementById("defaultChapterID").value;
+    const defaultChapterID = document.getElementById("defaultChapterID").value
+    selectChapterByValue(defaultChapterID, chapterSelect);
 
     await populateVerseSelect(chapterSelect.value); 
 
     const verseSelect = getVerseSelectElement();
-    verseSelect.value = document.getElementById("defaultVerseID").value;
+    const defaultVerseID = document.getElementById("defaultVerseID").value
+    selectVerseByValue(defaultVerseID, verseSelect);
 
     const depthSelect = getDepthSelectElement();
-    depthSelect.value = document.getElementById("defaultDepth").value;
+    const defaultDepth = document.getElementById("defaultDepth").value
+    selectDepthByValue(defaultDepth, depthSelect);
 }   
 
 
@@ -102,11 +113,8 @@ async function populateVerseSelect(chapterOptionValue) {
 
 function displaySelectedVerse() {
     const verseSelect = getVerseSelectElement();
-    console.log(verseSelect)
     const selectedVerseText = verseSelect.options[verseSelect.selectedIndex].dataset.text;
-    console.log(selectedVerseText)
     const selectedVerseDisplay = document.getElementById("selectedVerseDisplay");
-    console.log(selectedVerseDisplay);
     selectedVerseDisplay.textContent = selectedVerseText;
 }
 
@@ -155,22 +163,87 @@ function getSelectedVerseValue() {
 }
 
 
-async function handleBookSelectChange() {
-    const selectedBookValue = getSelectedBookValue();
-    await populateChapterSelect(selectedBookValue);
+async function handleBookSelectChange(event) {
+    const bookSelect = event.target;
+    const newValue = bookSelect.value;
 
-    await handleChapterSelectChange();
+    if (newValue === currentSelections.book.value) {
+        return;
+    }
+
+    selectBookByValue(newValue, bookSelect);
+
+    await populateChapterSelect(newValue);
+
+    const chapterSelect = getChapterSelectElement();
+    selectChapterByValue(chapterSelect.value, chapterSelect);
+
+    await populateVerseSelect(chapterSelect.value);
+
+    const verseSelect = getVerseSelectElement();
+    selectVerseByValue(verseSelect.value, verseSelect);
+    console.log(currentSelections);
 }
 
 
-async function handleChapterSelectChange() {
-    const selectedChapterValue = getSelectedChapterValue();
-    await populateVerseSelect(selectedChapterValue);
+async function handleChapterSelectChange(event) {
+    const chapterSelect = event.target;
+    const newValue = chapterSelect.value;
 
-    handleVerseSelectChange();
+    if (newValue === currentSelections.chapter.value) {
+        return;
+    }
+
+    selectChapterByValue(chapterSelect.value, chapterSelect);
+
+    await populateVerseSelect(chapterSelect.value);
+
+    const verseSelect = getVerseSelectElement();
+    selectVerseByValue(verseSelect.value, verseSelect);
+    console.log(currentSelections);
 }
 
 
-function handleVerseSelectChange() {
-    displaySelectedVerse();
+function handleVerseSelectChange(event) {
+    const verseSelect = event.target;
+    const newValue = verseSelect.value;
+
+    if (newValue === currentSelections.verse.value) {
+        return;
+    }
+    
+    selectVerseByValue(verseSelect.value, verseSelect);
+    console.log(currentSelections);
+}
+
+function selectBookByValue(newValue, selectElement) {
+    selectElement.value = newValue;
+    const newName = selectElement.options[selectElement.selectedIndex].textContent;
+
+    currentSelections.book.value = newValue;
+    currentSelections.book.name = newName;
+}
+
+function selectChapterByValue(newValue, selectElement) {
+    selectElement.value = newValue;
+    const newName = selectElement.options[selectElement.selectedIndex].textContent;
+
+    currentSelections.chapter.value = newValue;
+    currentSelections.chapter.name = newName;
+}
+
+function selectVerseByValue(newValue, selectElement) {
+    selectElement.value = newValue;
+    const newName = selectElement.options[selectElement.selectedIndex].textContent;
+
+    currentSelections.verse.value = newValue;
+    currentSelections.verse.name = newName;
+}
+
+function selectDepthByValue(newValue, selectElement) {
+    selectElement.value = newValue;
+    const newName = selectElement.options[selectElement.selectedIndex].textContent;
+
+    currentSelections.depth.value = newValue;
+    currentSelections.depth.name = newName;
 }
