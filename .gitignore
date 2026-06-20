@@ -8,6 +8,7 @@ pleiades.db
 venv/
 */__pycache__/
 *.pytest_cache/
+.fastapicloud
 
 # Node artifact files
 node_modules/
