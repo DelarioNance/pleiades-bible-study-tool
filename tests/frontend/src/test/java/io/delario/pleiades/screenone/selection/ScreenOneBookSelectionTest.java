@@ -2,6 +2,9 @@ package io.delario.pleiades.screenone.selection;
 
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
 import static io.delario.pleiades.utils.BibleCanon.getOrderedVerseNumberStringsInChapter;
+import static io.delario.pleiades.utils.BibleCanon.getOrderedChapterNumberStringsInBook;
+import static io.delario.pleiades.utils.BibleCanon.BOOKS_IN_NUMBER_ORDER;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -65,14 +68,60 @@ public class ScreenOneBookSelectionTest extends AbstractScreenOneTest{
         String postSelectedVerseText = postSelectVerseDropdownLocator.locator("option:checked").innerText();
         String postSelectedDepthText = postSelectDepthDropdownLocator.locator("option:checked").innerText();
 
-        assertEquals(postSelectBookOptions, preSelectBookOptions, "Book selection changed the book dropdown options.");
-        assertEquals(postSelectChapterOptions, preSelectChapterOptions, "Book selection changed the chapter dropdown options.");
-        assertEquals(postSelectVerseOptions, preSelectVerseOptions, "Book selection changed the verse dropdown options.");
-        assertEquals(postSelectDepthOptions, preSelectDepthOptions, "Book selection changed the depth dropdown options.");
+        // Dropdown Options
+        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(preSelectBookOptions.toArray(new String[0]));
+        assertThat(postSelectChapterDropdownLocator.locator("option")).hasText(preSelectChapterOptions.toArray(new String[0]));
+        assertThat(postSelectVerseDropdownLocator.locator("option")).hasText(preSelectVerseOptions.toArray(new String[0]));
+        assertThat(postSelectDepthDropdownLocator.locator("option")).hasText(preSelectDepthOptions.toArray(new String[0]));
 
-        assertEquals(postSelectedBookText, preSelectedBookText, "Book selection changed the selected book");
-        assertEquals(postSelectedChapterText, preSelectedChapterText, "Book selection changed the selected chapter");
-        assertEquals(postSelectedVerseText, preSelectedVerseText, "Book selection changed the selected verse");
-        assertEquals(postSelectedDepthText, preSelectedDepthText, "Book selection changed the selected depth");
+        // Selections
+        assertThat(postSelectBookDropdownLocator.locator("option:checked")).hasText(preSelectedBookText);
+        assertThat(postSelectChapterDropdownLocator.locator("option:checked")).hasText(preSelectedChapterText);
+        assertThat(postSelectVerseDropdownLocator.locator("option:checked")).hasText(preSelectedVerseText);
+        assertThat(postSelectDepthDropdownLocator.locator("option:checked")).hasText(preSelectedDepthText);
+    }
+
+
+    @ParameterizedTest()
+    @CsvSource({
+        "Genesis, 1, 1, 1, Obadiah",
+        "Genesis, 1, 10, 1, Revelation",
+        "Obadiah, 1, 1, 1, Genesis",
+        "Revelation, 9, 4, 1, Genesis",
+        "Revelation, 9, 21, 1, Obadiah",
+        "Genesis, 22, 1, 1, Obadiah",
+        "Revelation, 22, 21, 1, Obadiah"
+    }) // ECP (first, middle, last book) + Pairwise ({first,middle,last} x {first,middle,last}) + testing going from a non-1 chapter to a book with only 1 chapter
+    public void testDifferentBookSelectionChangesUICorrectly(
+        String defaultBook,
+        String defaultChapter,
+        String defaultVerse,
+        String defaultDepth,
+        String newBook
+    ) {
+        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+
+        Locator preSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+        List<String> preSelectDepthOptions = preSelectDepthDropdownLocator.locator("option").allInnerTexts();
+        String preSelectedDepthText = preSelectDepthDropdownLocator.locator("option:checked").innerText();
+
+        super.page.getByLabel("Book:").selectOption(new SelectOption().setLabel(newBook)); // select the option whose frontend text is the default book
+        
+        Locator postSelectBookDropdownLocator = super.page.getByLabel("Book");
+        Locator postSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
+        Locator postSelectVerseDropdownLocator = super.page.getByLabel("Verse");
+        Locator postSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+
+        // Dropdown Options
+        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(BOOKS_IN_NUMBER_ORDER.toArray(new String[0]));
+        assertThat(postSelectChapterDropdownLocator.locator("option")).hasText(getOrderedChapterNumberStringsInBook(newBook).toArray(new String[0]));
+        assertThat(postSelectVerseDropdownLocator.locator("option")).hasText(getOrderedVerseNumberStringsInChapter(newBook, 1).toArray(new String[0]));
+        assertThat(postSelectDepthDropdownLocator.locator("option")).hasText(preSelectDepthOptions.toArray(new String[0]));
+
+        // Selections
+        assertThat(postSelectBookDropdownLocator.locator("option:checked")).hasText(newBook);
+        assertThat(postSelectChapterDropdownLocator.locator("option:checked")).hasText("1");
+        assertThat(postSelectVerseDropdownLocator.locator("option:checked")).hasText("1");
+        assertThat(postSelectDepthDropdownLocator.locator("option:checked")).hasText(preSelectedDepthText);
     }
 }
