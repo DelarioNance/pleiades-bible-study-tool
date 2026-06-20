@@ -5,6 +5,7 @@ import static io.delario.pleiades.utils.BibleCanon.getOrderedVerseNumberStringsI
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,14 +66,16 @@ public class ScreenOneVerseSelectionTest extends AbstractScreenOneTest{
         String postSelectedVerseText = postSelectVerseDropdownLocator.locator("option:checked").innerText();
         String postSelectedDepthText = postSelectDepthDropdownLocator.locator("option:checked").innerText();
 
-        assertEquals(postSelectBookOptions, preSelectBookOptions, "Verse selection changed the book dropdown options.");
-        assertEquals(postSelectChapterOptions, preSelectChapterOptions, "Verse selection changed the chapter dropdown options.");
-        assertEquals(postSelectVerseOptions, preSelectVerseOptions, "Verse selection changed the verse dropdown options.");
-        assertEquals(postSelectDepthOptions, preSelectDepthOptions, "Verse selection changed the depth dropdown options.");
+        // Dropdown Options
+        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(preSelectBookOptions.toArray(new String[0]));
+        assertThat(postSelectChapterDropdownLocator.locator("option")).hasText(preSelectChapterOptions.toArray(new String[0]));
+        assertThat(postSelectVerseDropdownLocator.locator("option")).hasText(preSelectVerseOptions.toArray(new String[0]));
+        assertThat(postSelectDepthDropdownLocator.locator("option")).hasText(preSelectDepthOptions.toArray(new String[0]));
 
-        assertEquals(postSelectedBookText, preSelectedBookText, "Verse selection changed the selected book");
-        assertEquals(postSelectedChapterText, preSelectedChapterText, "Verse selection changed the selected chapter");
-        assertEquals(postSelectedVerseText, preSelectedVerseText, "Verse selection changed the selected verse");
-        assertEquals(postSelectedDepthText, preSelectedDepthText, "Verse selection changed the selected depth");
+        // Selections
+        assertThat(postSelectBookDropdownLocator.locator("option:checked")).hasText(preSelectedBookText);
+        assertThat(postSelectChapterDropdownLocator.locator("option:checked")).hasText(preSelectedChapterText);
+        assertThat(postSelectVerseDropdownLocator.locator("option:checked")).hasText(preSelectedVerseText);
+        assertThat(postSelectDepthDropdownLocator.locator("option:checked")).hasText(preSelectedDepthText);
     }
 }
