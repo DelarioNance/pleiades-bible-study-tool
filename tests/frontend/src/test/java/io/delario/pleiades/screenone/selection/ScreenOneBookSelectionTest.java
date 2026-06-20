@@ -101,8 +101,19 @@ public class ScreenOneBookSelectionTest extends AbstractScreenOneTest{
     ) {
         super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
 
+        Locator preSelectBookDropdownLocator = super.page.getByLabel("Book");
+        Locator preSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
+        Locator preSelectVerseDropdownLocator = super.page.getByLabel("Verse");
         Locator preSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+
+        List<String> preSelectBookOptions = preSelectBookDropdownLocator.locator("option").allInnerTexts();
+        List<String> preSelectChapterOptions = preSelectChapterDropdownLocator.locator("option").allInnerTexts();
+        List<String> preSelectVerseOptions = preSelectVerseDropdownLocator.locator("option").allInnerTexts();
         List<String> preSelectDepthOptions = preSelectDepthDropdownLocator.locator("option").allInnerTexts();
+
+        String preSelectedBookText = preSelectBookDropdownLocator.locator("option:checked").innerText();
+        String preSelectedChapterText = preSelectChapterDropdownLocator.locator("option:checked").innerText();
+        String preSelectedVerseText = preSelectVerseDropdownLocator.locator("option:checked").innerText();
         String preSelectedDepthText = preSelectDepthDropdownLocator.locator("option:checked").innerText();
 
         super.page.getByLabel("Book:").selectOption(new SelectOption().setLabel(newBook)); // select the option whose frontend text is the default book
@@ -113,7 +124,7 @@ public class ScreenOneBookSelectionTest extends AbstractScreenOneTest{
         Locator postSelectDepthDropdownLocator = super.page.getByLabel("Depth");
 
         // Dropdown Options
-        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(BOOKS_IN_NUMBER_ORDER.toArray(new String[0]));
+        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(preSelectBookOptions.toArray(new String[0]));
         assertThat(postSelectChapterDropdownLocator.locator("option")).hasText(getOrderedChapterNumberStringsInBook(newBook).toArray(new String[0]));
         assertThat(postSelectVerseDropdownLocator.locator("option")).hasText(getOrderedVerseNumberStringsInChapter(newBook, 1).toArray(new String[0]));
         assertThat(postSelectDepthDropdownLocator.locator("option")).hasText(preSelectDepthOptions.toArray(new String[0]));

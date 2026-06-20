@@ -78,4 +78,57 @@ public class ScreenOneDepthSelectionTest extends AbstractScreenOneTest{
         assertThat(postSelectVerseDropdownLocator.locator("option:checked")).hasText(preSelectedVerseText);
         assertThat(postSelectDepthDropdownLocator.locator("option:checked")).hasText(preSelectedDepthText);
     }
+
+    @ParameterizedTest()
+    @CsvSource({
+        "Genesis, 1, 1, 1, 2",
+        "Genesis, 1, 10, 1, 5",
+        "Obadiah, 1, 1, 5, 4",
+        "Revelation, 9, 4, 5, 1",
+        "Revelation, 9, 21, 3, 2",
+        "Genesis, 22, 1, 2, 3",
+    })
+    public void testDifferentDepthSelectionChangesUICorrectly(
+        String defaultBook,
+        String defaultChapter,
+        String defaultVerse,
+        String defaultDepth,
+        String newDepth
+    ) {
+        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+
+        Locator preSelectBookDropdownLocator = super.page.getByLabel("Book");
+        Locator preSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
+        Locator preSelectVerseDropdownLocator = super.page.getByLabel("Verse");
+        Locator preSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+
+        List<String> preSelectBookOptions = preSelectBookDropdownLocator.locator("option").allInnerTexts();
+        List<String> preSelectChapterOptions = preSelectChapterDropdownLocator.locator("option").allInnerTexts();
+        List<String> preSelectVerseOptions = preSelectVerseDropdownLocator.locator("option").allInnerTexts();
+        List<String> preSelectDepthOptions = preSelectDepthDropdownLocator.locator("option").allInnerTexts();
+
+        String preSelectedBookText = preSelectBookDropdownLocator.locator("option:checked").innerText();
+        String preSelectedChapterText = preSelectChapterDropdownLocator.locator("option:checked").innerText();
+        String preSelectedVerseText = preSelectVerseDropdownLocator.locator("option:checked").innerText();
+        String preSelectedDepthText = preSelectDepthDropdownLocator.locator("option:checked").innerText();
+
+        super.page.getByLabel("Depth:").selectOption(new SelectOption().setLabel(newDepth)); // select the option whose frontend text is the default book
+        
+        Locator postSelectBookDropdownLocator = super.page.getByLabel("Book");
+        Locator postSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
+        Locator postSelectVerseDropdownLocator = super.page.getByLabel("Verse");
+        Locator postSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+
+        // Dropdown Options
+        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(preSelectBookOptions.toArray(new String[0]));
+        assertThat(postSelectChapterDropdownLocator.locator("option")).hasText(preSelectChapterOptions.toArray(new String[0]));
+        assertThat(postSelectVerseDropdownLocator.locator("option")).hasText(preSelectVerseOptions.toArray(new String[0]));
+        assertThat(postSelectDepthDropdownLocator.locator("option")).hasText(preSelectDepthOptions.toArray(new String[0]));
+
+        // Selections
+        assertThat(postSelectBookDropdownLocator.locator("option:checked")).hasText(preSelectedBookText);
+        assertThat(postSelectChapterDropdownLocator.locator("option:checked")).hasText(preSelectedChapterText);
+        assertThat(postSelectVerseDropdownLocator.locator("option:checked")).hasText(preSelectedVerseText);
+        assertThat(postSelectDepthDropdownLocator.locator("option:checked")).hasText(newDepth);
+    }
 }
