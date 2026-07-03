@@ -1,9 +1,6 @@
 package io.delario.pleiades.pages;
 
-import io.delario.pleiades.pages.Dropdown;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.SelectOption;
 
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class IndexPage {
     // =========================================================
 
     private final Page page;
-    
+
     private static final String URL = "/";
     private static final String BOOK_DROPDOWN_LABEL = "Book";
     private static final String CHAPTER_DROPDOWN_LABEL = "Chapter";
