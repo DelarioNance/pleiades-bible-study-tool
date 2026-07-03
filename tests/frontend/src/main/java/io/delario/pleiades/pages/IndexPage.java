@@ -1,5 +1,6 @@
 package io.delario.pleiades.pages;
 
+import io.delario.pleiades.pages.Dropdown;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.SelectOption;
@@ -27,7 +28,12 @@ public class IndexPage {
     // =========================================================
 
     private final Page page;
+    
     private static final String URL = "/";
+    private static final String BOOK_DROPDOWN_LABEL = "Book";
+    private static final String CHAPTER_DROPDOWN_LABEL = "Chapter";
+    private static final String VERSE_DROPDOWN_LABEL = "Verse";
+    private static final String DEPTH_DROPDOWN_LABEL = "Depth";
 
     // =========================================================
     // Construction / Navigation
@@ -45,43 +51,83 @@ public class IndexPage {
         return new IndexPage(page);
     }
 
-    
-
     // =========================================================
-    // Locators (private helpers)
+    // Dropdowns
     // =========================================================
 
-    private Locator bookDropdown() {
-        return page.getByLabel("Book");
+    private Dropdown getBookDropdown() {
+        return new Dropdown(this.page.getByLabel(BOOK_DROPDOWN_LABEL));
     }
 
-    private Locator bookSelection() {
-        return bookDropdown().locator("option:checked");
+    private Dropdown getChapterDropdown() {
+        return new Dropdown(this.page.getByLabel(CHAPTER_DROPDOWN_LABEL));
     }
 
-    private Locator bookOptions() {
-        return bookDropdown().locator("option");
+    private Dropdown getVerseDropdown() {
+        return new Dropdown(this.page.getByLabel(VERSE_DROPDOWN_LABEL));
     }
 
-    // =========================================================
-    // Actions (user interactions)
-    // =========================================================
-
-    public void selectBook(String bookName) {
-        bookDropdown().selectOption(
-            new SelectOption().setLabel(bookName)
-        );
+    private Dropdown getDepthDropdown() {
+        return new Dropdown(this.page.getByLabel(DEPTH_DROPDOWN_LABEL));
     }
 
     // =========================================================
-    // Getters (state reads)
+    // Selection Getters
     // =========================================================
 
     public String getSelectedBook() {
-        return bookSelection().innerText();
+        return this.getBookDropdown().getSelectedOptionText();
     }
 
+    public String getSelectedChapter() {
+        return this.getChapterDropdown().getSelectedOptionText();
+    }
+
+    public String getSelectedVerse() {
+        return this.getVerseDropdown().getSelectedOptionText();
+    }
+
+    public String getSelectedDepth() {
+        return this.getDepthDropdown().getSelectedOptionText();
+    }
+
+    // =========================================================
+    // Options Getters
+    // =========================================================
+
     public List<String> getBookOptions() {
-        return bookOptions().allInnerTexts();
+        return this.getBookDropdown().getOptionTexts();
+    }
+
+    public List<String> getChapterOptions() {
+        return this.getChapterDropdown().getOptionTexts();
+    }
+
+    public List<String> getVerseOptions() {
+        return this.getVerseDropdown().getOptionTexts();
+    }
+
+    public List<String> getDepthOptions() {
+        return this.getDepthDropdown().getOptionTexts();
+    }
+
+    // =========================================================
+    // Option Selectors
+    // =========================================================
+
+    public void selectBook(String book) {
+        this.getBookDropdown().selectOptionByLabel(book);
+    }
+
+    public void selectChapter(String chapter) {
+        this.getChapterDropdown().selectOptionByLabel(chapter);
+    }
+
+    public void selectVerse(String verse) {
+        this.getVerseDropdown().selectOptionByLabel(verse);
+    }
+
+    public void selectDepth(String depth) {
+        this.getDepthDropdown().selectOptionByLabel(depth);
     }
 }
