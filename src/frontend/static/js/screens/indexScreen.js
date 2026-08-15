@@ -31,12 +31,12 @@ export async function getIndexScreen() {
             <option value=4>4</option>
             <option value=5>5</option>
         </select>
-        <p>"<span id="selectedVerseDisplay"/></span>"</p>
+        <p>"<span id="selectedVerseDisplay"/>Click Below!</span>"</p>
         <button id="submitButton">Submit</button>
     `;
     
     await initializeSelections();
-    await displaySelectedVerse();
+    // await displaySelectedVerse();
     attachEventListeners();
 }
 
