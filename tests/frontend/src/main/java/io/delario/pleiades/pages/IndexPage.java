@@ -7,6 +7,8 @@ import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.SelectOption;
 import com.microsoft.playwright.options.WaitForSelectorState;
 
+import io.delario.pleiades.util.ScreenOneReadyStateUtil;
+
 import java.util.List;
 
 /**
@@ -64,7 +66,7 @@ public class IndexPage {
     // option getters and selected‑value getters). Those methods prevent tests from depending
     // on internal DOM details, but public locators give tests the flexibility to assert UI
     // state without unnecessary abstraction.
-
+    private final Page page;
     public Locator bookDropdown;
     public Locator chapterDropdown;
     public Locator verseDropdown;
@@ -94,6 +96,7 @@ public class IndexPage {
      * on describing and interacting with the Index page’s UI.</p>
      */
     public IndexPage(Page page) {
+        this.page = page;
         this.bookDropdown = page.getByLabel("Book");
         this.chapterDropdown = page.getByLabel("Chapter");
         this.verseDropdown = page.getByLabel("Verse");
@@ -151,18 +154,22 @@ public class IndexPage {
 
     public void selectBook(String book) {
         this.bookDropdown.selectOption(new SelectOption().setLabel(book));
+        ScreenOneReadyStateUtil.waitForReadyState(this.page);
     }
 
     public void selectChapter(String chapter) {
         this.chapterDropdown.selectOption(new SelectOption().setLabel(chapter));
+        ScreenOneReadyStateUtil.waitForReadyState(this.page);
     }
 
     public void selectVerse(String verse) {
         this.verseDropdown.selectOption(new SelectOption().setLabel(verse));
+        ScreenOneReadyStateUtil.waitForReadyState(this.page);
     }
 
     public void selectDepth(String depth) {
         this.depthDropdown.selectOption(new SelectOption().setLabel(depth));
+        ScreenOneReadyStateUtil.waitForReadyState(this.page);
     }
 
     public static void main(String[] args) {

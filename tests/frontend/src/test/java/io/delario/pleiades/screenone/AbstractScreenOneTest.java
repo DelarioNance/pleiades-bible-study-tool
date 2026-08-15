@@ -8,7 +8,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.options.WaitForSelectorState;
+import io.delario.pleiades.util.ScreenOneReadyStateUtil;
 
 public abstract class AbstractScreenOneTest {
     protected static Playwright playwright;
@@ -44,7 +44,7 @@ public abstract class AbstractScreenOneTest {
      */
     protected IndexPage goToIndexPage() {
         page.navigate(this.baseURL);
-        waitForTestReadyState();
+        ScreenOneReadyStateUtil.waitForReadyState(this.page);
         return new IndexPage(page);
     }
 
@@ -60,35 +60,10 @@ public abstract class AbstractScreenOneTest {
             + "&default_verse_number=" + initialVerse
             + "&default_depth=" + initialDepth
         );
-        waitForTestReadyState();
+        ScreenOneReadyStateUtil.waitForReadyState(this.page);
         return new IndexPage(page);
     }
     
-    /**
-     * Synchronizes the DOM so tests never interact with partially-loaded dropdowns.
-     *
-     * Playwright auto-waits for visibility and attachment of the dropdown element,
-     * but it does NOT wait for <option> children to be populated.
-     *
-     * The Index page loads dropdown options asynchronously based on:
-     *  - default book
-     *  - default chapter
-     *  - default verse
-     *  - default depth
-     *
-     * Without this method, tests would be flaky.
-     * With this method, tests are deterministic and stable.
-     */
-    protected void waitForTestReadyState() {
-        // The Playwright with Java docs are incomplete, so you must inspect the definition
-        // of the waitFor method, WaitForOptions class, setState method, and WaitForSelectorState enum 
-        // to understand how this works
-        this.page.getByLabel("Book").locator("option").first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.ATTACHED));
-        this.page.getByLabel("Chapter").locator("option").first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.ATTACHED));
-        this.page.getByLabel("Verse").locator("option").first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.ATTACHED));
-        this.page.getByLabel("Depth").locator("option").first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.ATTACHED));
-    }
-
     /**
      * Test-only helper for retrieving the backend-provided default book name.
      * This reads the hidden placeholder input that the backend exposes solely
