@@ -1,5 +1,6 @@
 package io.delario.pleiades.screenone.selection;
 
+import io.delario.pleiades.pages.IndexPage;
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
 import static io.delario.pleiades.utils.BibleCanon.getOrderedVerseNumberStringsInChapter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,51 +33,39 @@ public class ScreenOneChapterSelectionTest extends AbstractScreenOneTest{
         String defaultVerse,
         String defaultDepth
     ) {
-        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+        IndexPage indexPage = super.goToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
 
-        Locator preSelectBookDropdownLocator = super.page.getByLabel("Book");
-        Locator preSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator preSelectVerseDropdownLocator = super.page.getByLabel("Verse");
-        Locator preSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+        List<String> preSelectBookOptions = indexPage.getBookOptions();
+        List<String> preSelectChapterOptions = indexPage.getChapterOptions();
+        List<String> preSelectVerseOptions = indexPage.getVerseOptions();
+        List<String> preSelectDepthOptions = indexPage.getDepthOptions();
 
-        List<String> preSelectBookOptions = preSelectBookDropdownLocator.locator("option").allInnerTexts();
-        List<String> preSelectChapterOptions = preSelectChapterDropdownLocator.locator("option").allInnerTexts();
-        List<String> preSelectVerseOptions = preSelectVerseDropdownLocator.locator("option").allInnerTexts();
-        List<String> preSelectDepthOptions = preSelectDepthDropdownLocator.locator("option").allInnerTexts();
+        String preSelectBookSelection = indexPage.getSelectedBook();
+        String preSelectChapterSelection = indexPage.getSelectedChapter();
+        String preSelectVerseSelection = indexPage.getSelectedVerse();
+        String preSelectDepthSelection = indexPage.getSelectedDepth();
 
-        String preSelectedBookText = preSelectBookDropdownLocator.locator("option:checked").innerText();
-        String preSelectedChapterText = preSelectChapterDropdownLocator.locator("option:checked").innerText();
-        String preSelectedVerseText = preSelectVerseDropdownLocator.locator("option:checked").innerText();
-        String preSelectedDepthText = preSelectDepthDropdownLocator.locator("option:checked").innerText();
+        indexPage.selectChapter(defaultChapter);
 
-        super.page.getByLabel("Chapter:").selectOption(new SelectOption().setLabel(defaultChapter)); // select the option whose frontend text is the default book
+        List<String> postSelectBookOptions = indexPage.getBookOptions();
+        List<String> postSelectChapterOptions = indexPage.getChapterOptions();
+        List<String> postSelectVerseOptions = indexPage.getVerseOptions();
+        List<String> postSelectDepthOptions = indexPage.getDepthOptions();
 
-        Locator postSelectBookDropdownLocator = super.page.getByLabel("Book");
-        Locator postSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator postSelectVerseDropdownLocator = super.page.getByLabel("Verse");
-        Locator postSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+        String postSelectBookSelection = indexPage.getSelectedBook();
+        String postSelectChapterSelection = indexPage.getSelectedChapter();
+        String postSelectVerseSelection = indexPage.getSelectedVerse();
+        String postSelectDepthSelection = indexPage.getSelectedDepth();
 
-        List<String> postSelectBookOptions = postSelectBookDropdownLocator.locator("option").allInnerTexts();
-        List<String> postSelectChapterOptions = postSelectChapterDropdownLocator.locator("option").allInnerTexts();
-        List<String> postSelectVerseOptions = postSelectVerseDropdownLocator.locator("option").allInnerTexts();
-        List<String> postSelectDepthOptions = postSelectDepthDropdownLocator.locator("option").allInnerTexts();
-        
-        String postSelectedBookText = postSelectBookDropdownLocator.locator("option:checked").innerText();
-        String postSelectedChapterText = postSelectChapterDropdownLocator.locator("option:checked").innerText();
-        String postSelectedVerseText = postSelectVerseDropdownLocator.locator("option:checked").innerText();
-        String postSelectedDepthText = postSelectDepthDropdownLocator.locator("option:checked").innerText();
+        assertEquals(preSelectBookOptions, postSelectBookOptions);
+        assertEquals(preSelectChapterOptions, postSelectChapterOptions);
+        assertEquals(preSelectVerseOptions, postSelectVerseOptions);
+        assertEquals(preSelectDepthOptions, postSelectDepthOptions);
 
-        // Dropdown Options
-        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(preSelectBookOptions.toArray(new String[0]));
-        assertThat(postSelectChapterDropdownLocator.locator("option")).hasText(preSelectChapterOptions.toArray(new String[0]));
-        assertThat(postSelectVerseDropdownLocator.locator("option")).hasText(preSelectVerseOptions.toArray(new String[0]));
-        assertThat(postSelectDepthDropdownLocator.locator("option")).hasText(preSelectDepthOptions.toArray(new String[0]));
-
-        // Selections
-        assertThat(postSelectBookDropdownLocator.locator("option:checked")).hasText(preSelectedBookText);
-        assertThat(postSelectChapterDropdownLocator.locator("option:checked")).hasText(preSelectedChapterText);
-        assertThat(postSelectVerseDropdownLocator.locator("option:checked")).hasText(preSelectedVerseText);
-        assertThat(postSelectDepthDropdownLocator.locator("option:checked")).hasText(preSelectedDepthText);
+        assertEquals(preSelectBookSelection, postSelectBookSelection);
+        assertEquals(preSelectChapterSelection, postSelectChapterSelection);
+        assertEquals(preSelectVerseSelection, postSelectVerseSelection);
+        assertEquals(preSelectDepthSelection, postSelectDepthSelection);
     }
 
 
@@ -97,40 +86,38 @@ public class ScreenOneChapterSelectionTest extends AbstractScreenOneTest{
         String defaultDepth,
         String newChapter
     ) {
-        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+        IndexPage indexPage = super.goToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
 
-        Locator preSelectBookDropdownLocator = super.page.getByLabel("Book");
-        Locator preSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator preSelectVerseDropdownLocator = super.page.getByLabel("Verse");
-        Locator preSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+        List<String> preSelectBookOptions = indexPage.getBookOptions();
+        List<String> preSelectChapterOptions = indexPage.getChapterOptions();
+        List<String> preSelectVerseOptions = indexPage.getVerseOptions();
+        List<String> preSelectDepthOptions = indexPage.getDepthOptions();
 
-        List<String> preSelectBookOptions = preSelectBookDropdownLocator.locator("option").allInnerTexts();
-        List<String> preSelectChapterOptions = preSelectChapterDropdownLocator.locator("option").allInnerTexts();
-        List<String> preSelectVerseOptions = preSelectVerseDropdownLocator.locator("option").allInnerTexts();
-        List<String> preSelectDepthOptions = preSelectDepthDropdownLocator.locator("option").allInnerTexts();
-
-        String preSelectedBookText = preSelectBookDropdownLocator.locator("option:checked").innerText();
-        String preSelectedChapterText = preSelectChapterDropdownLocator.locator("option:checked").innerText();
-        String preSelectedVerseText = preSelectVerseDropdownLocator.locator("option:checked").innerText();
-        String preSelectedDepthText = preSelectDepthDropdownLocator.locator("option:checked").innerText();
-
-        super.page.getByLabel("Chapter:").selectOption(new SelectOption().setLabel(newChapter)); // select the option whose frontend text is the default book
+        String preSelectBookSelection = indexPage.getSelectedBook();
+        String preSelectChapterSelection = indexPage.getSelectedChapter();
+        String preSelectVerseSelection = indexPage.getSelectedVerse();
+        String preSelectDepthSelection = indexPage.getSelectedDepth();
         
-        Locator postSelectBookDropdownLocator = super.page.getByLabel("Book");
-        Locator postSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator postSelectVerseDropdownLocator = super.page.getByLabel("Verse");
-        Locator postSelectDepthDropdownLocator = super.page.getByLabel("Depth");
+        indexPage.selectChapter(newChapter);
 
-        // Dropdown Options
-        assertThat(postSelectBookDropdownLocator.locator("option")).hasText(preSelectBookOptions.toArray(new String[0]));
-        assertThat(postSelectChapterDropdownLocator.locator("option")).hasText(preSelectChapterOptions.toArray(new String[0]));
-        assertThat(postSelectVerseDropdownLocator.locator("option")).hasText(getOrderedVerseNumberStringsInChapter(preSelectedBookText, newChapter).toArray(new String[0]));
-        assertThat(postSelectDepthDropdownLocator.locator("option")).hasText(preSelectDepthOptions.toArray(new String[0]));
+        List<String> postSelectBookOptions = indexPage.getBookOptions();
+        List<String> postSelectChapterOptions = indexPage.getChapterOptions();
+        List<String> postSelectVerseOptions = indexPage.getVerseOptions();
+        List<String> postSelectDepthOptions = indexPage.getDepthOptions();
 
-        // Selections
-        assertThat(postSelectBookDropdownLocator.locator("option:checked")).hasText(preSelectedBookText);
-        assertThat(postSelectChapterDropdownLocator.locator("option:checked")).hasText(newChapter);
-        assertThat(postSelectVerseDropdownLocator.locator("option:checked")).hasText("1");
-        assertThat(postSelectDepthDropdownLocator.locator("option:checked")).hasText(preSelectedDepthText);
+        String postSelectBookSelection = indexPage.getSelectedBook();
+        String postSelectChapterSelection = indexPage.getSelectedChapter();
+        String postSelectVerseSelection = indexPage.getSelectedVerse();
+        String postSelectDepthSelection = indexPage.getSelectedDepth();
+
+        assertEquals(preSelectBookOptions, postSelectBookOptions);
+        assertEquals(preSelectChapterOptions, postSelectChapterOptions);
+        assertEquals(getOrderedVerseNumberStringsInChapter(preSelectBookSelection, newChapter), postSelectVerseOptions);
+        assertEquals(preSelectDepthOptions, postSelectDepthOptions);
+
+        assertEquals(preSelectBookSelection, postSelectBookSelection);
+        assertEquals(newChapter, postSelectChapterSelection);
+        assertEquals("1", postSelectVerseSelection);
+        assertEquals(preSelectDepthSelection, postSelectDepthSelection);
     }
 }

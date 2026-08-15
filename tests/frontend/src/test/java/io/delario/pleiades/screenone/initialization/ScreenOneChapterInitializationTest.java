@@ -1,9 +1,13 @@
 package io.delario.pleiades.screenone.initialization;
 
+import io.delario.pleiades.pages.IndexPage;
+
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
 import static io.delario.pleiades.utils.BibleCanon.getOrderedChapterNumberStringsInBook;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,18 +19,16 @@ public class ScreenOneChapterInitializationTest extends AbstractScreenOneTest {
 
     @Test
     public void testChapterDropdownIsVisibleWhenDefaultsProvided() {
-        super.navigateToIndexPage("Genesis", "1", "1", "1");
-        Locator chapterDropdownLocator = super.page.getByLabel("Chapter:");
-        assertTrue(chapterDropdownLocator.isVisible(),
-            "The chapter dropdown should be visible on the screen.");
+        IndexPage indexPage = super.goToIndexPage("Genesis", "1", "1", "1");
+        Locator chapterDropdownLocator = indexPage.chapterDropdown;
+        assertThat(chapterDropdownLocator).isVisible();
     }
 
     @Test
     public void testChapterDropdownIsVisibleWhenDefaultsNotProvided() {
-        super.navigateToIndexPage();
-        Locator chapterDropdownLocator = super.page.getByLabel("Chapter:");
-        assertTrue(chapterDropdownLocator.isVisible(),
-            "The chapter dropdown should be visible on the screen.");
+        IndexPage indexPage = super.goToIndexPage();
+        Locator chapterDropdownLocator = indexPage.chapterDropdown;
+        assertThat(chapterDropdownLocator).isVisible();
     }
 
     @ParameterizedTest
@@ -39,30 +41,26 @@ public class ScreenOneChapterInitializationTest extends AbstractScreenOneTest {
         String defaultVerse,
         String defaultDepth
     ) {
-        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
-        Locator chapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator optionsLocator = chapterDropdownLocator.locator("option");
+        IndexPage indexPage = super.goToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+        List<String> chapterOptions = indexPage.getChapterOptions();
 
         assertEquals(
             getOrderedChapterNumberStringsInBook(defaultBook),
-            optionsLocator.allInnerTexts(),
+            chapterOptions,
             "Chapter dropdown options are not correct."
         );
     }
 
     @Test
     public void testCorrectChapterDropdownOptionListWhenDefaultsNotProvided() {
-        super.navigateToIndexPage();
+        IndexPage indexPage = super.goToIndexPage();
+        List<String> chapterOptions = indexPage.getChapterOptions();
 
-        Locator defaultBookNameLocator = super.page.getByPlaceholder("defaultBookNamePlaceholder");
-        String defaultBookName = defaultBookNameLocator.inputValue();
-
-        Locator chapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator optionsLocator = chapterDropdownLocator.locator("option");
+        String defaultBookName = super.getBackendDefaultBookName();
 
         assertEquals(
             getOrderedChapterNumberStringsInBook(defaultBookName),
-            optionsLocator.allInnerTexts(),
+            chapterOptions,
             "Chapter dropdown options are not correct."
         );
     }
@@ -82,31 +80,26 @@ public class ScreenOneChapterInitializationTest extends AbstractScreenOneTest {
         String defaultVerse,
         String defaultDepth
     ) {
-        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
-
-        Locator chapterDropdownLocator = super.page.getByLabel("Chapter:");
-        Locator selectedOptionLocator = chapterDropdownLocator.locator("option:checked");
+        IndexPage indexPage = super.goToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+        String selectedChapter = indexPage.getSelectedChapter();
 
         assertEquals(
             defaultChapter,
-            selectedOptionLocator.innerText(),
+            selectedChapter,
             "The default selected chapter should be " + defaultChapter + "."
         );
     }
 
     @Test
     public void testCorrectDefaultChapterSelectedWhenDefaultsNotProvided() {
-        super.navigateToIndexPage();
+        IndexPage indexPage = super.goToIndexPage();
+        String selectedChapter = indexPage.getSelectedChapter();
 
-        Locator defaultChapterNumberLocator = super.page.getByPlaceholder("defaultChapterNumberPlaceholder");
-        String defaultChapterNumber = defaultChapterNumberLocator.inputValue();
-
-        Locator chapterDropdownLocator = super.page.getByLabel("Chapter:");
-        Locator selectedOptionLocator = chapterDropdownLocator.locator("option:checked");
+        String defaultChapterNumber = super.getBackendDefaultChapterNumber();
 
         assertEquals(
             defaultChapterNumber,
-            selectedOptionLocator.innerText(),
+            selectedChapter,
             "The default selected chapter should be " + defaultChapterNumber + "."
         );
     }

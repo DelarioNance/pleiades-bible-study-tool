@@ -21,4 +21,9 @@ public class Dropdown {
 
     public void selectOptionByLabel(String label) {
         this.locator.selectOption(new SelectOption().setLabel(label));
-    }}
+    }
+
+    public boolean isVisible() {
+        return this.locator.isVisible();
+    }
+}

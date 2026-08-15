@@ -1,5 +1,7 @@
 package io.delario.pleiades.screenone.initialization;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import io.delario.pleiades.pages.IndexPage;
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
 import static io.delario.pleiades.utils.BibleCanon.getOrderedVerseNumberStringsInChapter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.List;
 
 import com.microsoft.playwright.Locator;
 
@@ -19,18 +23,18 @@ public class ScreenOneVerseInitializationTest extends AbstractScreenOneTest {
 
     @Test
     public void testVerseDropdownIsVisibleWhenDefaultsProvided() {
-        super.navigateToIndexPage("Genesis", "1", "1", "1");
-        Locator verseDropdownLocator = super.page.getByLabel("Verse:");
-        assertTrue(verseDropdownLocator.isVisible(), 
-            "The verse dropdown should be visible on the screen.");
+        IndexPage indexPage = super.goToIndexPage("Genesis", "1", "1", "1");
+        Locator verseDropdown = indexPage.verseDropdown;
+
+        assertThat(verseDropdown).isVisible();
     }
 
     @Test
     public void testVerseDropdownIsVisibleWhenDefaultsNotProvided() {
-        super.navigateToIndexPage();
-        Locator verseDropdownLocator = super.page.getByLabel("Verse:");
-        assertTrue(verseDropdownLocator.isVisible(), 
-            "The verse dropdown should be visible on the screen.");
+        IndexPage indexPage = super.goToIndexPage();
+        Locator verseDropdown = indexPage.verseDropdown;
+
+        assertThat(verseDropdown).isVisible();
     }
 
     // ------------------------------------------------------------
@@ -47,34 +51,27 @@ public class ScreenOneVerseInitializationTest extends AbstractScreenOneTest {
         String defaultVerse,
         String defaultDepth
     ) {
-        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
-
-        Locator verseDropdownLocator = super.page.getByLabel("Verse");
-        Locator optionsLocator = verseDropdownLocator.locator("option");
+        IndexPage indexPage = super.goToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+        List<String> verseOptions = indexPage.getVerseOptions();
 
         assertEquals(
             getOrderedVerseNumberStringsInChapter(defaultBook, defaultChapter),
-            optionsLocator.allInnerTexts(),
+            verseOptions,
             "Verse dropdown options are not correct."
         );
     }
 
     @Test
     public void testCorrectVerseDropdownOptionListWhenDefaultsNotProvided() {
-        super.navigateToIndexPage();
+        IndexPage indexPage = super.goToIndexPage();
+        List<String> verseOptions = indexPage.getVerseOptions();
 
-        Locator defaultBookNameLocator = super.page.getByPlaceholder("defaultBookNamePlaceholder");
-        String defaultBookName = defaultBookNameLocator.inputValue();
-
-        Locator defaultChapterNumberLocator = super.page.getByPlaceholder("defaultChapterNumberPlaceholder");
-        String defaultChapterNumber = defaultChapterNumberLocator.inputValue();
-
-        Locator verseDropdownLocator = super.page.getByLabel("Verse");
-        Locator optionsLocator = verseDropdownLocator.locator("option");
+        String defaultBookName = super.getBackendDefaultBookName();
+        String defaultChapterNumber = super.getBackendDefaultChapterNumber();
 
         assertEquals(
             getOrderedVerseNumberStringsInChapter(defaultBookName, defaultChapterNumber),
-            optionsLocator.allInnerTexts(),
+            verseOptions,
             "Verse dropdown options are not correct."
         );
     }
@@ -91,38 +88,33 @@ public class ScreenOneVerseInitializationTest extends AbstractScreenOneTest {
         "Matthew, 28, 1, 1",
         "Revelation, 1, 1, 1",
         "Revelation, 22, 21, 5",
-    }) // Pairwise + BVA + ECP
+    })
     public void testCorrectDefaultVerseSelectedWhenDefaultsProvided(
         String defaultBook,
         String defaultChapter,
         String defaultVerse,
         String defaultDepth
     ) {
-        super.navigateToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
-
-        Locator verseDropdownLocator = super.page.getByLabel("Verse:");
-        Locator selectedOptionLocator = verseDropdownLocator.locator("option:checked");
+        IndexPage indexPage = super.goToIndexPage(defaultBook, defaultChapter, defaultVerse, defaultDepth);
+        String selectedVerse = indexPage.getSelectedVerse();
 
         assertEquals(
             defaultVerse,
-            selectedOptionLocator.innerText(),
+            selectedVerse,
             "The default selected verse should be " + defaultVerse + "."
         );
     }
 
     @Test
     public void testCorrectDefaultVerseSelectedWhenDefaultsNotProvided() {
-        super.navigateToIndexPage();
+        IndexPage indexPage = super.goToIndexPage();
+        String selectedVerse = indexPage.getSelectedVerse();
 
-        Locator defaultVerseNumberLocator = super.page.getByPlaceholder("defaultVerseNumberPlaceholder");
-        String defaultVerseNumber = defaultVerseNumberLocator.inputValue();
-
-        Locator verseDropdownLocator = super.page.getByLabel("Verse:");
-        Locator selectedOptionLocator = verseDropdownLocator.locator("option:checked");
+        String defaultVerseNumber = super.getBackendDefaultVerseNumber();
 
         assertEquals(
             defaultVerseNumber,
-            selectedOptionLocator.innerText(),
+            selectedVerse,
             "The default selected verse should be " + defaultVerseNumber + "."
         );
     }
