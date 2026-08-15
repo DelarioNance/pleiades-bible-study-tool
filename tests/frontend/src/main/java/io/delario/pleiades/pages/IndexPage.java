@@ -1,6 +1,8 @@
 package io.delario.pleiades.pages;
 
+import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class IndexPage {
 
     private final Page page;
 
-    private static final String URL = "/";
+    private static final String URL = "http://127.0.0.1:8000";
     private static final String BOOK_DROPDOWN_LABEL = "Book";
     private static final String CHAPTER_DROPDOWN_LABEL = "Chapter";
     private static final String VERSE_DROPDOWN_LABEL = "Verse";
@@ -126,5 +128,47 @@ public class IndexPage {
 
     public void selectDepth(String depth) {
         this.getDepthDropdown().selectOptionByLabel(depth);
+    }
+
+    public static void main(String[] args) {
+        // Example usage of the IndexPage class with Playwright
+        Playwright playwright = Playwright.create();
+        Browser browser = playwright.chromium().launch(
+            new com.microsoft.playwright.BrowserType.LaunchOptions()
+        );
+        Page page = browser.newPage();
+
+        System.out.println("Navigated to Index Page");
+        IndexPage index = IndexPage.navigateTo(page);
+
+        System.out.println("Initial selections:");
+        System.out.println(index.getSelectedBook());
+        System.out.println(index.getSelectedChapter());
+        System.out.println(index.getSelectedVerse());
+        System.out.println(index.getSelectedDepth());
+
+        System.out.println("Available options:");
+        System.out.println(index.getBookOptions());
+        System.out.println(index.getChapterOptions());
+        System.out.println(index.getVerseOptions());
+        System.out.println(index.getDepthOptions());
+
+        System.out.println("Selecting Book, Chapter, Verse, and Depth...");
+        index.selectBook("2 Chronicles");
+        index.selectChapter("18");
+        index.selectVerse("31");
+        index.selectDepth("1");
+
+        System.out.println("New selections:");
+        System.out.println(index.getSelectedBook());
+        System.out.println(index.getSelectedChapter());
+        System.out.println(index.getSelectedVerse());
+        System.out.println(index.getSelectedDepth());
+
+        System.out.println("New options:");
+        System.out.println(index.getBookOptions());
+        System.out.println(index.getChapterOptions());
+        System.out.println(index.getVerseOptions());
+        System.out.println(index.getDepthOptions());
     }
 }
