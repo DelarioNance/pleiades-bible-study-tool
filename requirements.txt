@@ -12,6 +12,7 @@ decorator==5.2.1
 defusedxml==0.7.1
 docopt==0.6.2
 executing==2.2.1
+fastapi==0.136.1
 fastjsonschema==2.21.2
 frozenlist==1.8.0
 greenlet==3.3.2
