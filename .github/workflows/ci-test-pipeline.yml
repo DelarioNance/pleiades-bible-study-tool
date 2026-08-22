@@ -57,9 +57,18 @@ jobs:
       - uses: actions/setup-python@v5 # Install Python 3.12 on the runner (https://github.com/actions/setup-python) 
         with:
           python-version: '3.12'
-      - name: Install test dependencies
+      - name: Install ETL and API test dependencies
         run: pip install -r requirements.txt
       - name: Run ETL Tests
         run: pytest tests/backend/etl
       - name: Run API Tests
         run: pytest tests/backend/api
+      - name: Run app in background
+        run: nohup uvicorn src.api.main:app --host 0.0.0.0 --port 8000 &
+      - name: Install UI test dependencies
+        run: |
+          sudo apt update
+          sudo apt install openjdk-17-jdk # install Java 17
+          cd tests/frontend
+      - name: Run UI Tests
+        run: mvn clean package
