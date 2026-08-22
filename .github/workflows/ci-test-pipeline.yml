@@ -61,3 +61,5 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run ETL Tests
         run: pytest tests/backend/etl
+      - name: Run API Tests
+        run: pytest tests/backend/api
