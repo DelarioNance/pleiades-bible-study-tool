@@ -30,6 +30,10 @@ jobs:
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env:
       PLEIADES_ENV: test # Set the environment variable PLEIADES_ENV to "test" for the test suite (the code uses this to determine which database credentials to use)
+      DB_HOST_ADMIN: localhost # The Postgres service container is reachable at host "postgres"
+      DB_USER_ADMIN: ${{ secrets.CI_DB_USER }} # this and the two below must match credential chosen when creating Postgres service container (needed for src code to connect to the create DB via its credentials)
+      DB_PASSWORD_ADMIN: ${{ secrets.CI_DB_PASSWORD }}
+      DB_NAME_ADMIN: ${{ secrets.CI_DB_NAME }}
       DB_HOST_TEST: localhost # The Postgres service container is reachable at host "postgres"
       DB_USER_TEST: ${{ secrets.CI_DB_USER }} # this and the two below must match credential chosen when creating Postgres service container (needed for src code to connect to the create DB via its credentials)
       DB_PASSWORD_TEST: ${{ secrets.CI_DB_PASSWORD }}
