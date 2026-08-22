@@ -1,0 +1,15 @@
+[project]
+name = "pleiades-bible-study-tool"
+version = "0.1.0"
+description = "Bible study tool API"
+requires-python = ">=3.10"
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "jinja2"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

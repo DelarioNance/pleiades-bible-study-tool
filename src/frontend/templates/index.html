@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pleaides Bible Study Tool</title>
+    <link rel="stylesheet" href="src/frontend/static/css/styles.css">
+</head>
+<body>
+    <h1>Pleiades Bible Study Tool</h1>
+
+    <div id="app">
+        <!-- Dynamic content will be put here-->
+    </div>
+
+    <input type="hidden" id="defaultBookID" placeholder="defaultBookIDPlaceholder" value="{{ defaultBookID }}">
+    <input type="hidden" id="defaultBookName" placeholder="defaultBookNamePlaceholder" value="{{ defaultBookName }}">
+    <input type="hidden" id="defaultChapterID" placeholder="defaultChapterIDPlaceholder" value="{{ defaultChapterID }}">
+    <input type="hidden" id="defaultChapterNumber" placeholder="defaultChapterNumberPlaceholder" value="{{ defaultChapterNumber }}">
+    <input type="hidden" id="defaultVerseID" placeholder="defaultVerseIDPlaceholder" value="{{ defaultVerseID }}">
+    <input type="hidden" id="defaultVerseNumber" placeholder="defaultVerseNumberPlaceholder" value="{{ defaultVerseNumber }}">
+    <input type="hidden" id="defaultDepth" placeholder="defaultDepthPlaceholder" value="{{ defaultDepth }}">
+
+    <script type="module" src="src/frontend/static/js/app.js"></script>
+</body>
+</html>
