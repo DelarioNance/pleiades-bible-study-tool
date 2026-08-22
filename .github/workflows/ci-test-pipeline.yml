@@ -26,7 +26,7 @@ run-name: ${{ github.actor }} is validating PR against test suite
 on: pull_request
 
 jobs:
-  etl-tests: # Job definition
+  ci-tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env:
       PLEIADES_ENV: test # Set the environment variable PLEIADES_ENV to "test" for the test suite (the code uses this to determine which database credentials to use)
@@ -69,6 +69,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install openjdk-17-jdk # install Java 17
-          cd tests/frontend
+        working-directory: tests/frontend
       - name: Run UI Tests
         run: mvn clean package
+        working-directory: tests/frontend
