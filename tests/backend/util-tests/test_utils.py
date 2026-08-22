@@ -1,5 +1,5 @@
 import pytest
-from src.utils.db import get_db_url
+from src.db.utils import get_db_url
 from cases_utils import GetDbUrlCases
 
 

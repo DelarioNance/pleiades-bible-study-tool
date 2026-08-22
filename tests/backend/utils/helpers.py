@@ -2,7 +2,7 @@ import os
 import uuid # used to generate random test database names
 from sqlalchemy import text
 
-from src.utils.db import get_db_engine, create_engine
+from src.db.utils import get_db_engine, create_engine
 
 
 def create_random_test_db():

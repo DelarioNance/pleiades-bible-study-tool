@@ -17,6 +17,18 @@ def get_db_url(env_alias):
         name = os.getenv("DB_NAME_SANDBOX")
         host = os.getenv("DB_HOST_SANDBOX")
         suffix = '_sandbox'
+    elif env_alias == 'test':
+        user = os.getenv("DB_USER_TEST")
+        password = os.getenv("DB_PASSWORD_TEST")
+        name = os.getenv("DB_NAME_TEST")
+        host = os.getenv("DB_HOST_TEST")
+        suffix = '_test'
+    elif env_alias == 'staging':
+        user = os.getenv("DB_USER_STAGING")
+        password = os.getenv("DB_PASSWORD_STAGING")
+        name = os.getenv("DB_NAME_STAGING")
+        host = os.getenv("DB_HOST_STAGING")
+        suffix = '_staging'
     elif env_alias == 'prod':
         user = os.getenv("DB_USER_PROD")
         password = os.getenv("DB_PASSWORD_PROD")
@@ -43,3 +55,8 @@ def get_db_url(env_alias):
 def get_db_engine(env_alias):
     db_url = get_db_url(env_alias)
     return create_engine(db_url)
+
+
+def get_current_engine():
+    env = os.getenv("PLEIADES_ENV", "sandbox")
+    return get_db_engine(env)
