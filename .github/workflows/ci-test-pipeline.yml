@@ -55,4 +55,4 @@ jobs:
           python-version: '3.12'
       - run: pip install -r requirements.txt
       - name: Run ETL Tests
-        run: pytest/tests/backend/etl
+        run: pytest tests/backend/etl
