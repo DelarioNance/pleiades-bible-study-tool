@@ -11,13 +11,13 @@ def get_db_url(env_alias):
     # alongside the corresponding 
     # name, user, and password repo
     # variables in Bitbucket
-    if env_alias == 'sandbox':
+    if env_alias == 'sandbox': # used during local development
         user = os.getenv("DB_USER_SANDBOX")
         password = os.getenv("DB_PASSWORD_SANDBOX")
         name = os.getenv("DB_NAME_SANDBOX")
         host = os.getenv("DB_HOST_SANDBOX")
         suffix = '_sandbox'
-    elif env_alias == 'test':
+    elif env_alias == 'test': # used by GitHub Actions for etl and api tests
         user = os.getenv("DB_USER_TEST")
         password = os.getenv("DB_PASSWORD_TEST")
         name = os.getenv("DB_NAME_TEST")
@@ -59,4 +59,5 @@ def get_db_engine(env_alias):
 
 def get_current_engine():
     env = os.getenv("PLEIADES_ENV", "sandbox")
+    print(f"[DB] Using environment: {env}")
     return get_db_engine(env)
