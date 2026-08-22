@@ -20,7 +20,6 @@ public class ScreenOneBookInitializationTest extends AbstractScreenOneTest {
         IndexPage indexPage = super.goToIndexPage();
         Locator bookDropdown = indexPage.bookDropdown;
         assertThat(bookDropdown).isVisible();
-        assertThat(1 == 3).isTrue();
     }
 
     @Test
