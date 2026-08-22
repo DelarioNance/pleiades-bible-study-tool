@@ -19,7 +19,7 @@ import sys
 import time
 import asyncio
 
-from src.utils.db import get_db_engine
+from src.db.utils import get_db_engine
 from src.etl.pipeline import pipeline
 
 

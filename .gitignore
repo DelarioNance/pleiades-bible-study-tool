@@ -9,6 +9,7 @@ venv/
 */__pycache__/
 *.pytest_cache/
 .fastapicloud
+nohup.out
 
 # Node artifact files
 node_modules/
