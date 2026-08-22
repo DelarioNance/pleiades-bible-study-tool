@@ -26,7 +26,7 @@ run-name: ${{ github.actor }} is validating PR against test suite
 on: pull_request
 
 jobs:
-  etl-tests: # Job definition
+  ci-tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env:
       PLEIADES_ENV: test # Set the environment variable PLEIADES_ENV to "test" for the test suite (the code uses this to determine which database credentials to use)
@@ -57,9 +57,19 @@ jobs:
       - uses: actions/setup-python@v5 # Install Python 3.12 on the runner (https://github.com/actions/setup-python) 
         with:
           python-version: '3.12'
-      - name: Install test dependencies
+      - name: Install ETL and API test dependencies
         run: pip install -r requirements.txt
       - name: Run ETL Tests
         run: pytest tests/backend/etl
       - name: Run API Tests
         run: pytest tests/backend/api
+      - name: Run app in background
+        run: nohup uvicorn src.api.main:app --host 0.0.0.0 --port 8000 &
+      - name: Install UI test dependencies
+        run: |
+          sudo apt update
+          sudo apt install openjdk-17-jdk # install Java 17
+        working-directory: tests/frontend
+      - name: Run UI Tests
+        run: mvn clean package
+        working-directory: tests/frontend
