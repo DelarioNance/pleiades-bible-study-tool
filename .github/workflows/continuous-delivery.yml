@@ -15,5 +15,7 @@ jobs:
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
+      - name: Install FastAPI
+        run: pip install fastapi[standard]
       - name: Deploy to Staging Environment
         run: fastapi deploy --app-id ${{ secrets.FASTAPI_CLOUD_STAGING_APP_ID }}
