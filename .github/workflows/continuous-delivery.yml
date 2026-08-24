@@ -18,4 +18,7 @@ jobs:
       - name: Install FastAPI
         run: pip install fastapi[standard]
       - name: Deploy to Staging Environment
-        run: fastapi deploy --app-id ${{ secrets.FASTAPI_CLOUD_STAGING_APP_ID }}
+        run: fastapi deploy
+        env: # The FASTAPI_CLOUD_TOKEN and FASTAPI_CLOUD_APP_ID environment variables are required for deployment to FastAPI Cloud. They are stored as GitHub secrets for security.
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_STAGING_DEPLOY_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_STAGING_APP_ID }}
