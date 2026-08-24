@@ -1,0 +1,19 @@
+# Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
+name: Continuous Deployment (CD)
+
+# Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
+run-name: ${{ github.actor }} is running CD
+
+# Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
+on:
+    push:
+        branches:
+        - main
+
+jobs:
+  deployment: # Job definition
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    steps: # Steps executed on the runner
+      - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
+      - name: Deploy to Staging Environment
+        run: fastapi deploy --app-id ${{ secrets.FASTAPI_CLOUD_STAGING_APP_ID }}

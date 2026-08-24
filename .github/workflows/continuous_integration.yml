@@ -17,16 +17,16 @@
 
 
 # Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
-name: Run Test Suite with Postgres Service
+name: Run Continuous Integration (CI)
 
 # Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
-run-name: ${{ github.actor }} is validating PR against test suite  
+run-name: ${{ github.actor }} is running CI 
 
 # Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
 on: pull_request
 
 jobs:
-  ci-tests: # Job definition
+  tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env:
       PLEIADES_ENV: test # Set the environment variable PLEIADES_ENV to "test" for the test suite (the code uses this to determine which database credentials to use)
