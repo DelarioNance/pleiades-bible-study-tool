@@ -20,7 +20,7 @@ public abstract class AbstractScreenOneTest {
         // Local tests and CI tests are expected
         // to default since neither make Java
         // aware of environment variables.
-        String env = System.getenv("PLEIADES_ENV");
+        String env = System.getenv("PLEIADES_ENV"); // Java doesn't know about .env, so we must set this in the CI/CD environment if staging or prod is desired
         if (env == null || env.isBlank()) {
             env = "sandbox";
         }
@@ -28,8 +28,8 @@ public abstract class AbstractScreenOneTest {
 
         String url = switch (env) {
             case "sandbox", "test" -> "http://127.0.0.1:8000";
-            case "staging" -> System.getenv("URL_STAGING");
-            case "prod" -> System.getenv("URL_PROD");
+            case "staging" -> System.getenv("URL_STAGING"); // Java doesn't know about .env, so we must set this in the CI/CD environment.
+            case "prod" -> System.getenv("URL_PROD"); // Java doesn't know about .env, so we must set this in the CI/CD environment.
             default -> null;
         };
 
@@ -39,7 +39,7 @@ public abstract class AbstractScreenOneTest {
             );
         }
 
-        System.out.println("Using base URL: " + url);
+        // System.out.println("Using base URL: " + url);
 
         return url;
     }
