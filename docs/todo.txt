@@ -1,1 +1,4 @@
-1. Update UI test suite and AbstractScreenOneTest.java to use IndexPage.java POM
+1. Update to continuous-delivery.yml to only once after a PR has been merged into main (so ad-hoc pushes to main do not trigger a full deployment to staging)
+2. Add staging tests to continuous-delivery.yml
+3. Add rollback functionality to continuous-delivery.yml
+4. Work on Screen #2
