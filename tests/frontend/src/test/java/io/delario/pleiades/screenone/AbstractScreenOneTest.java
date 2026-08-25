@@ -14,7 +14,35 @@ public abstract class AbstractScreenOneTest {
     protected static Playwright playwright;
     protected static Browser browser;
     protected Page page; 
-    protected final String baseURL = "http://127.0.0.1:8000";
+    protected final String baseURL = getBaseURL();
+
+    private String getBaseURL() {
+        // Local tests and CI tests are expected
+        // to default since neither make Java
+        // aware of environment variables.
+        String env = System.getenv("PLEIADES_ENV");
+        if (env == null || env.isBlank()) {
+            env = "sandbox";
+        }
+        System.out.println("Running tests against environment: " + env);
+
+        String url = switch (env) {
+            case "sandbox", "test" -> "http://127.0.0.1:8000";
+            case "staging" -> System.getenv("URL_STAGING");
+            case "prod" -> System.getenv("URL_PROD");
+            default -> null;
+        };
+
+        if (url == null || url.isBlank()) {
+            throw new IllegalStateException(
+                "Invalid baseURL: environment variable not set or empty for PLEIADES_ENV=" + env
+            );
+        }
+
+        System.out.println("Using base URL: " + url);
+
+        return url;
+    }
 
     /**
      * One-time Playwright + Browser initialization. We use BeforeAll because
