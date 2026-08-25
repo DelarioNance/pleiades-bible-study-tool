@@ -8,8 +8,7 @@ run-name: ${{ github.actor }} is running staging tests
 on:
   workflow_run:
     workflows: [Continuous Deployment (CD)] # must match the name in the CD pipeline
-    types: [completed] # I'll want to update this .yml to only run when the CD workflow completes successfully, but for now, I'll just run it on any completion to test the workflow.
-
+    types: [completed] # I technically could only run this on successful runs, but I wonder if running it on failed runs can signal that the staging environment broke before the recent deployment attempt
 jobs:
   tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment

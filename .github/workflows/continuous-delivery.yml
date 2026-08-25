@@ -4,10 +4,11 @@ name: Continuous Deployment (CD)
 # Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
 run-name: ${{ github.actor }} is running CD
 
-# Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
 on:
-    push:
-        branches:
+    pull_request:
+      types:
+        - closed
+      branches:
         - main
 
 jobs:
