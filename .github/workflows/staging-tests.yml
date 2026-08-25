@@ -1,0 +1,25 @@
+# Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
+name: Run Staging Tests
+
+# Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
+run-name: ${{ github.actor }} is running staging tests
+
+# Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
+on:
+  workflow_run:
+    workflows: [Continuous Deployment (CD)] # must match the name in the CD pipeline
+    types: [completed]
+
+jobs:
+  tests: # Job definition
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    steps: # Steps executed on the runner
+      - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
+      - name: Install UI test dependencies
+        run: |
+          sudo apt update
+          sudo apt install openjdk-17-jdk # install Java 17
+        working-directory: tests/frontend
+      - name: Run UI Tests
+        run: mvn clean package
+        working-directory: tests/frontend
