@@ -8,11 +8,14 @@ run-name: ${{ github.actor }} is running staging tests
 on:
   workflow_run:
     workflows: [Continuous Deployment (CD)] # must match the name in the CD pipeline
-    types: [completed]
+    types: [completed] # I'll want to update this .yml to only run when the CD workflow completes successfully, but for now, I'll just run it on any completion to test the workflow.
 
 jobs:
   tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    env:
+      PLEIADES_ENV: staging
+      URL_STAGING: ${{ secrets.URL_STAGING }}
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - name: Install UI test dependencies
