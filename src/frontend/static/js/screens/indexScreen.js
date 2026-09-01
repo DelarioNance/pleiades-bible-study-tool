@@ -162,17 +162,28 @@ function getSelectedVerseValue() {
     return getVerseSelectElement().value;
 }
 
+function getSelectionCounterElement() {
+    return document.getElementById("selectionCounter");
+}
+
+function bumpSelectionCounter() {
+    const selectionCounterElement = getSelectionCounterElement();
+    const currentSelectionCounter = parseInt(selectionCounterElement.dataset.selectionCounter);
+    console.log("The counter before update:", getSelectionCounterElement().dataset.selectionCounter);
+    const newSelectionCounter = (currentSelectionCounter + 1).toString();
+    selectionCounterElement.dataset.selectionCounter = newSelectionCounter;
+    console.log("The counter after update:", getSelectionCounterElement().dataset.selectionCounter);
+}
 
 async function handleBookSelectChange(event) {
     const bookSelect = event.target;
     const newValue = bookSelect.value;
 
     if (newValue === currentSelections.book.value) {
-        return;
-    }
-
+        return; // this should never happen since the event listener is "change", but doesn't hurt to keep
+    }   
+    
     selectBookByValue(newValue, bookSelect);
-
     await populateChapterSelect(newValue);
 
     const chapterSelect = getChapterSelectElement();
@@ -182,7 +193,8 @@ async function handleBookSelectChange(event) {
 
     const verseSelect = getVerseSelectElement();
     selectVerseByValue(verseSelect.value, verseSelect);
-    console.log(currentSelections);
+
+    bumpSelectionCounter();
 }
 
 
@@ -191,8 +203,8 @@ async function handleChapterSelectChange(event) {
     const newValue = chapterSelect.value;
 
     if (newValue === currentSelections.chapter.value) {
-        return;
-    }
+        return; // this should never happen since the event listener is "change", but doesn't hurt to keep
+    }  
 
     selectChapterByValue(chapterSelect.value, chapterSelect);
 
@@ -200,7 +212,8 @@ async function handleChapterSelectChange(event) {
 
     const verseSelect = getVerseSelectElement();
     selectVerseByValue(verseSelect.value, verseSelect);
-    console.log(currentSelections);
+    
+    bumpSelectionCounter();
 }
 
 
@@ -209,11 +222,12 @@ function handleVerseSelectChange(event) {
     const newValue = verseSelect.value;
 
     if (newValue === currentSelections.verse.value) {
-        return;
+        return; // this should never happen since the event listener is "change", but doesn't hurt to keep
     }
     
     selectVerseByValue(verseSelect.value, verseSelect);
-    console.log(currentSelections);
+    
+    bumpSelectionCounter();
 }
 
 function selectBookByValue(newValue, selectElement) {
