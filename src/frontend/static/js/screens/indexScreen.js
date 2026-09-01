@@ -126,6 +126,8 @@ async function attachEventListeners() {
         .addEventListener("change", handleChapterSelectChange);
     document.getElementById("verseSelect")
         .addEventListener("change", handleVerseSelectChange);
+    document.getElementById("depthSelect")
+        .addEventListener("change", handleDepthSelectChange);
 }
 
 
@@ -226,6 +228,19 @@ function handleVerseSelectChange(event) {
     }
     
     selectVerseByValue(verseSelect.value, verseSelect);
+    
+    bumpSelectionCounter();
+}
+
+function handleDepthSelectChange(event) {
+    const depthSelect = event.target;
+    const newValue = depthSelect.value;
+
+    if (newValue === currentSelections.depth.value) {
+        return; // this should never happen since the event listener is "change", but doesn't hurt to keep
+    }
+    
+    selectDepthByValue(depthSelect.value, depthSelect);
     
     bumpSelectionCounter();
 }
