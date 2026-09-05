@@ -4,18 +4,14 @@ class ExtractCases:
     VALID = [
         {
             "csv_read_output": pd.DataFrame.from_dict({
-                "book": ["GEN", "EXO"],
-                "chapter": [1, 2],
-                "verse": [1, 2],
-                "anchor": ["God", "He"],
-                "references": ["REF1", "REF2"],
+                "From Verse": ["GEN", "EXO"],
+                "To Verse": ["GEN.1.1", "EXO.2.2"],
+                "Votes": [5, 10]
             }),
             "expected": pd.DataFrame.from_dict({
-                "book": ["GEN", "EXO"],
-                "chapter": [1, 2],
-                "verse": [1, 2],
-                "anchor": ["God", "He"],
-                "references": ["REF1", "REF2"],
+                "From Verse": ["GEN", "EXO"],
+                "To Verse": ["GEN.1.1", "EXO.2.2"],
+                "Votes": [5, 10]
             }),
         }
     ]

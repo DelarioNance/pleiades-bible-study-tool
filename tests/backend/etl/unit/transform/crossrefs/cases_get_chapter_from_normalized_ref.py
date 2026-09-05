@@ -5,13 +5,17 @@ class GetChapterCases:
     # -----------------------------------------------------
     VALID = [
         {
-            "input": "John 3:16",
+            "input": "John.3.16",
             "expected": "3"
         },
         {
-            "input": "1 Thess 4:5",
+            "input": "1 Thess.4.5",
             "expected": "4"
-        }
+        },
+        {
+            "input": "1Thess.4.5",
+            "expected": "4"
+        },
     ]
 
     # -----------------------------------------------------

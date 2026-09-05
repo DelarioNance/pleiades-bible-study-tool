@@ -10,10 +10,9 @@ class TransformVerseCrossrefsCases:
             # No loop here — keep as-is
             "input": pd.DataFrame([
                 {
-                    "book": "John",
-                    "chapter": "3",
-                    "verse": "16",
-                    "references": "John 3:16"
+                    "From Verse": "John.3.16",
+                    "To Verse": "John.3.16",
+                    "Votes": "5"
                 }
             ]),
             "expected": [
@@ -25,21 +24,26 @@ class TransformVerseCrossrefsCases:
         {
             "input": pd.DataFrame([
                 {
-                    "book": "1 Thess",
-                    "chapter": "4",
-                    "verse": "5",
-                    "references": "1 Thess 4:5|John 3:16"
+                    "From Verse": "1 Thess.4.5",
+                    "To Verse": "John.3.16",
+                    "Votes": "5"
+                },
+                {
+                    "From Verse": "1 Thess.4.5",
+                    "To Verse": "1 Thess.4.5",
+                    "Votes": "5"
                 }
             ]),
             "expected": [
                 # ❌ Remove the loop (1 Thess 4:5 → 1 Thess 4:5)
                 {
-                    "from_book": "1 Thess",
-                    "from_chapter": "4",
-                    "from_verse": "5",
-                    "to_book": "John",
-                    "to_chapter": "3",
-                    "to_verse": "16"
+                    "from_book_name": "1 Thess",
+                    "from_chapter_num": "4",
+                    "from_verse_num": "5",
+                    "to_book_name": "John",
+                    "to_chapter_num": "3",
+                    "to_verse_num": "16",
+                    "num_votes": "5",
                 }
             ]
         },
@@ -48,28 +52,34 @@ class TransformVerseCrossrefsCases:
             # No loops here — keep both
             "input": pd.DataFrame([
                 {
-                    "book": "Genesis",
-                    "chapter": "1",
-                    "verse": "1",
-                    "references": "John 1:1|Hebrews 11:3"
+                    "From Verse": "Genesis.1.1",
+                    "To Verse": "John.1.1",
+                    "Votes": "5"
+                },
+                {
+                    "From Verse": "Genesis.1.1",
+                    "To Verse": "Hebrews.11.3",
+                    "Votes": "5"
                 }
             ]),
             "expected": [
                 {
-                    "from_book": "Genesis",
-                    "from_chapter": "1",
-                    "from_verse": "1",
-                    "to_book": "John",
-                    "to_chapter": "1",
-                    "to_verse": "1"
+                    "from_book_name": "Genesis",
+                    "from_chapter_num": "1",
+                    "from_verse_num": "1",
+                    "to_book_name": "John",
+                    "to_chapter_num": "1",
+                    "to_verse_num": "1",
+                    "num_votes": "5"
                 },
                 {
-                    "from_book": "Genesis",
-                    "from_chapter": "1",
-                    "from_verse": "1",
-                    "to_book": "Hebrews",
-                    "to_chapter": "11",
-                    "to_verse": "3"
+                    "from_book_name": "Genesis",
+                    "from_chapter_num": "1",
+                    "from_verse_num": "1",
+                    "to_book_name": "Hebrews",
+                    "to_chapter_num": "11",
+                    "to_verse_num": "3",
+                    "num_votes": "5"
                 }
             ]
         },
@@ -78,36 +88,48 @@ class TransformVerseCrossrefsCases:
             # No loops here — keep all
             "input": pd.DataFrame([
                 {
-                    "book": "Romans",
-                    "chapter": "8",
-                    "verse": "28",
-                    "references": "Genesis 50:20|James 1:2|Psalm 23:1"
+                    "From Verse": "2Cor.8.28",
+                    "To Verse": "Genesis.50.20",
+                    "Votes": "5"
+                },
+                {
+                    "From Verse": "Rom.8.28",
+                    "To Verse": "2Tim.1.2",
+                    "Votes": "5"
+                },
+                {
+                    "From Verse": "2Cor.8.28",
+                    "To Verse": "2Tim.23.1",
+                    "Votes": "5"
                 }
             ]),
             "expected": [
                 {
-                    "from_book": "Romans",
-                    "from_chapter": "8",
-                    "from_verse": "28",
-                    "to_book": "Genesis",
-                    "to_chapter": "50",
-                    "to_verse": "20"
+                    "from_book_name": "2Cor",
+                    "from_chapter_num": "8",
+                    "from_verse_num": "28",
+                    "to_book_name": "Genesis",
+                    "to_chapter_num": "50",
+                    "to_verse_num": "20",
+                    "num_votes": "5",
                 },
                 {
-                    "from_book": "Romans",
-                    "from_chapter": "8",
-                    "from_verse": "28",
-                    "to_book": "James",
-                    "to_chapter": "1",
-                    "to_verse": "2"
+                    "from_book_name": "Rom",
+                    "from_chapter_num": "8",
+                    "from_verse_num": "28",
+                    "to_book_name": "2Tim",
+                    "to_chapter_num": "1",
+                    "to_verse_num": "2",
+                    "num_votes": "5",
                 },
                 {
-                    "from_book": "Romans",
-                    "from_chapter": "8",
-                    "from_verse": "28",
-                    "to_book": "Psalm",
-                    "to_chapter": "23",
-                    "to_verse": "1"
+                    "from_book_name": "2Cor",
+                    "from_chapter_num": "8",
+                    "from_verse_num": "28",
+                    "to_book_name": "2Tim",
+                    "to_chapter_num": "23",
+                    "to_verse_num": "1",
+                    "num_votes": "5",
                 }
             ]
         }

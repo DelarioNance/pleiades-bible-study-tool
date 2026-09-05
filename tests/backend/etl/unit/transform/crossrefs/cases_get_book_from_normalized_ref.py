@@ -5,13 +5,17 @@ class GetBookCases:
     # -----------------------------------------------------
     VALID = [
         {
-            "input": "John 3:16",
+            "input": "John.3.16",
             "expected": "John"
         },
         {
-            "input": "1 Thess 4:5",
+            "input": "1 Thess.4.5",
             "expected": "1 Thess"
-        }
+        },
+        {
+            "input": "1Thess.4.5",
+            "expected": "1Thess"
+        },
     ]
 
     # -----------------------------------------------------

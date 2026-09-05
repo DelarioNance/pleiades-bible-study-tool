@@ -59,7 +59,7 @@ async def pipeline(
     verses_raw = await extract_all_verses_async(books_raw, bible_api_url)
 
     print("Extracting cross-references...")
-    verse_crossrefs_raw = extract_verse_crossrefs()
+    verse_crossrefs_raw = extract_verse_crossrefs("data/open_bible_info_verse_crossrefs_kjv.tsv")
 
     # -----------------------------
     # Transform

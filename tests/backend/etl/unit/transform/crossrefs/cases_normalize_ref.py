@@ -5,25 +5,25 @@ class NormalizeRefCases:
     # -----------------------------------------------------
     VALID = [
         {
-            "input": "John 3:16",
-            "expected": "John 3:16"
+            "input": "John.3.16",
+            "expected": "John.3.16"
         },
         {
-            "input": "John 3:9-6",
-            "expected": "John 3:9"
+            "input": "1 Thess.4.5",
+            "expected": "1 Thess.4.5"
         },
         {
-            "input": "John 3:9,16",
-            "expected": "John 3:9"
+            "input": "1Thess.4.5",
+            "expected": "1Thess.4.5"
         },
         {
-            "input": "John 3:9, 16",
-            "expected": "John 3:9"
+            "input": "1Thess.4.5 - 2Cor.5.6",
+            "expected": "1Thess.4.5"
         },
         {
-            "input": "2 Thess 3:9-19, 8",
-            "expected": "2 Thess 3:9"
-        }
+            "input": "1Thess.4.5-2Cor.5.6",
+            "expected": "1Thess.4.5"
+        },
     ]
 
     # -----------------------------------------------------

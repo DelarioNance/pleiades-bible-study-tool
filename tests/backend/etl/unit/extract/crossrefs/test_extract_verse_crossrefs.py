@@ -17,10 +17,9 @@ def test_extract_verse_crossrefs_valid(mock_read_csv, case):
         "fake-path",
         sep="\t",
         usecols=[
-            "book", 
-            "chapter", 
-            "verse", 
-            "references"
+            "From Verse", 
+            "To Verse", 
+            "Votes"
         ],
         dtype=str
     )
