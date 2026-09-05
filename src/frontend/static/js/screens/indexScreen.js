@@ -126,6 +126,8 @@ async function attachEventListeners() {
         .addEventListener("change", handleChapterSelectChange);
     document.getElementById("verseSelect")
         .addEventListener("change", handleVerseSelectChange);
+    document.getElementById("depthSelect")
+        .addEventListener("change", handleDepthSelectChange);
 }
 
 
@@ -162,27 +164,42 @@ function getSelectedVerseValue() {
     return getVerseSelectElement().value;
 }
 
+function getSelectionCounterElement() {
+    return document.getElementById("selectionCounter");
+}
+
+// NOTE: If UI testing automation is shifted away from Playwright, then
+// +1 may no longer function correctly. Even though manual UI selections
+// for the same option do not trigger a "change," the Playwright code
+// to do so does trigger a "change" event. This is why the counter 
+// increments by +1 for both same and new selections.
+function bumpSelectionCounter() {
+    const selectionCounterElement = getSelectionCounterElement();
+    const currentSelectionCounter = parseInt(selectionCounterElement.dataset.selectionCounter);
+    console.log("The counter before update:", getSelectionCounterElement().dataset.selectionCounter);
+    const newSelectionCounter = (currentSelectionCounter + 1).toString();
+    selectionCounterElement.dataset.selectionCounter = newSelectionCounter;
+    console.log("The counter after update:", getSelectionCounterElement().dataset.selectionCounter);
+}
 
 async function handleBookSelectChange(event) {
     const bookSelect = event.target;
     const newValue = bookSelect.value;
 
-    if (newValue === currentSelections.book.value) {
-        return;
+    if (newValue !== currentSelections.book.value) {
+        selectBookByValue(newValue, bookSelect);
+        await populateChapterSelect(newValue);
+
+        const chapterSelect = getChapterSelectElement();
+        selectChapterByValue(chapterSelect.value, chapterSelect);
+
+        await populateVerseSelect(chapterSelect.value);
+
+        const verseSelect = getVerseSelectElement();
+        selectVerseByValue(verseSelect.value, verseSelect);
     }
 
-    selectBookByValue(newValue, bookSelect);
-
-    await populateChapterSelect(newValue);
-
-    const chapterSelect = getChapterSelectElement();
-    selectChapterByValue(chapterSelect.value, chapterSelect);
-
-    await populateVerseSelect(chapterSelect.value);
-
-    const verseSelect = getVerseSelectElement();
-    selectVerseByValue(verseSelect.value, verseSelect);
-    console.log(currentSelections);
+    bumpSelectionCounter();
 }
 
 
@@ -190,30 +207,39 @@ async function handleChapterSelectChange(event) {
     const chapterSelect = event.target;
     const newValue = chapterSelect.value;
 
-    if (newValue === currentSelections.chapter.value) {
-        return;
+    if (newValue !== currentSelections.chapter.value) {
+        selectChapterByValue(newValue, chapterSelect);
+
+        await populateVerseSelect(newValue);
+
+        const verseSelect = getVerseSelectElement();
+        selectVerseByValue(verseSelect.value, verseSelect);
     }
 
-    selectChapterByValue(chapterSelect.value, chapterSelect);
-
-    await populateVerseSelect(chapterSelect.value);
-
-    const verseSelect = getVerseSelectElement();
-    selectVerseByValue(verseSelect.value, verseSelect);
-    console.log(currentSelections);
+    bumpSelectionCounter();
 }
 
 
-function handleVerseSelectChange(event) {
+async function handleVerseSelectChange(event) {
     const verseSelect = event.target;
     const newValue = verseSelect.value;
 
-    if (newValue === currentSelections.verse.value) {
-        return;
+    if (newValue !== currentSelections.verse.value) {
+        selectVerseByValue(newValue, verseSelect);
     }
-    
-    selectVerseByValue(verseSelect.value, verseSelect);
-    console.log(currentSelections);
+
+    bumpSelectionCounter();
+}
+
+async function handleDepthSelectChange(event) {
+    const depthSelect = event.target;
+    const newValue = depthSelect.value;
+
+    if (newValue !== currentSelections.depth.value) {
+        selectDepthByValue(newValue, depthSelect);
+    }
+
+    bumpSelectionCounter();
 }
 
 function selectBookByValue(newValue, selectElement) {

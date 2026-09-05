@@ -24,7 +24,7 @@ public abstract class AbstractScreenOneTest {
         if (env == null || env.isBlank()) {
             env = "sandbox";
         }
-        System.out.println("Running tests against environment: " + env);
+        // System.out.println("Running tests against environment: " + env);
 
         String url = switch (env) {
             case "sandbox", "test" -> "http://127.0.0.1:8000";

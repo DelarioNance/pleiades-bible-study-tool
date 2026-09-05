@@ -6,8 +6,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.SelectOption;
 import com.microsoft.playwright.options.WaitForSelectorState;
-
-import io.delario.pleiades.util.ScreenOneReadyStateUtil;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 import java.util.List;
 
@@ -66,11 +65,20 @@ public class IndexPage {
     // option getters and selected‑value getters). Those methods prevent tests from depending
     // on internal DOM details, but public locators give tests the flexibility to assert UI
     // state without unnecessary abstraction.
-    private final Page page;
     public Locator bookDropdown;
     public Locator chapterDropdown;
     public Locator verseDropdown;
     public Locator depthDropdown;
+
+    private Locator selectionCounter;
+    private final String SELECTION_COUNTER_ATTRIBUTE_NAME = "data-selection-counter";
+
+    // NOTE: If UI testing automation is shifted away from Playwright, then
+    // +1 may no longer function correctly. Even though manual UI selections
+    // for the same option do not trigger a "change," the Playwright code
+    // to do so does trigger a "change" event. This is why the counter 
+    // increments by +1 for both same and new selections.
+    private final int SELECTION_COUNTER_INCREMENT = 1;
 
    /**
      * <p><strong>Constructs an IndexPage by binding Playwright locators to the
@@ -96,11 +104,11 @@ public class IndexPage {
      * on describing and interacting with the Index page’s UI.</p>
      */
     public IndexPage(Page page) {
-        this.page = page;
         this.bookDropdown = page.getByLabel("Book");
         this.chapterDropdown = page.getByLabel("Chapter");
         this.verseDropdown = page.getByLabel("Verse");
         this.depthDropdown = page.getByLabel("Depth");
+        this.selectionCounter = page.getByPlaceholder("selectionCounter");
     }
 
 
@@ -152,24 +160,50 @@ public class IndexPage {
         return this.depthDropdown.locator("option:checked").innerText();
     }
 
+    private int getSelectionCounter() {
+        return Integer.parseInt(
+            this.selectionCounter.getAttribute(SELECTION_COUNTER_ATTRIBUTE_NAME)
+        );
+    }
+
     public void selectBook(String book) {
-        this.bookDropdown.selectOption(new SelectOption().setLabel(book));
-        ScreenOneReadyStateUtil.waitForReadyState(this.page);
+        makeSelection(this.bookDropdown, book);
     }
 
     public void selectChapter(String chapter) {
-        this.chapterDropdown.selectOption(new SelectOption().setLabel(chapter));
-        ScreenOneReadyStateUtil.waitForReadyState(this.page);
+        makeSelection(this.chapterDropdown, chapter);
     }
 
     public void selectVerse(String verse) {
-        this.verseDropdown.selectOption(new SelectOption().setLabel(verse));
-        ScreenOneReadyStateUtil.waitForReadyState(this.page);
+        makeSelection(this.verseDropdown, verse);
     }
 
     public void selectDepth(String depth) {
-        this.depthDropdown.selectOption(new SelectOption().setLabel(depth));
-        ScreenOneReadyStateUtil.waitForReadyState(this.page);
+        makeSelection(this.depthDropdown, depth);
+    }
+
+    private void makeSelection(Locator dropdown, String value) {
+        int preSelectionCounter = getSelectionCounter();
+        // System.out.println("Current counter: " + preSelectionCounter + ", current dropdown value: " + currentDropdownValue + ", new value: " + value);
+
+        dropdown.selectOption(new SelectOption().setLabel(value));
+
+        // try {
+        //     Thread.sleep(10000);
+        // } catch (InterruptedException e) {
+        // } // Allow time for the selection cascade to complete and the counter to increment.
+
+        // System.out.println("New counter: " + getSelectionCounter() + ", new dropdown value: " + dropdown.locator("option:checked").innerText());
+
+        // We wait until the selection counter increments to the expected value as a synchronization point.
+        // Without the monotonic incrementing counter, UI tests could proceed before the selection cascade
+        // has completed. The definition of "completed" is the action of the corresponding event listener
+        // in the frontend code.
+        assertThat(this.selectionCounter)
+            .hasAttribute(
+                SELECTION_COUNTER_ATTRIBUTE_NAME, 
+                Integer.toString(preSelectionCounter + SELECTION_COUNTER_INCREMENT)
+            );
     }
 
     public static void main(String[] args) {
