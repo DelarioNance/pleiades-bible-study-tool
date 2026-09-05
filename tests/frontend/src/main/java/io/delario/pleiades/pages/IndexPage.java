@@ -184,7 +184,6 @@ public class IndexPage {
 
     private void makeSelection(Locator dropdown, String value) {
         int preSelectionCounter = getSelectionCounter();
-        String currentDropdownValue = dropdown.locator("option:checked").innerText();
         // System.out.println("Current counter: " + preSelectionCounter + ", current dropdown value: " + currentDropdownValue + ", new value: " + value);
 
         dropdown.selectOption(new SelectOption().setLabel(value));
