@@ -1,4 +1,3 @@
-Tighten UI state synchronizer
 Add rollback functionality to continuous-delivery.yml
 Work on Screen #2
 Add test reporting
