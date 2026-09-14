@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from fastapi import HTTPException
 from src.api.db import engine
 from sqlalchemy import text
@@ -114,7 +116,7 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
                         ON c.id = v.chapter_id 
                     INNER JOIN books b
                         ON b.id = c.book_id 
-                    WHERE rt.level < :max_depth_limit + 1
+                    WHERE rt.level < :max_depth_limit
                         AND vrf.to_id <> all(rt.visited)
                 )
                 SELECT
@@ -137,16 +139,15 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    return [
-        {
-            "level": row.level,
+    layered = defaultdict(list)
+    for row in rows:
+        layered[row.level].append({
             "verse_id": row.verse_id,
             "book_name": row.book_name,
             "chapter_number": row.chapter_number,
             "verse_number": row.verse_number,
             "verse_text": row.verse_text,
             "parent_id": row.parent_id,
-            "num_votes": row.num_votes
-        }
-        for row in rows
-    ]
+            "link_strength": row.num_votes
+        })
+    return dict(layered)
