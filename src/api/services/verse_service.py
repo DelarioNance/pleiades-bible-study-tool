@@ -159,7 +159,8 @@ def find_sparsest_verse_id():
         "verse_id": row.id
     }
 
-
+# The magic number 3 will need to be updated if a 
+# dynamic max neighbor count is desired in the future.
 def find_densest_verse_id():
     try:
         with engine.connect() as conn:
