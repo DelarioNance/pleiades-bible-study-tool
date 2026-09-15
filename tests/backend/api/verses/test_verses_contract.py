@@ -2,17 +2,18 @@ from fastapi.testclient import TestClient
 import pytest
 from src.api.main import app
 from fastapi import status 
+from tests.backend.api.utils import find_sparsest_verse_id, find_densest_verse_id
 
 client = TestClient(app)
 
-
+# will want to remove the hardcoded verse ids
 @pytest.mark.parametrize("case", [
     {
-        "verse_id": 10710, # sparsest possible tree (no neighbors)
+        "verse_id": find_sparsest_verse_id(client),
         "status_code": status.HTTP_200_OK
     },
     {
-        "verse_id": 4129, # densest possible tree (3 neighbors at each level)
+        "verse_id": find_densest_verse_id(client),
         "status_code": status.HTTP_200_OK
     },
 ])

@@ -4,6 +4,9 @@ from fastapi import HTTPException
 from src.api.db import engine
 from sqlalchemy import text
 
+# Much of the code assumes a max neighbor count of 3, 
+# so the code will need to be updated if a dynamic 
+# max neighbor count is desired in the future.
 
 def get_verse_info_from_chapter_id_and_verse_number(chapter_id, verse_number):
     try:
@@ -35,50 +38,14 @@ def get_verse_info_from_chapter_id_and_verse_number(chapter_id, verse_number):
         "text": row.verse_text
     }
 
-def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: int = 3):
+def run_bfs(start_verse_id: int, max_depth_limit: int = 2):
     try:
         with engine.connect() as conn:
             rows = conn.execute(text("""
-                WITH RECURSIVE verse_references_ranked AS (
-                    SELECT
-                        vr.from_id
-                        , vr.to_id
-                        , b.canonical_order AS to_book_canonical_order
-                        , b.common_name AS to_book_name
-                        , c.chapter_number AS to_chapter_number
-                        , v.verse_number AS to_verse_number
-                        , v.verse_text AS to_verse_text
-                        , vr.num_votes
-                        , RANK() OVER (
-                            PARTITION BY vr.from_id 
-                            ORDER BY 
-                                vr.num_votes DESC
-                                , b.canonical_order 
-                                , c.chapter_number 
-                                , v.verse_number 
-                        ) AS reference_rank -- no ties should occur if scriptures are unique in the DB
-                    FROM verse_references vr
-                    LEFT JOIN verses v 
-                        ON v.id = vr.to_id 
-                    LEFT JOIN chapters c
-                        ON c.id = v.chapter_id 
-                    LEFT JOIN books b
-                        ON b.id = c.book_id 
-                ), 
-                verse_references_filtered AS (
-                    SELECT
-                        vrr.from_id
-                        , vrr.to_id
-                        , vrr.to_book_canonical_order
-                        , vrr.to_book_name
-                        , vrr.to_chapter_number
-                        , vrr.to_verse_number
-                        , vrr.to_verse_text
-                        , vrr.num_votes
-                        , vrr.reference_rank
-                    FROM verse_references_ranked vrr
-                    WHERE vrr.reference_rank <= :max_neighbor_limit
-                ), 
+                WITH RECURSIVE verse_references_filtered AS (
+                    SELECT *
+                    FROM get_filtered_verse_reference_graph(3)
+                ),
                 ref_tree AS (
                     -- Base Case: Get output row corresponding to level (i.e., the starting verse)
                     SELECT
@@ -138,7 +105,6 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
             """), {
                 "start_verse_id": start_verse_id,
                 "max_depth_limit": max_depth_limit,
-                "max_neighbor_limit": max_neighbor_limit
             }).fetchall()
         
     except Exception as e:
@@ -165,3 +131,149 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
         ))
 
     return dict(layered_result)
+
+
+def find_sparsest_verse_id():
+    try:
+        with engine.connect() as conn:
+            row = conn.execute(text("""
+                SELECT 
+                    v.id
+                FROM verses v
+                LEFT JOIN get_filtered_verse_reference_graph() vr
+                    ON vr.from_id = v.id
+                GROUP BY 
+                    v.id
+                ORDER BY 
+                    COUNT(vr.to_id) ASC
+                    , v.id ASC -- tiebreaker
+                LIMIT 1;
+            """)).fetchone()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    if row is None:
+        raise HTTPException(status_code=404, detail="No verses found")
+    
+    return {
+        "verse_id": row.id
+    }
+
+
+def find_densest_verse_id():
+    try:
+        with engine.connect() as conn:
+            row = conn.execute(text("""
+                WITH verse_references_filtered AS (
+                    SELECT *
+                    FROM get_filtered_verse_reference_graph()
+                ),
+                roots AS (
+                    SELECT from_id AS root_id
+                    FROM verse_references_filtered
+                    GROUP BY from_id
+                    HAVING COUNT(to_id) = 3
+                ),
+                children AS (
+                    SELECT
+                        r.root_id,
+                        vr.to_id AS child_id
+                    FROM roots r
+                    JOIN verse_references_filtered vr
+                        ON vr.from_id = r.root_id
+                ),
+                grandchildren AS (
+                    SELECT
+                        c.root_id,
+                        c.child_id,
+                        vr2.to_id AS grandchild_id
+                    FROM children c
+                    JOIN verse_references_filtered vr2
+                        ON vr2.from_id = c.child_id
+                    WHERE vr2.to_id <> c.root_id
+                ),
+                grandchildren_per_child AS (
+                    SELECT
+                        root_id,
+                        child_id,
+                        COUNT(grandchild_id) AS gc_count
+                    FROM grandchildren
+                    GROUP BY root_id, child_id
+                    HAVING COUNT(grandchild_id) = 3
+                ),
+                valid_roots AS (
+                    SELECT root_id
+                    FROM grandchildren_per_child
+                    GROUP BY root_id
+                    HAVING COUNT(child_id) = 3
+                )
+                SELECT root_id
+                FROM valid_roots
+                LIMIT 1
+                ;
+            """)).fetchone()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    if row is None:
+        raise HTTPException(status_code=404, detail="No verses found")
+    
+    return {
+        "verse_id": row.root_id
+    }
+
+"""
+CREATE OR REPLACE FUNCTION get_filtered_verse_reference_graph()
+RETURNS TABLE (
+    from_id INT,
+    to_id INT,
+    to_book_canonical_order INT,
+    to_book_name TEXT,
+    to_chapter_number INT,
+    to_verse_number INT,
+    to_verse_text TEXT,
+    num_votes INT,
+    reference_rank INT
+)
+LANGUAGE sql
+AS $$
+WITH verse_references_ranked AS (
+    SELECT
+        vr.from_id
+        , vr.to_id
+        , b.canonical_order AS to_book_canonical_order
+        , b.common_name AS to_book_name
+        , c.chapter_number AS to_chapter_number
+        , v.verse_number AS to_verse_number
+        , v.verse_text AS to_verse_text
+        , vr.num_votes
+        , RANK() OVER (
+            PARTITION BY vr.from_id 
+            ORDER BY 
+                vr.num_votes DESC
+                , b.canonical_order 
+                , c.chapter_number 
+                , v.verse_number 
+        ) AS reference_rank -- no ties should occur if scriptures are unique in the DB
+    FROM verse_references vr
+    LEFT JOIN verses v 
+        ON v.id = vr.to_id 
+    LEFT JOIN chapters c
+        ON c.id = v.chapter_id 
+    LEFT JOIN books b
+        ON b.id = c.book_id 
+)
+SELECT
+    vrr.from_id
+    , vrr.to_id
+    , vrr.to_book_canonical_order
+    , vrr.to_book_name
+    , vrr.to_chapter_number
+    , vrr.to_verse_number
+    , vrr.to_verse_text
+    , vrr.num_votes
+    , vrr.reference_rank
+FROM verse_references_ranked vrr
+WHERE vrr.reference_rank <= 3
+$$;
+"""
