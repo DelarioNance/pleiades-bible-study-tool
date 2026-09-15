@@ -43,6 +43,7 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
                     SELECT
                         vr.from_id
                         , vr.to_id
+                        , b.canonical_order AS to_book_canonical_order
                         , b.common_name AS to_book_name
                         , c.chapter_number AS to_chapter_number
                         , v.verse_number AS to_verse_number
@@ -68,6 +69,7 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
                     SELECT
                         vrr.from_id
                         , vrr.to_id
+                        , vrr.to_book_canonical_order
                         , vrr.to_book_name
                         , vrr.to_chapter_number
                         , vrr.to_verse_number
@@ -82,6 +84,7 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
                     SELECT
                         0 AS level
                         , v.id AS verse_id
+                        , b.canonical_order AS book_canonical_order
                         , b.common_name AS book_name
                         , c.chapter_number 
                         , v.verse_number 
@@ -100,6 +103,7 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
                     SELECT
                         rt.level + 1 AS level
                         , vrf.to_id AS verse_id
+                        , b.canonical_order AS book_canonical_order
                         , b.common_name AS book_name
                         , c.chapter_number 
                         , v.verse_number 
@@ -122,6 +126,7 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
                 SELECT
                     rt.LEVEL
                     , rt.verse_id
+                    , rt.book_canonical_order
                     , rt.book_name
                     , rt.chapter_number 
                     , rt.verse_number 
@@ -139,10 +144,11 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    layered = defaultdict(list)
+    layered_result = defaultdict(list)
     for row in rows:
-        layered[row.level].append({
+        layered_result[row.level].append({
             "verse_id": row.verse_id,
+            "book_canonical_order": row.book_canonical_order,
             "book_name": row.book_name,
             "chapter_number": row.chapter_number,
             "verse_number": row.verse_number,
@@ -150,4 +156,12 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2, max_neighbor_limit: i
             "parent_id": row.parent_id,
             "link_strength": row.num_votes
         })
-    return dict(layered)
+
+    for layer in layered_result:
+        layered_result[layer].sort(key=lambda x: (
+            x["book_canonical_order"], 
+            x["chapter_number"], 
+            x["verse_number"]
+        ))
+
+    return dict(layered_result)
