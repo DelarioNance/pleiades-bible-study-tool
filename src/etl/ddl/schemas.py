@@ -36,6 +36,7 @@ CREATE TABLE verse_references (
     id SERIAL PRIMARY KEY,
     from_id INT NOT NULL,
     to_id INT NOT NULL,
+    num_votes INT NOT NULL,
 
     CONSTRAINT fk_verse_references_from
         FOREIGN KEY (from_id)

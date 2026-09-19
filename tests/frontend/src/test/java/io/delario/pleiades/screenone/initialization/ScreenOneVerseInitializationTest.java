@@ -43,7 +43,7 @@ public class ScreenOneVerseInitializationTest extends AbstractScreenOneTest {
 
     @ParameterizedTest
     @CsvSource({
-        "2 Chronicles, 18, 31, 4",
+        "2 Chronicles, 18, 31, 3",
     })
     public void testCorrectVerseDropdownOptionListWhenDefaultsProvided(
         String defaultBook,
@@ -83,11 +83,11 @@ public class ScreenOneVerseInitializationTest extends AbstractScreenOneTest {
     @ParameterizedTest
     @CsvSource({
         "Genesis, 1, 1, 1",
-        "Genesis, 50, 26, 5",
-        "Matthew, 1, 25, 5",
+        "Genesis, 50, 26, 3",
+        "Matthew, 1, 25, 3",
         "Matthew, 28, 1, 1",
         "Revelation, 1, 1, 1",
-        "Revelation, 22, 21, 5",
+        "Revelation, 22, 21, 3",
     })
     public void testCorrectDefaultVerseSelectedWhenDefaultsProvided(
         String defaultBook,

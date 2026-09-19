@@ -33,7 +33,9 @@ from src.etl.transform_crossrefs import transform_verse_crossrefs
 
 from src.etl.drop_bible_db_tables import drop_bible_db_tables
 from src.etl.create_tables import create_table
-import src.etl.ddl_schemas as schemas
+from src.etl.ddl.schemas import books, chapters, verses, verse_references
+from src.etl.create_or_replace_functions import create_or_replace_function
+from src.etl.ddl.functions import get_filtered_verse_reference_graph
 
 from src.etl.load_books import load_books
 from src.etl.build_id_map import build_id_map
@@ -59,7 +61,7 @@ async def pipeline(
     verses_raw = await extract_all_verses_async(books_raw, bible_api_url)
 
     print("Extracting cross-references...")
-    verse_crossrefs_raw = extract_verse_crossrefs()
+    verse_crossrefs_raw = extract_verse_crossrefs("data/open_bible_info_verse_crossrefs_kjv.tsv")
 
     # -----------------------------
     # Transform
@@ -81,10 +83,13 @@ async def pipeline(
         drop_bible_db_tables(conn, table_names_ordered=['verse_references', 'verses', 'chapters', 'books'])
 
         print("Creating tables...")
-        create_table(conn, schemas.books)
-        create_table(conn, schemas.chapters)
-        create_table(conn, schemas.verses)
-        create_table(conn, schemas.verse_references)
+        create_table(conn, books)
+        create_table(conn, chapters)
+        create_table(conn, verses)
+        create_table(conn, verse_references)
+
+        print("Creating functions...")
+        create_or_replace_function(conn, get_filtered_verse_reference_graph)
 
         # -----------------------------
         # Load

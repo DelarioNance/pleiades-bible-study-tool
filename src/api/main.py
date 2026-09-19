@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse # informs docs of an HTML repsonse
-from .routers import book_router, chapter_router
+from .routers import book_router, chapter_router, verse_router
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -11,6 +11,7 @@ from src.api.services.verse_service import get_verse_info_from_chapter_id_and_ve
 app = FastAPI() # fastapi dev src/api/main.py 
 app.include_router(book_router.router)
 app.include_router(chapter_router.router)
+app.include_router(verse_router.router)
 app.mount(
     "/src/frontend/static",
     StaticFiles(directory="src/frontend/static"),

@@ -28,3 +28,15 @@ def get_chapter_by_book_order_and_chapter_number(test_client, book_order, chapte
 def get_verses_by_chapter_id(test_client, chapter_id):
     verses = test_client.get(f"/v1/chapters/{chapter_id}/verses").json()
     return verses
+
+
+def find_sparsest_verse_id(test_client):
+    return test_client.get("/v1/verses/sparsest").json()["verse_id"]
+
+
+def find_densest_verse_id(test_client):
+    return test_client.get("/v1/verses/densest").json()["verse_id"]
+
+
+def get_verse_bfs_response(test_client, verse_id):
+    return test_client.get(f"/v1/verses/{verse_id}/traversal_results")

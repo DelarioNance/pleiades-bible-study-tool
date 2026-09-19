@@ -21,11 +21,11 @@ public class ScreenOneVerseSelectionTest extends AbstractScreenOneTest{
     @ParameterizedTest
     @CsvSource({
         "Genesis, 1, 1, 1",
-        "Genesis, 50, 26, 5",
-        "Matthew, 1, 25, 5",
+        "Genesis, 50, 26, 3",
+        "Matthew, 1, 25, 3",
         "Matthew, 28, 1, 1",
         "Revelation, 1, 1, 1",
-        "Revelation, 22, 21, 5",
+        "Revelation, 22, 21, 3",
     }) // Pairwise + BVA + ECP
     public void testSameVerseSelectionDoesNotChangeUI(
         String defaultBook,
@@ -46,11 +46,6 @@ public class ScreenOneVerseSelectionTest extends AbstractScreenOneTest{
         String preSelectDepthSelection = indexPage.getSelectedDepth();
 
         indexPage.selectVerse(defaultVerse);
-
-        Locator postSelectBookDropdownLocator = super.page.getByLabel("Book");
-        Locator postSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator postSelectVerseDropdownLocator = super.page.getByLabel("Verse");
-        Locator postSelectDepthDropdownLocator = super.page.getByLabel("Depth");
 
         List<String> postSelectBookOptions = indexPage.getBookOptions();
         List<String> postSelectChapterOptions = indexPage.getChapterOptions();

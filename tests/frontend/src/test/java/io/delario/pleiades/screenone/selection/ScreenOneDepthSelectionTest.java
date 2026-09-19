@@ -21,11 +21,11 @@ public class ScreenOneDepthSelectionTest extends AbstractScreenOneTest{
     @ParameterizedTest
     @CsvSource({
         "Genesis, 1, 1, 1",
-        "Genesis, 50, 26, 5",
-        "Matthew, 1, 25, 5",
+        "Genesis, 50, 26, 3",
+        "Matthew, 1, 25, 3",
         "Matthew, 28, 1, 1",
         "Revelation, 1, 1, 1",
-        "Revelation, 22, 21, 5",
+        "Revelation, 22, 21, 3",
     }) // Pairwise + BVA + ECP
     public void testSameDepthSelectionDoesNotChangeUI(
         String defaultBook,
@@ -46,11 +46,6 @@ public class ScreenOneDepthSelectionTest extends AbstractScreenOneTest{
         String preSelectDepthSelection = indexPage.getSelectedDepth();
 
         indexPage.selectDepth(defaultDepth);
-
-        Locator postSelectBookDropdownLocator = super.page.getByLabel("Book");
-        Locator postSelectChapterDropdownLocator = super.page.getByLabel("Chapter");
-        Locator postSelectVerseDropdownLocator = super.page.getByLabel("Verse");
-        Locator postSelectDepthDropdownLocator = super.page.getByLabel("Depth");
 
         List<String> postSelectBookOptions = indexPage.getBookOptions();
         List<String> postSelectChapterOptions = indexPage.getChapterOptions();
@@ -76,11 +71,11 @@ public class ScreenOneDepthSelectionTest extends AbstractScreenOneTest{
     @ParameterizedTest()
     @CsvSource({
         "Genesis, 1, 1, 1, 2",
-        "Genesis, 1, 10, 1, 5",
-        "Obadiah, 1, 1, 5, 4",
-        "Revelation, 9, 4, 5, 1",
-        "Revelation, 9, 21, 3, 2",
-        "Genesis, 22, 1, 2, 3",
+        "Genesis, 1, 10, 1, 3",
+        "Obadiah, 1, 1, 3, 1",
+        "Revelation, 9, 4, 3, 1",
+        "Revelation, 9, 21, 2, 3",
+        "Genesis, 22, 1, 2, 1",
     })
     public void testDifferentDepthSelectionChangesUICorrectly(
         String defaultBook,
