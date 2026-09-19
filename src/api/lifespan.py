@@ -4,7 +4,7 @@ import os
 
 from fastapi.concurrency import asynccontextmanager
 
-from db.utils import get_db_engine
+from src.db.utils import get_db_engine
 from src.etl.pipeline import pipeline
 
 # async is used because FastAPI requires it
