@@ -36,3 +36,7 @@ def find_sparsest_verse_id(test_client):
 
 def find_densest_verse_id(test_client):
     return test_client.get("/v1/verses/densest").json()["verse_id"]
+
+
+def get_verse_bfs_response(test_client, verse_id):
+    return test_client.get(f"/v1/verses/{verse_id}/traversal_results")

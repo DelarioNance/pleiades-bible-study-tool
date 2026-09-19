@@ -4,6 +4,8 @@ from fastapi import status
 import pytest
 from unittest.mock import patch
 
+from tests.backend.api.utils import get_verse_bfs_response
+
 client = TestClient(app)
 
 
@@ -15,5 +17,5 @@ client = TestClient(app)
 ])
 def test_verse_bfs_server_error(case):
     with patch("src.api.services.verse_service.engine.connect", side_effect=Exception("Database error")):
-        response = client.get(f"/v1/verses/{case['verse_id']}/traversal_results")
+        response = get_verse_bfs_response(client, case["verse_id"])
         assert response.status_code == case["status_code"]

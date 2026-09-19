@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 import pytest
 from src.api.main import app
 from fastapi import status 
-from tests.backend.api.utils import find_sparsest_verse_id, find_densest_verse_id
+from tests.backend.api.utils import find_sparsest_verse_id, find_densest_verse_id, get_verse_bfs_response
 
 client = TestClient(app)
 
@@ -18,7 +18,7 @@ client = TestClient(app)
     },
 ])
 def test_verse_bfs_contract(case):
-    response = client.get(f"/v1/verses/{case['verse_id']}/traversal_results")
+    response = get_verse_bfs_response(client, case["verse_id"])
 
     # status code check
     assert response.status_code == case["status_code"]
