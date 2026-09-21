@@ -27,14 +27,14 @@ async def lifespan(app):
             result = conn.execute(text(f"SELECT pg_try_advisory_lock({ETL_LOCK_ID});"))
             got_lock = result.scalar()
 
-        if not got_lock:
-            print("ETL already running or completed; skipping.")
-            return
-        
-        await pipeline(
-            bible_api_url="https://bible.helloao.org/api/eng_kjv", 
-            engine=engine
-        ) # will want to extract this to a utility for maintainability/simplicity
+            if not got_lock:
+                print("ETL already running or completed; skipping.")
+                return
+            
+            await pipeline(
+                bible_api_url="https://bible.helloao.org/api/eng_kjv", 
+                engine=engine
+            ) # will want to extract this to a utility for maintainability/simplicity
 
     # No need to force an ETL run for sandbox.
 
