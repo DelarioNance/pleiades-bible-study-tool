@@ -15,10 +15,20 @@ on:
 jobs:
   deployment: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    env: # not ideal to have staging variables in github actions and fastapi cloud
+      PLEIADES_ENV: staging 
+      DB_HOST_STAGING: localhost
+      DB_USER_TEST: ${{ secrets.CI_DB_USER }} 
+      DB_PASSWORD_TEST: ${{ secrets.CI_DB_PASSWORD }}
+      DB_NAME_TEST: ${{ secrets.CI_DB_NAME }}
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - name: Install FastAPI
         run: pip install fastapi[standard]
+      - name: Install ETL and API dependencies (only ETL is needed here)
+        run: pip install -r requirements.txt
+      - name: Run ETL
+        run: python -m src.etl.run_etl staging
       - name: Deploy to Staging Environment
         run: fastapi deploy
         env: # The FASTAPI_CLOUD_TOKEN and FASTAPI_CLOUD_APP_ID environment variables are required for deployment to FastAPI Cloud. They are stored as GitHub secrets for security.
