@@ -17,10 +17,10 @@ jobs:
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env: # not ideal to have staging variables in github actions and fastapi cloud
       PLEIADES_ENV: staging 
-      DB_HOST_STAGING: localhost
-      DB_USER_TEST: ${{ secrets.CI_DB_USER }} 
-      DB_PASSWORD_TEST: ${{ secrets.CI_DB_PASSWORD }}
-      DB_NAME_TEST: ${{ secrets.CI_DB_NAME }}
+      DB_HOST_STAGING: ${{ secrets.DB_HOST_STAGING }}
+      DB_USER_TEST: ${{ secrets.DB_USER_STAGING }} 
+      DB_PASSWORD_TEST: ${{ secrets.DB_PASSWORD_STAGING }}
+      DB_NAME_TEST: ${{ secrets.DB_NAME_STAGING }}
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - name: Install FastAPI
