@@ -1,6 +1,9 @@
 from sqlalchemy import MetaData, insert, bindparam
 
-def load_chapters(conn, chapters, book_id_mapping_api_to_db):
+from src.etl.data_test_seed import TEST_CHAPTERS
+
+
+def load_chapters_non_test(conn, chapters, book_id_mapping_api_to_db):
     metadata_obj = MetaData()
     metadata_obj.reflect(bind=conn)
     chapters_table = metadata_obj.tables['chapters']
@@ -10,6 +13,7 @@ def load_chapters(conn, chapters, book_id_mapping_api_to_db):
         .values(
             book_id=bindparam('db_book_id'),
             chapter_number=bindparam('chapter_number'),
+            is_test=False
         )
         .returning(chapters_table.c.id)
     )
@@ -26,3 +30,30 @@ def load_chapters(conn, chapters, book_id_mapping_api_to_db):
     db_chapter_ids = [row.id for row in result]
     
     return db_chapter_ids
+
+
+def load_chapters_test(conn, test_book_id_mapping):
+    metadata_obj = MetaData()
+    metadata_obj.reflect(bind=conn)
+    chapters_table = metadata_obj.tables['chapters']
+
+    insert_stmt = (
+        insert(chapters_table)
+        .values(
+            book_id=bindparam('book_id'),
+            chapter_number=bindparam('chapter_number'),
+            is_test=True
+        )
+        .returning(chapters_table.c.id, sort_by_parameter_order=True)
+    )
+
+    test_chapters_with_db_book_ids = [
+        {
+            'book_id': test_book_id_mapping[chapter['book_id']],
+            'chapter_number': chapter['chapter_number'],
+        }
+        for chapter in TEST_CHAPTERS
+    ]
+
+    result = conn.execute(insert_stmt, test_chapters_with_db_book_ids)
+    return [row.id for row in result]

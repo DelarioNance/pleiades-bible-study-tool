@@ -2,7 +2,8 @@ books = """
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     common_name VARCHAR(100) NOT NULL,
-    canonical_order INT NOT NULL
+    canonical_order INT NOT NULL,
+    is_test BOOLEAN NOT NULL
 );
 """
 
@@ -11,6 +12,7 @@ CREATE TABLE chapters (
     id SERIAL PRIMARY KEY,
     book_id INT NOT NULL,
     chapter_number INT NOT NULL,
+    is_test BOOLEAN NOT NULL,
 
     CONSTRAINT fk_chapters_books
         FOREIGN KEY (book_id)
@@ -24,6 +26,7 @@ CREATE TABLE verses (
     chapter_id INT NOT NULL,
     verse_number INT NOT NULL,
     verse_text VARCHAR(528) NOT NULL,
+    is_test BOOLEAN NOT NULL,
 
     CONSTRAINT fk_verses_chapters
         FOREIGN KEY (chapter_id)
@@ -37,6 +40,7 @@ CREATE TABLE verse_references (
     from_id INT NOT NULL,
     to_id INT NOT NULL,
     num_votes INT NOT NULL,
+    is_test BOOLEAN NOT NULL,
 
     CONSTRAINT fk_verse_references_from
         FOREIGN KEY (from_id)
