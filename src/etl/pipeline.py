@@ -95,24 +95,24 @@ async def pipeline(
         # -----------------------------
         # Load (non-test data)
         # -----------------------------
-        # print("Loading real books...")
-        # db_book_ids = load_books_non_test(conn, books_transformed)
-        # book_id_mapping_api_to_db = build_id_map(books_transformed, db_book_ids, 'book_id')
+        print("Loading real books...")
+        db_book_ids = load_books_non_test(conn, books_transformed)
+        book_id_mapping_api_to_db = build_id_map(books_transformed, db_book_ids, 'book_id')
 
-        # print("Loading real chapters...")
-        # db_chapter_ids = load_chapters_non_test(conn, chapters_derived, book_id_mapping_api_to_db)
-        # chapter_id_mapping_api_to_db = build_id_map(chapters_derived, db_chapter_ids, ['book_id', 'chapter_number'])
+        print("Loading real chapters...")
+        db_chapter_ids = load_chapters_non_test(conn, chapters_derived, book_id_mapping_api_to_db)
+        chapter_id_mapping_api_to_db = build_id_map(chapters_derived, db_chapter_ids, ['book_id', 'chapter_number'])
 
-        # print("Loading real verses...")
-        # db_verse_ids = load_verses_non_test(conn, verses_transformed, chapter_id_mapping_api_to_db)
-        # verse_id_mapping_api_to_db = build_id_map(
-        #     verses_transformed,
-        #     db_verse_ids,
-        #     ['book_id', 'chapter_number', 'verse_number']
-        # )
+        print("Loading real verses...")
+        db_verse_ids = load_verses_non_test(conn, verses_transformed, chapter_id_mapping_api_to_db)
+        verse_id_mapping_api_to_db = build_id_map(
+            verses_transformed,
+            db_verse_ids,
+            ['book_id', 'chapter_number', 'verse_number']
+        )
 
-        # print("Loading real cross-references...")
-        # load_verse_crossrefs_non_test(conn, refs_transformed, verse_id_mapping_api_to_db)
+        print("Loading real cross-references...")
+        load_verse_crossrefs_non_test(conn, refs_transformed, verse_id_mapping_api_to_db)
 
         # -----------------------------
         # Load (test data)

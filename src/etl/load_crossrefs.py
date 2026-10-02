@@ -63,13 +63,13 @@ def load_verse_crossrefs_test(conn, test_verse_id_mapping):
             **crossref,
             'from_verse_id': test_verse_id_mapping[(
                 crossref['from_book_name'],
-                int(crossref['from_chapter_num']),
-                int(crossref['from_verse_num'])
+                int(crossref['from_chapter_number']),
+                int(crossref['from_verse_number'])
             )],
             'to_verse_id': test_verse_id_mapping[(
-                CROSSREF_TO_HELLO_API_BOOK_ID_MAPPING[crossref['to_book_name']],
-                int(crossref['to_chapter_num']),
-                int(crossref['to_verse_num'])
+                crossref['to_book_name'],
+                int(crossref['to_chapter_number']),
+                int(crossref['to_verse_number'])
             )],
         }
         for crossref in TEST_VERSE_REFERENCES

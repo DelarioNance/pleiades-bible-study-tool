@@ -54,38 +54,38 @@ TEST_VERSE_REFERENCES = [
     # --- dense_layers_0_2: top 3 children (votes 100/90/80) each have 3 children;
     #     children 4 and 5 are lower-vote extras with no children ---
     # root -> children
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 1, "num_votes": 100},  # dense_layers_0_2_root -> child_1
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 2, "num_votes": 90},   # -> child_2
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 3, "num_votes": 80},   # -> child_3
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 4, "num_votes": 10},   # -> child_4
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 5, "num_votes": 5},    # -> child_5
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 1, "num_votes": 100},  # dense_layers_0_2_root -> child_1
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 2, "num_votes": 90},   # -> child_2
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 3, "num_votes": 80},   # -> child_3
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 4, "num_votes": 10},   # -> child_4
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 2, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 5, "num_votes": 5},    # -> child_5
     # child_1 -> grandchildren 1.1-1.3
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 1, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 1, "num_votes": 49},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 1, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 2, "num_votes": 48},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 1, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 3, "num_votes": 47},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 1, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 1, "num_votes": 49},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 1, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 2, "num_votes": 48},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 1, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 3, "num_votes": 47},
     # child_2 -> grandchildren 2.1-2.3
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 2, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 4, "num_votes": 49},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 2, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 5, "num_votes": 48},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 2, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 6, "num_votes": 47},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 2, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 4, "num_votes": 49},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 2, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 5, "num_votes": 48},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 2, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 6, "num_votes": 47},
     # child_3 -> grandchildren 3.1-3.3
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 3, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 7, "num_votes": 49},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 3, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 8, "num_votes": 48},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 3, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 9, "num_votes": 47},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 3, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 7, "num_votes": 49},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 3, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 8, "num_votes": 48},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 3, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 9, "num_votes": 47},
 
     # --- dense_layers_0_1: 3 children, no grandchildren ---
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 3, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 6, "num_votes": 30},  # dense_layers_0_1_root -> child_1
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 3, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 7, "num_votes": 20},  # -> child_2
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 3, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 8, "num_votes": 10},  # -> child_3
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 3, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 6, "num_votes": 30},  # dense_layers_0_1_root -> child_1
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 3, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 7, "num_votes": 20},  # -> child_2
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 3, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 8, "num_votes": 10},  # -> child_3
 
     # --- one_child: exactly one child ---
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 4, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 9, "num_votes": 7},   # one_child_root -> one_child_child_1
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 4, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 9, "num_votes": 7},   # one_child_root -> one_child_child_1
 
     # --- middle_child: votes 30 > 20 > 10; only the 20-vote (middle) child has children ---
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 5, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 10, "num_votes": 30},  # middle_child_root -> child_1
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 5, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 11, "num_votes": 20},  # -> child_2
-    {"from_book_id": "book_a1", "from_chapter_number": 9001, "from_verse_number": 5, "to_book_id": "book_b1", "to_chapter_number": 9002, "to_verse_number": 12, "num_votes": 10},  # -> child_3
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 5, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 10, "num_votes": 30},  # middle_child_root -> child_1
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 5, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 11, "num_votes": 20},  # -> child_2
+    {"from_book_name": "book_a1", "from_chapter_number": 9001, "from_verse_number": 5, "to_book_name": "book_b1", "to_chapter_number": 9002, "to_verse_number": 12, "num_votes": 10},  # -> child_3
     # middle_child_child_2 -> grandchildren
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 11, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 10, "num_votes": 14},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 11, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 11, "num_votes": 13},
-    {"from_book_id": "book_b1", "from_chapter_number": 9002, "from_verse_number": 11, "to_book_id": "book_c1", "to_chapter_number": 9003, "to_verse_number": 12, "num_votes": 12},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 11, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 10, "num_votes": 14},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 11, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 11, "num_votes": 13},
+    {"from_book_name": "book_b1", "from_chapter_number": 9002, "from_verse_number": 11, "to_book_name": "book_c1", "to_chapter_number": 9003, "to_verse_number": 12, "num_votes": 12},
 ]

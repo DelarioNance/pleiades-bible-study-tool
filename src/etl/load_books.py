@@ -37,7 +37,7 @@ def load_books_test(conn):
             canonical_order=bindparam('canonical_order'),
             is_test=True
         )
-        .returning(books_table.c.id, sort_by_parameter_order=True)
+        .returning(books_table.c.id)
     )
 
     test_books = [

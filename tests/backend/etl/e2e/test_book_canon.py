@@ -6,7 +6,11 @@ from tests.backend.utils.constants import (
 )
 
 def test_correct_number_of_books(conn_from_etl_run):
-    query = text("SELECT COUNT(id) FROM books;")
+    query = text("""
+        SELECT COUNT(id) 
+        FROM books
+        WHERE is_test = FALSE;
+    """)
     (count,) = conn_from_etl_run.execute(query).one() # one is used instead of scalar to error if the query does not return exactly 1 row
 
     assert count == NUM_BOOKS, f"Expected {NUM_BOOKS} books, found {count}"
@@ -16,6 +20,7 @@ def test_books_in_correct_order(conn_from_etl_run):
     query = text("""
         SELECT common_name
         FROM books
+        WHERE is_test = FALSE
         ORDER BY id;
     """)
 
@@ -32,7 +37,8 @@ def test_correct_chapter_count_per_book(conn_from_etl_run):
     query = text("""
         SELECT b.common_name, COUNT(c.id) AS chapter_count
         FROM books b
-        LEFT JOIN chapters c ON c.book_id = b.id
+        LEFT JOIN chapters c ON c.book_id = b.id and c.is_test = FALSE
+        WHERE b.is_test = FALSE
         GROUP BY b.common_name
     """)
 
@@ -57,7 +63,8 @@ def test_chapters_are_contiguous_and_start_at_one(conn_from_etl_run):
                     ORDER BY c.chapter_number
                 ) AS rn
             FROM books b
-            JOIN chapters c ON c.book_id = b.id
+            JOIN chapters c ON c.book_id = b.id and c.is_test = FALSE
+            WHERE b.is_test = FALSE
         )
         SELECT common_name, chapter_number, rn
         FROM numbered

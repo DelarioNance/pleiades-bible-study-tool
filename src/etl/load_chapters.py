@@ -44,7 +44,7 @@ def load_chapters_test(conn, test_book_id_mapping):
             chapter_number=bindparam('chapter_number'),
             is_test=True
         )
-        .returning(chapters_table.c.id, sort_by_parameter_order=True)
+        .returning(chapters_table.c.id)
     )
 
     test_chapters_with_db_book_ids = [

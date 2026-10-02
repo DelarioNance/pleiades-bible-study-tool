@@ -3,7 +3,7 @@ from tests.backend.utils.constants import NUM_VERSES
 
 
 def test_correct_number_of_verses(conn_from_etl_run):
-    query = text("SELECT COUNT(id) FROM verses;")
+    query = text("SELECT COUNT(id) FROM verses WHERE is_test = FALSE;")
     (count,) = conn_from_etl_run.execute(query).one()
 
     assert count == NUM_VERSES, (
