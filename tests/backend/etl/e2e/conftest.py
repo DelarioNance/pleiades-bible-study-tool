@@ -10,7 +10,8 @@ def db_engine_from_etl_run():
     engine = get_current_engine()
     asyncio.run(pipeline(
         bible_api_url="https://bible.helloao.org/api/eng_kjv", 
-        engine=engine
+        engine=engine,
+        load_test_data=True,
     ))
     yield engine
 

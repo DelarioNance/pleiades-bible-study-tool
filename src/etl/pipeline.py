@@ -47,7 +47,8 @@ from src.etl.data_test_seed import TEST_BOOKS, TEST_CHAPTERS, TEST_VERSES
 
 async def pipeline(
     bible_api_url,
-    engine
+    engine,
+    load_test_data=False,
 ):
     # -----------------------------
     # Extract
@@ -114,24 +115,22 @@ async def pipeline(
         print("Loading real cross-references...")
         load_verse_crossrefs_non_test(conn, refs_transformed, verse_id_mapping_api_to_db)
 
-        # -----------------------------
-        # Load (test data)
-        # -----------------------------
-        print("Loading test books...")
-        db_test_book_ids = load_books_test(conn)
-        test_book_id_mapping = build_id_map(TEST_BOOKS, db_test_book_ids, 'book_id')
+        if load_test_data:
+            print("Loading test books...")
+            db_test_book_ids = load_books_test(conn)
+            test_book_id_mapping = build_id_map(TEST_BOOKS, db_test_book_ids, 'book_id')
 
-        print("Loading test chapters...")
-        db_test_chapter_ids = load_chapters_test(conn, test_book_id_mapping)
-        test_chapter_id_mapping = build_id_map(TEST_CHAPTERS, db_test_chapter_ids, ['book_id', 'chapter_number'])
+            print("Loading test chapters...")
+            db_test_chapter_ids = load_chapters_test(conn, test_book_id_mapping)
+            test_chapter_id_mapping = build_id_map(TEST_CHAPTERS, db_test_chapter_ids, ['book_id', 'chapter_number'])
 
-        print("Loading test verses...")
-        db_test_verse_ids = load_verses_test(conn, test_chapter_id_mapping)
-        test_verse_id_mapping = build_id_map(
-            TEST_VERSES,
-            db_test_verse_ids,
-            ['book_id', 'chapter_number', 'verse_number']
-        )
+            print("Loading test verses...")
+            db_test_verse_ids = load_verses_test(conn, test_chapter_id_mapping)
+            test_verse_id_mapping = build_id_map(
+                TEST_VERSES,
+                db_test_verse_ids,
+                ['book_id', 'chapter_number', 'verse_number']
+            )
 
-        print("Loading test cross-references...")
-        load_verse_crossrefs_test(conn, test_verse_id_mapping)
+            print("Loading test cross-references...")
+            load_verse_crossrefs_test(conn, test_verse_id_mapping)
