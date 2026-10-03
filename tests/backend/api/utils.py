@@ -1,5 +1,5 @@
-def get_books(test_client):
-    return test_client.get("/v1/books").json()
+def get_books(test_client, is_test: bool=False):
+    return test_client.get(f"/v1/books?is_test={is_test}").json()
 
 
 def get_book_by_order(test_client, book_order):
