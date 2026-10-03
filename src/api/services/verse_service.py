@@ -38,6 +38,32 @@ def get_verse_info_from_chapter_id_and_verse_number(chapter_id, verse_number):
         "text": row.verse_text
     }
 
+
+def fetch_verses_from_text(verse_text: str):
+    try:
+        with engine.connect() as conn:
+            rows = conn.execute(text("""
+                SELECT
+                    v.id
+                FROM verses v
+                WHERE v.verse_text ILIKE :verse_text
+                ;
+            """), {
+                "verse_text": verse_text
+            }).fetchall()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    if not rows:
+        raise HTTPException(status_code=404, detail="No verses found matching the text")
+    
+    return [
+        {
+            "id": row.id
+        }
+        for row in rows
+    ]
+
 def run_bfs(start_verse_id: int, max_depth_limit: int = 2):
     try:
         with engine.connect() as conn:
@@ -131,94 +157,3 @@ def run_bfs(start_verse_id: int, max_depth_limit: int = 2):
         ))
 
     return dict(layered_result)
-
-
-def find_sparsest_verse_id():
-    try:
-        with engine.connect() as conn:
-            row = conn.execute(text("""
-                SELECT 
-                    v.id
-                FROM verses v
-                LEFT JOIN get_filtered_verse_reference_graph() vr
-                    ON vr.from_id = v.id
-                GROUP BY 
-                    v.id
-                ORDER BY 
-                    COUNT(vr.to_id) ASC
-                    , v.id ASC -- tiebreaker
-                LIMIT 1;
-            """)).fetchone()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-    if row is None:
-        raise HTTPException(status_code=404, detail="No verses found")
-    
-    return {
-        "verse_id": row.id
-    }
-
-# The magic number 3 will need to be updated if a 
-# dynamic max neighbor count is desired in the future.
-def find_densest_verse_id():
-    try:
-        with engine.connect() as conn:
-            row = conn.execute(text("""
-                WITH verse_references_filtered AS (
-                    SELECT *
-                    FROM get_filtered_verse_reference_graph()
-                ),
-                roots AS (
-                    SELECT from_id AS root_id
-                    FROM verse_references_filtered
-                    GROUP BY from_id
-                    HAVING COUNT(to_id) = 3
-                ),
-                children AS (
-                    SELECT
-                        r.root_id,
-                        vr.to_id AS child_id
-                    FROM roots r
-                    JOIN verse_references_filtered vr
-                        ON vr.from_id = r.root_id
-                ),
-                grandchildren AS (
-                    SELECT
-                        c.root_id,
-                        c.child_id,
-                        vr2.to_id AS grandchild_id
-                    FROM children c
-                    JOIN verse_references_filtered vr2
-                        ON vr2.from_id = c.child_id
-                    WHERE vr2.to_id <> c.root_id
-                ),
-                grandchildren_per_child AS (
-                    SELECT
-                        root_id,
-                        child_id,
-                        COUNT(grandchild_id) AS gc_count
-                    FROM grandchildren
-                    GROUP BY root_id, child_id
-                    HAVING COUNT(grandchild_id) = 3
-                ),
-                valid_roots AS (
-                    SELECT root_id
-                    FROM grandchildren_per_child
-                    GROUP BY root_id
-                    HAVING COUNT(child_id) = 3
-                )
-                SELECT root_id
-                FROM valid_roots
-                LIMIT 1
-                ;
-            """)).fetchone()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-    if row is None:
-        raise HTTPException(status_code=404, detail="No verses found")
-    
-    return {
-        "verse_id": row.root_id
-    }

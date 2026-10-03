@@ -30,13 +30,11 @@ def get_verses_by_chapter_id(test_client, chapter_id):
     return verses
 
 
-def find_sparsest_verse_id(test_client):
-    return test_client.get("/v1/verses/sparsest").json()["verse_id"]
-
-
-def find_densest_verse_id(test_client):
-    return test_client.get("/v1/verses/densest").json()["verse_id"]
-
-
 def get_verse_bfs_response(test_client, verse_id):
     return test_client.get(f"/v1/verses/{verse_id}/traversal_results")
+
+
+def get_verse_by_text(test_client, verse_text):
+    verses = test_client.get(f"/v1/verses/search?text={verse_text}").json()
+    assert len(verses) == 1, f"Expected exactly one verse for text '{verse_text}', but found {len(verses)}."
+    return verses[0]['id']
