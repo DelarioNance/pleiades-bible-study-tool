@@ -28,6 +28,10 @@ client = TestClient(app)
         "verse_id": get_verse_by_text(client, "TEST ROOT: 3 children, middle has children"),
         "status_code": status.HTTP_200_OK
     },
+    {
+        "verse_id": get_verse_by_text(client, "TEST ROOT: Chain past depth limit (4 layers)"),
+        "status_code": status.HTTP_200_OK
+    }
 ])
 def test_verse_bfs_contract(case):
     response = get_verse_bfs_response(client, case["verse_id"])
@@ -39,6 +43,8 @@ def test_verse_bfs_contract(case):
 
     # shape checks
     assert isinstance(data, dict)
+
+    assert 1 <= len(data) <= 3, "The number of levels in the response should be between 1 and 3." 
 
     # key + type checks
     for level in data:
