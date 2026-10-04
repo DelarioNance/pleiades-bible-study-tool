@@ -8,10 +8,11 @@ run-name: ${{ github.actor }} is running staging tests
 on:
   workflow_run:
     workflows: [Continuous Deployment (CD)] # must match the name in the CD pipeline
-    types: [completed] # I technically could only run this on successful runs, but I wonder if running it on failed runs can signal that the staging environment broke before the recent deployment attempt
+    types: [completed]
 jobs:
   tests: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       PLEIADES_ENV: staging
       URL_STAGING: ${{ secrets.URL_STAGING }}
