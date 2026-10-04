@@ -2,20 +2,36 @@ from fastapi.testclient import TestClient
 import pytest
 from src.api.main import app
 from fastapi import status 
-from tests.backend.api.utils import find_sparsest_verse_id, find_densest_verse_id, get_verse_bfs_response
+from tests.backend.api.utils import get_verse_bfs_response, get_verse_by_text
 
 client = TestClient(app)
 
 # will want to remove the hardcoded verse ids
 @pytest.mark.parametrize("case", [
     {
-        "verse_id": find_sparsest_verse_id(client),
+        "verse_id": get_verse_by_text(client, "TEST ROOT: No children"),
         "status_code": status.HTTP_200_OK
     },
     {
-        "verse_id": find_densest_verse_id(client),
+        "verse_id": get_verse_by_text(client, "TEST ROOT: Dense at layers 0-2"),
         "status_code": status.HTTP_200_OK
     },
+    {
+        "verse_id": get_verse_by_text(client, "TEST ROOT: Dense at layers 0-1; sparse as layer 2"),
+        "status_code": status.HTTP_200_OK
+    },
+    {
+        "verse_id": get_verse_by_text(client, "TEST ROOT: 1 child"),
+        "status_code": status.HTTP_200_OK
+    },
+    {
+        "verse_id": get_verse_by_text(client, "TEST ROOT: 3 children, middle has children"),
+        "status_code": status.HTTP_200_OK
+    },
+    {
+        "verse_id": get_verse_by_text(client, "TEST ROOT: Chain past depth limit (4 layers)"),
+        "status_code": status.HTTP_200_OK
+    }
 ])
 def test_verse_bfs_contract(case):
     response = get_verse_bfs_response(client, case["verse_id"])
@@ -27,6 +43,8 @@ def test_verse_bfs_contract(case):
 
     # shape checks
     assert isinstance(data, dict)
+
+    assert 1 <= len(data) <= 3, "The number of levels in the response should be between 1 and 3." 
 
     # key + type checks
     for level in data:

@@ -37,16 +37,18 @@ from src.etl.ddl.schemas import books, chapters, verses, verse_references
 from src.etl.create_or_replace_functions import create_or_replace_function
 from src.etl.ddl.functions import get_filtered_verse_reference_graph
 
-from src.etl.load_books import load_books
+from src.etl.load_books import load_books_non_test, load_books_test
 from src.etl.build_id_map import build_id_map
-from src.etl.load_chapters import load_chapters
-from src.etl.load_verses import load_verses
-from src.etl.load_crossrefs import load_verse_crossrefs
+from src.etl.load_chapters import load_chapters_non_test, load_chapters_test
+from src.etl.load_verses import load_verses_non_test, load_verses_test
+from src.etl.load_crossrefs import load_verse_crossrefs_non_test, load_verse_crossrefs_test
+from src.etl.data_test_seed import TEST_BOOKS, TEST_CHAPTERS, TEST_VERSES
 
 
 async def pipeline(
     bible_api_url,
-    engine
+    engine,
+    load_test_data=False,
 ):
     # -----------------------------
     # Extract
@@ -92,23 +94,43 @@ async def pipeline(
         create_or_replace_function(conn, get_filtered_verse_reference_graph)
 
         # -----------------------------
-        # Load
+        # Load (non-test data)
         # -----------------------------
-        print("Loading books...")
-        db_book_ids = load_books(conn, books_transformed)
+        print("Loading real books...")
+        db_book_ids = load_books_non_test(conn, books_transformed)
         book_id_mapping_api_to_db = build_id_map(books_transformed, db_book_ids, 'book_id')
 
-        print("Loading chapters...")
-        db_chapter_ids = load_chapters(conn, chapters_derived, book_id_mapping_api_to_db)
+        print("Loading real chapters...")
+        db_chapter_ids = load_chapters_non_test(conn, chapters_derived, book_id_mapping_api_to_db)
         chapter_id_mapping_api_to_db = build_id_map(chapters_derived, db_chapter_ids, ['book_id', 'chapter_number'])
 
-        print("Loading verses...")
-        db_verse_ids = load_verses(conn, verses_transformed, chapter_id_mapping_api_to_db)
+        print("Loading real verses...")
+        db_verse_ids = load_verses_non_test(conn, verses_transformed, chapter_id_mapping_api_to_db)
         verse_id_mapping_api_to_db = build_id_map(
             verses_transformed,
             db_verse_ids,
             ['book_id', 'chapter_number', 'verse_number']
         )
 
-        print("Loading cross-references...")
-        load_verse_crossrefs(conn, refs_transformed, verse_id_mapping_api_to_db)
+        print("Loading real cross-references...")
+        load_verse_crossrefs_non_test(conn, refs_transformed, verse_id_mapping_api_to_db)
+
+        if load_test_data:
+            print("Loading test books...")
+            db_test_book_ids = load_books_test(conn)
+            test_book_id_mapping = build_id_map(TEST_BOOKS, db_test_book_ids, 'book_id')
+
+            print("Loading test chapters...")
+            db_test_chapter_ids = load_chapters_test(conn, test_book_id_mapping)
+            test_chapter_id_mapping = build_id_map(TEST_CHAPTERS, db_test_chapter_ids, ['book_id', 'chapter_number'])
+
+            print("Loading test verses...")
+            db_test_verse_ids = load_verses_test(conn, test_chapter_id_mapping)
+            test_verse_id_mapping = build_id_map(
+                TEST_VERSES,
+                db_test_verse_ids,
+                ['book_id', 'chapter_number', 'verse_number']
+            )
+
+            print("Loading test cross-references...")
+            load_verse_crossrefs_test(conn, test_verse_id_mapping)

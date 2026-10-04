@@ -3,7 +3,7 @@ from src.api.db import engine
 from sqlalchemy import text
 
 
-def fetch_books():
+def fetch_books(is_test: bool=False):
     with engine.connect() as conn:
         rows = conn.execute(text("""
             SELECT
@@ -11,10 +11,13 @@ def fetch_books():
                 , b.common_name
                 , b.canonical_order
             FROM books b
+            WHERE b.is_test = :is_test
             ORDER BY 
                 b.canonical_order
             ;
-        """)).fetchall()
+        """), {
+            "is_test": is_test
+        }).fetchall()
 
     return [
         {

@@ -9,8 +9,8 @@ router = APIRouter(prefix="/v1/books")
 
 
 @router.get("/")
-def get_books():
-    return fetch_books()
+def get_books(is_test: bool = False):
+    return fetch_books(is_test=is_test)
 
 
 @router.get("/{book_id}/chapters") # https://fastapi.tiangolo.com/tutorial/path-params/

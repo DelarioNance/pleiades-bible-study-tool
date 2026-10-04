@@ -6,7 +6,7 @@ from tests.backend.utils.constants import (
 
 
 def test_correct_number_of_chapters(conn_from_etl_run):
-    query = text("SELECT COUNT(id) FROM chapters;")
+    query = text("SELECT COUNT(id) FROM chapters WHERE is_test = FALSE;")
     (count,) = conn_from_etl_run.execute(query).one()
 
     assert count == NUM_CHAPTERS, (
@@ -18,8 +18,9 @@ def test_correct_number_of_verses_per_chapter(conn_from_etl_run):
     query = text("""
         SELECT b.common_name, c.chapter_number, COUNT(v.id) AS verse_count
         FROM books b
-        JOIN chapters c ON c.book_id = b.id
-        JOIN verses v ON v.chapter_id = c.id
+        JOIN chapters c ON c.book_id = b.id AND c.is_test = FALSE
+        JOIN verses v ON v.chapter_id = c.id AND v.is_test = FALSE
+        WHERE b.is_test = FALSE
         GROUP BY b.common_name, c.chapter_number
         ;
     """)
@@ -46,8 +47,9 @@ def test_verses_are_contiguous_and_start_at_one(conn_from_etl_run):
                     ORDER BY v.verse_number
                 ) AS rn
             FROM books b
-            JOIN chapters c ON c.book_id = b.id
-            JOIN verses v ON v.chapter_id = c.id
+            JOIN chapters c ON c.book_id = b.id AND c.is_test = FALSE
+            JOIN verses v ON v.chapter_id = c.id AND v.is_test = FALSE
+            WHERE b.is_test = FALSE 
         )
         SELECT common_name, chapter_number, verse_number, rn
         FROM numbered

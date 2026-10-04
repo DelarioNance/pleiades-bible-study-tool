@@ -36,11 +36,13 @@ def main():
     print()
 
     engine = get_db_engine(env)
+    load_test_data = True if env in ['sandbox', 'test'] else False
 
     start = time.perf_counter()
     asyncio.run(pipeline(
         bible_api_url="https://bible.helloao.org/api/eng_kjv", 
-        engine=engine
+        engine=engine,
+        load_test_data=load_test_data,
     ))
     elapsed = time.perf_counter() - start
 
