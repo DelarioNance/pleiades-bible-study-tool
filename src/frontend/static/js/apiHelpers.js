@@ -14,3 +14,9 @@ export async function getVersesFromChapterID(chapterID) {
     const response = await fetch(`/v1/chapters/${chapterID}/verses`);
     return await response.json();
 }
+
+
+export async function runVerseTraversal(verseID) {
+    const response = await fetch(`/v1/verses/${verseID}/traversal_results`);
+    return await response.json();
+}
