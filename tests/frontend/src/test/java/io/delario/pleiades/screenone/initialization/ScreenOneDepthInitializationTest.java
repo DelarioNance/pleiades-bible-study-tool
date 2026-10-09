@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -20,6 +21,7 @@ public class ScreenOneDepthInitializationTest extends AbstractScreenOneTest {
     // Visibility Tests
     // ------------------------------------------------------------
 
+    @Disabled("Depth dropdown is hidden")
     @Test
     public void testDepthDropdownIsVisibleWhenDefaultsProvided() {
         IndexPage indexPage = super.goToIndexPage("Genesis", "1", "1", "1");
@@ -28,6 +30,7 @@ public class ScreenOneDepthInitializationTest extends AbstractScreenOneTest {
         assertThat(depthDropdown).isVisible();
     }
 
+    @Disabled("Depth dropdown is hidden")
     @Test
     public void testDepthDropdownIsVisibleWhenDefaultsNotProvided() {
         IndexPage indexPage = super.goToIndexPage();

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -16,7 +17,7 @@ import java.util.List;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.SelectOption;
 
-
+@Disabled("Depth dropdown is hidden")
 public class ScreenOneDepthSelectionTest extends AbstractScreenOneTest{
     @ParameterizedTest
     @CsvSource({

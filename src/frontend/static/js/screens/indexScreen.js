@@ -23,11 +23,18 @@ export async function getIndexScreen() {
         <label for="verseSelect">Verse:</label>
         <select id="verseSelect"></select>
         <br>
-        <label for="depthSelect">Depth:</label>
-        <select id="depthSelect">
+        <label hidden for="depthSelect" >Depth:</label>
+        <select hidden id="depthSelect">
+            <option value=1>1</option>
+            <option value=2>2</option>
             <option value=3>3</option>
         </select>
-        <p>"<span id="selectedVerseDisplay"/>Click Below!</span>"</p>
+        <p>
+            <!--
+                Commed out until app supports verse preview
+                <span id="selectedVerseDisplay"/>Click Below!</span>
+            -->
+        </p>
         <button id="submitButton">Submit</button>
         <br>
         <br>
