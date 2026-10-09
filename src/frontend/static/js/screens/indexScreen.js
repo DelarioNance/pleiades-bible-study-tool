@@ -172,8 +172,8 @@ function getSelectionCounterElement() {
     return document.getElementById("selectionCounter");
 }
 
-function getTraversalCounterElement() {
-    return document.getElementById("traversalCounter");
+function getSubmissionCounterElement() {
+    return document.getElementById("submissionCounter");
 }
 
 function getTraversalResultsElement() {
@@ -198,9 +198,9 @@ function bumpSelectionCounter() {
     bumpCounter(selectionCounterElement);
 }
 
-function bumpTraversalCounter() {
-    const traversalCounterElement = getTraversalCounterElement();
-    bumpCounter(traversalCounterElement);
+function bumpSubmissionCounter() {
+    const submissionCounterElement = getSubmissionCounterElement();
+    bumpCounter(submissionCounterElement);
 }
 
 async function handleBookSelectChange(event) {
@@ -338,5 +338,5 @@ async function handleSubmitButtonClick() {
         traversalResultsElement.appendChild(layerDiv);
     }
 
-    bumpTraversalCounter();
+    bumpSubmissionCounter();
 }

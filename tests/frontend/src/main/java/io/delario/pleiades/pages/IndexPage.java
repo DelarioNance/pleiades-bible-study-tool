@@ -4,6 +4,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.SelectOption;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -65,13 +66,20 @@ public class IndexPage {
     // option getters and selected‑value getters). Those methods prevent tests from depending
     // on internal DOM details, but public locators give tests the flexibility to assert UI
     // state without unnecessary abstraction.
+    public Locator titleHeader;
+    public Locator bookLabel;
     public Locator bookDropdown;
     public Locator chapterDropdown;
     public Locator verseDropdown;
     public Locator depthDropdown;
+    public Locator submitButton;
+    public Locator resultsDisplay;
 
     private Locator selectionCounter;
-    private final String SELECTION_COUNTER_ATTRIBUTE_NAME = "data-selection-counter";
+    private Locator submissionCounter;
+    
+    private final String SELECTION_COUNTER_ATTRIBUTE_NAME = "data-counter";
+    private final String SUBMISSION_COUNTER_ATTRIBUTE_NAME = "data-counter";
 
     // NOTE: If UI testing automation is shifted away from Playwright, then
     // +1 may no longer function correctly. Even though manual UI selections
@@ -79,6 +87,7 @@ public class IndexPage {
     // to do so does trigger a "change" event. This is why the counter 
     // increments by +1 for both same and new selections.
     private final int SELECTION_COUNTER_INCREMENT = 1;
+    private final int SUBMISSION_COUNTER_INCREMENT = 1;
 
    /**
      * <p><strong>Constructs an IndexPage by binding Playwright locators to the
@@ -104,14 +113,29 @@ public class IndexPage {
      * on describing and interacting with the Index page’s UI.</p>
      */
     public IndexPage(Page page) {
+        this.titleHeader = page.getByRole(
+            AriaRole.HEADING, 
+            new Page.GetByRoleOptions().setName("Pleiades Bible Study Tool")
+        );
         this.bookDropdown = page.getByLabel("Book");
         this.chapterDropdown = page.getByLabel("Chapter");
         this.verseDropdown = page.getByLabel("Verse");
         this.depthDropdown = page.getByLabel("Depth");
+        this.submitButton = page.getByRole(
+            AriaRole.BUTTON, 
+            new Page.GetByRoleOptions().setName("Submit")
+        );
+        
         this.selectionCounter = page.getByPlaceholder("selectionCounter");
+        this.submissionCounter = page.getByPlaceholder("submissionCounter");
+
+        this.resultsDisplay = page.locator("#traversalResults");
     }
 
-
+    ///////////////////////////////////////
+    /// RETRIEVAL METHODS //
+    ///////////////////////////////////////
+    
     // Even though locators are public, tests should NOT query <option> elements
     // directly. Doing so would leak DOM structure into the test suite and create
     // brittle tests if the underlying HTML ever changes.
@@ -120,6 +144,10 @@ public class IndexPage {
     // dropdown contents. They abstract away the fact that options are represented
     // as <option> elements, so tests interact with meaningful data (book names,
     // chapter numbers, etc.) instead of raw DOM queries.
+
+    public String getTitleHeaderText() {
+        return this.titleHeader.innerText();
+    }
 
     public List<String> getBookOptions() {
         return this.bookDropdown.locator("option").allInnerTexts();
@@ -160,11 +188,23 @@ public class IndexPage {
         return this.depthDropdown.locator("option:checked").innerText();
     }
 
-    private int getSelectionCounter() {
+    private int getSelectionCount() {
+        return getCount(this.selectionCounter, SELECTION_COUNTER_ATTRIBUTE_NAME);
+    }
+
+    private int getSubmissionCount() {
+        return getCount(this.submissionCounter, SUBMISSION_COUNTER_ATTRIBUTE_NAME);
+    }
+
+    private int getCount(Locator counterLocator, String attributeName) {
         return Integer.parseInt(
-            this.selectionCounter.getAttribute(SELECTION_COUNTER_ATTRIBUTE_NAME)
+            counterLocator.getAttribute(attributeName)
         );
     }
+
+    ///////////////////////////////////////
+    /// ACTION METHODS //
+    ///////////////////////////////////////
 
     public void selectBook(String book) {
         makeSelection(this.bookDropdown, book);
@@ -183,7 +223,7 @@ public class IndexPage {
     }
 
     private void makeSelection(Locator dropdown, String value) {
-        int preSelectionCounter = getSelectionCounter();
+        int preSelectionCounter = getSelectionCount();
         // System.out.println("Current counter: " + preSelectionCounter + ", current dropdown value: " + currentDropdownValue + ", new value: " + value);
 
         dropdown.selectOption(new SelectOption().setLabel(value));
@@ -203,6 +243,18 @@ public class IndexPage {
             .hasAttribute(
                 SELECTION_COUNTER_ATTRIBUTE_NAME, 
                 Integer.toString(preSelectionCounter + SELECTION_COUNTER_INCREMENT)
+            );
+    }
+
+    public void submitScriptureSelection() {
+        int preSubmissionCounter = getSubmissionCount();
+
+        this.submitButton.click();
+
+        assertThat(this.submissionCounter)
+            .hasAttribute(
+                SUBMISSION_COUNTER_ATTRIBUTE_NAME, 
+                Integer.toString(preSubmissionCounter + SUBMISSION_COUNTER_INCREMENT)
             );
     }
 
@@ -250,5 +302,15 @@ public class IndexPage {
         System.out.println();
 
         System.out.println("Selected Depth: " + indexPage.getSelectedDepth());
+        System.out.println();
+
+        System.out.println("Pre-submission Counter: " + indexPage.getSubmissionCount());
+        System.out.println();
+        indexPage.submitScriptureSelection();
+
+        System.out.println(indexPage.resultsDisplay.innerHTML());
+        System.out.println();
+        System.out.println("Post-Submission Counter: " + indexPage.getSubmissionCount());
+        System.out.println();
     }
 }
