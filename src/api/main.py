@@ -23,9 +23,9 @@ templates = Jinja2Templates(directory='src/frontend/templates')
 @app.get("/", response_class=HTMLResponse) 
 def read_index(
     request:Request,
-    default_book_name: str = 'John',
-    default_chapter_number: int = 3,
-    default_verse_number: int = 16,
+    default_book_name: str = 'Job',
+    default_chapter_number: int = 38,
+    default_verse_number: int = 31,
     default_depth: int = 2,
 ):
     """
