@@ -26,7 +26,7 @@ def read_index(
     default_book_name: str = 'Job',
     default_chapter_number: int = 38,
     default_verse_number: int = 31,
-    default_depth: int = 2,
+    default_depth: int = 3,
 ):
     """
     Examples:

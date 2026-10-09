@@ -25,8 +25,6 @@ export async function getIndexScreen() {
         <br>
         <label for="depthSelect">Depth:</label>
         <select id="depthSelect">
-            <option value=1>1</option>
-            <option value=2>2</option>
             <option value=3>3</option>
         </select>
         <p>"<span id="selectedVerseDisplay"/>Click Below!</span>"</p>
