@@ -1,4 +1,4 @@
-package io.delario.pleiades.screenone.selection;
+package io.delario.pleiades.screenone.submission;
 
 import io.delario.pleiades.pages.IndexPage;
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
@@ -20,6 +20,7 @@ import com.microsoft.playwright.options.SelectOption;
 
 
 public class ScreenOneSubmissionTest extends AbstractScreenOneTest{
+    @Test
     public void testSubmissionDoesNotBreakUI() {
         IndexPage indexPage = super.goToIndexPage();
 
