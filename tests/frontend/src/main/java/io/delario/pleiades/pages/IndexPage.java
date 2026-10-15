@@ -9,6 +9,7 @@ import com.microsoft.playwright.options.SelectOption;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -193,8 +194,8 @@ public class IndexPage {
         return this.depthDropdown.locator("option:checked").innerText();
     }
 
-    public Set<Map<String, String>> getDisplayedVerses() {
-        Set<Map<String, String>> results = new HashSet<>();
+    public List<Map<String, String>> getDisplayedVerses() {
+        List<Map<String, String>> results = new ArrayList<>();
 
         List<Locator> layers = this.resultsDisplay.locator(".traversal-layer").all();
 
