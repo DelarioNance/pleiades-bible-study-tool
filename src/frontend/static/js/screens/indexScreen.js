@@ -1,4 +1,4 @@
-import { getAllBooks, getChaptersFromBookID, getVersesFromChapterID } from "../apiHelpers.js";
+import { getAllBooks, getChaptersFromBookID, getVersesFromChapterID, runVerseTraversal } from "../apiHelpers.js";
 
 let currentSelections = {
     book:   { value: null, name: null },
@@ -23,14 +23,23 @@ export async function getIndexScreen() {
         <label for="verseSelect">Verse:</label>
         <select id="verseSelect"></select>
         <br>
-        <label for="depthSelect">Depth:</label>
-        <select id="depthSelect">
+        <label hidden for="depthSelect" >Depth:</label>
+        <select hidden id="depthSelect">
             <option value=1>1</option>
             <option value=2>2</option>
             <option value=3>3</option>
         </select>
-        <p>"<span id="selectedVerseDisplay"/>Click Below!</span>"</p>
+        <p>
+            <!--
+                Commed out until app supports verse preview
+                <span id="selectedVerseDisplay"/>Click Below!</span>
+            -->
+        </p>
         <button id="submitButton">Submit</button>
+        <br>
+        <br>
+        <div id="traversalResults">
+        </div>
     `;
     
     await initializeSelections();
@@ -126,6 +135,8 @@ async function attachEventListeners() {
         .addEventListener("change", handleVerseSelectChange);
     document.getElementById("depthSelect")
         .addEventListener("change", handleDepthSelectChange);
+    document.getElementById("submitButton")
+        .addEventListener("click", handleSubmitButtonClick);
 }
 
 
@@ -166,6 +177,22 @@ function getSelectionCounterElement() {
     return document.getElementById("selectionCounter");
 }
 
+function getSubmissionCounterElement() {
+    return document.getElementById("submissionCounter");
+}
+
+function getTraversalResultsElement() {
+    return document.getElementById("traversalResults");
+}
+
+
+function bumpCounter(counterElement) {
+    const currentCounter = parseInt(counterElement.dataset.counter);
+    const newCounter = (currentCounter + 1).toString();
+    counterElement.dataset.counter = newCounter;
+}
+
+
 // NOTE: If UI testing automation is shifted away from Playwright, then
 // +1 may no longer function correctly. Even though manual UI selections
 // for the same option do not trigger a "change," the Playwright code
@@ -173,11 +200,12 @@ function getSelectionCounterElement() {
 // increments by +1 for both same and new selections.
 function bumpSelectionCounter() {
     const selectionCounterElement = getSelectionCounterElement();
-    const currentSelectionCounter = parseInt(selectionCounterElement.dataset.selectionCounter);
-    console.log("The counter before update:", getSelectionCounterElement().dataset.selectionCounter);
-    const newSelectionCounter = (currentSelectionCounter + 1).toString();
-    selectionCounterElement.dataset.selectionCounter = newSelectionCounter;
-    console.log("The counter after update:", getSelectionCounterElement().dataset.selectionCounter);
+    bumpCounter(selectionCounterElement);
+}
+
+function bumpSubmissionCounter() {
+    const submissionCounterElement = getSubmissionCounterElement();
+    bumpCounter(submissionCounterElement);
 }
 
 async function handleBookSelectChange(event) {
@@ -270,4 +298,53 @@ function selectDepthByValue(newValue, selectElement) {
 
     currentSelections.depth.value = newValue;
     currentSelections.depth.name = newName;
+}
+
+
+async function handleSubmitButtonClick() {
+    const selectedVerseValue = getSelectedVerseValue();
+    const verseTraversalResults = await runVerseTraversal(selectedVerseValue);
+
+    const traversalResultsElement = getTraversalResultsElement();
+    traversalResultsElement.replaceChildren();
+
+    const numLayers = Object.keys(verseTraversalResults).length;
+
+    for (let layer = 0; layer < numLayers; layer++) {
+        // Layer container
+        const layerDiv = document.createElement("div");
+        layerDiv.classList.add("traversal-layer")
+
+        const layerSpan = document.createElement("span");
+        layerSpan.classList.add("traversal-layer-number")
+        layerSpan.textContent = `Layer ${layer + 1}`; // +1 is used for user-readability
+
+        layerDiv.appendChild(layerSpan);
+
+        // All verses in this layer
+        const verses = verseTraversalResults[layer];
+
+        for (const verse of verses) {
+            const verseDiv = document.createElement("div");
+            verseDiv.classList.add("traversal-verse");
+
+            const referenceElement = document.createElement("span");
+            referenceElement.classList.add("traversal-verse-identifier");
+            referenceElement.textContent =
+                `${verse.book_name} ${verse.chapter_number}:${verse.verse_number}`;
+
+            const textElement = document.createElement("span");
+            textElement.classList.add("traversal-verse-text");
+            textElement.textContent = verse.verse_text;
+
+            verseDiv.appendChild(referenceElement);
+            verseDiv.appendChild(textElement);
+    
+            layerDiv.appendChild(verseDiv);
+        }
+
+        traversalResultsElement.appendChild(layerDiv);
+    }
+
+    bumpSubmissionCounter();
 }

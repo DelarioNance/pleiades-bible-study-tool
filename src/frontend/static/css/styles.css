@@ -1,0 +1,24 @@
+.traversal-layer {
+    margin-bottom: 2rem;
+}
+
+.traversal-layer-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.traversal-verse {
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+}
+
+.traversal-reference {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.traversal-text {
+    color: #a42121;
+}
