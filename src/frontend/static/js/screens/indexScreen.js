@@ -316,6 +316,7 @@ async function handleSubmitButtonClick() {
         layerDiv.classList.add("traversal-layer")
 
         const layerSpan = document.createElement("span");
+        layerSpan.classList.add("traversal-layer-number")
         layerSpan.textContent = `Layer ${layer + 1}`; // +1 is used for user-readability
 
         layerDiv.appendChild(layerSpan);
@@ -327,11 +328,13 @@ async function handleSubmitButtonClick() {
             const verseDiv = document.createElement("div");
             verseDiv.classList.add("traversal-verse");
 
-            const referenceElement = document.createElement("div");
+            const referenceElement = document.createElement("span");
+            referenceElement.classList.add("traversal-verse-identifier");
             referenceElement.textContent =
                 `${verse.book_name} ${verse.chapter_number}:${verse.verse_number}`;
 
-            const textElement = document.createElement("div");
+            const textElement = document.createElement("span");
+            textElement.classList.add("traversal-verse-text");
             textElement.textContent = verse.verse_text;
 
             verseDiv.appendChild(referenceElement);

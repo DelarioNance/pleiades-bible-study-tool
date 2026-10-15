@@ -9,7 +9,12 @@ import com.microsoft.playwright.options.SelectOption;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
 
 /**
  * <p><strong>Page Object representing the Index page of the Pleiades application.</strong></p>
@@ -188,6 +193,28 @@ public class IndexPage {
         return this.depthDropdown.locator("option:checked").innerText();
     }
 
+    public Set<Map<String, String>> getDisplayedVerses() {
+        Set<Map<String, String>> results = new HashSet<>();
+
+        List<Locator> layers = this.resultsDisplay.locator(".traversal-layer").all();
+
+        for (Locator layer : layers) {
+            String layerNumber = layer.locator(".traversal-layer-number").innerText().trim();
+
+            List<Locator> verses = layer.locator(".traversal-verse").all();
+
+            for (Locator verse : verses) {
+                results.add(Map.of(
+                    "layer", layerNumber,
+                    "scripture_identifier", verse.locator(".traversal-verse-identifier").innerText().trim(),
+                    "scripture_text", verse.locator(".traversal-verse-text").innerText().trim()
+                ));
+            }
+        }
+        
+        return results;
+    }
+
     private int getSelectionCount() {
         return getCount(this.selectionCounter, SELECTION_COUNTER_ATTRIBUTE_NAME);
     }
@@ -306,11 +333,18 @@ public class IndexPage {
 
         System.out.println("Pre-submission Counter: " + indexPage.getSubmissionCount());
         System.out.println();
+        System.out.println("Pre-submission Results: " + indexPage.resultsDisplay.innerHTML());
+        System.out.println();
+        System.out.println("Pre-submission Verses: " + indexPage.getDisplayedVerses());
+        System.out.println();
+
         indexPage.submitScriptureSelection();
 
-        System.out.println(indexPage.resultsDisplay.innerHTML());
-        System.out.println();
         System.out.println("Post-Submission Counter: " + indexPage.getSubmissionCount());
+        System.out.println();
+        System.out.println("Post-submission Results: " + indexPage.resultsDisplay.innerHTML());
+        System.out.println();
+        System.out.println("Post-submission Verses: " + indexPage.getDisplayedVerses());
         System.out.println();
     }
 }
