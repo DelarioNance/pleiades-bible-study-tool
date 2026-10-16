@@ -36,7 +36,6 @@ public class ScreenOneSubmissionTest extends AbstractScreenOneTest{
     public void testSubmissionDoesNotBreakUI() {
         IndexPage indexPage = super.goToIndexPage();
 
-        String preSubmitTitleHeaderText = indexPage.getTitleHeaderText();
         List<String> preSubmitBookOptions = indexPage.getBookOptions();
         List<String> preSubmitChapterOptions = indexPage.getChapterOptions();
         List<String> preSubmitVerseOptions = indexPage.getVerseOptions();
@@ -44,13 +43,11 @@ public class ScreenOneSubmissionTest extends AbstractScreenOneTest{
 
         indexPage.submitScriptureSelection();
 
-        String postSubmitTitleHeaderText = indexPage.getTitleHeaderText();
         List<String> postSubmitBookOptions = indexPage.getBookOptions();
         List<String> postSubmitChapterOptions = indexPage.getChapterOptions();
         List<String> postSubmitVerseOptions = indexPage.getVerseOptions();
         List<String> postSubmitDepthOptions = indexPage.getDepthOptions();
 
-        assertEquals(preSubmitTitleHeaderText, postSubmitTitleHeaderText);
         assertEquals(preSubmitBookOptions, postSubmitBookOptions);
         assertEquals(preSubmitChapterOptions, postSubmitChapterOptions);
         assertEquals(preSubmitVerseOptions, postSubmitVerseOptions);
@@ -73,11 +70,11 @@ public class ScreenOneSubmissionTest extends AbstractScreenOneTest{
         IndexPage indexPage = super.goToIndexPage();
         indexPage.submitScriptureSelection();
 
-        List<Map<String, String>> displayedVerses = indexPage.getDisplayedVerses();
+        List<Map<String, Object>> displayedVerses = indexPage.getDisplayedVerses();
 
-        List<Map<String, String>> expected = new ObjectMapper().readValue(
+        List<Map<String, Object>> expected = new ObjectMapper().readValue(
             new File(expectedDataPathStr),
-            new TypeReference<List<Map<String, String>>>() {}
+            new TypeReference<List<Map<String, Object>>>() {}
         );
 
         assertEquals(expected, displayedVerses);

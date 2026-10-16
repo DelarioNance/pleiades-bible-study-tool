@@ -124,7 +124,7 @@ public class IndexPage {
         this.chapterDropdown = page.getByLabel("Chapter");
         this.verseDropdown = page.getByLabel("Verse");
         this.depthDropdown = page.getByLabel("Depth");
-        this.submitButton = page.getByTestId("submit-buton");
+        this.submitButton = page.getByTestId("submit-button");
         this.selectionCounter = page.getByPlaceholder("selectionCounter");
         this.submissionCounter = page.getByPlaceholder("submissionCounter");
         this.resultsDisplay = page.getByTestId("traversal-results");
@@ -196,7 +196,7 @@ public class IndexPage {
 
             for (Locator verse : layer.locator(".traversal-verse").all()) {
                 results.add(Map.of(
-                    "degree_connection", degree,
+                    "connection_degree", degree,
                     "scripture_identifier", verse.locator(".traversal-verse-identifier").innerText().trim(),
                     "scripture_text", verse.locator(".traversal-verse-text").innerText().trim()
                 ));
