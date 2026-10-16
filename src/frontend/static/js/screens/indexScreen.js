@@ -1,44 +1,48 @@
 import { getAllBooks, getChaptersFromBookID, getVersesFromChapterID, runVerseTraversal } from "../apiHelpers.js";
 
-let currentSelections = {
+const currentSelections = {
     book:   { value: null, name: null },
     chapter:{ value: null, name: null },
     verse:  { value: null, name: null },
     depth:  { value: null, name: null }
 };
 
+const degreeNames = [
+    "Selected Verse", 
+    "1st-Degree", 
+    "2nd-Degree"
+];
+
 
 export async function getIndexScreen() {
     const app = document.getElementById("app");
 
     app.innerHTML = `
-        <h2>Select a Verse and Connection Depth</h2>
+        <h2>Find Related Scriptures</h2>
 
-        <label for="bookSelect">Book:</label>
-        <select id="bookSelect"></select>
-        <br>
-        <label for="chapterSelect">Chapter:</label>
-        <select id="chapterSelect"></select>
-        <br>
-        <label for="verseSelect">Verse:</label>
-        <select id="verseSelect"></select>
-        <br>
-        <label hidden for="depthSelect" >Depth:</label>
-        <select hidden id="depthSelect">
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-        </select>
+        <div id="scriptureSelection">
+            <label for="bookSelect">Book:</label>
+            <select id="bookSelect"></select>
+            <label for="chapterSelect">Chapter:</label>
+            <select id="chapterSelect"></select>
+            <label for="verseSelect">Verse:</label>
+            <select id="verseSelect"></select>
+            <label hidden for="depthSelect" >Depth:</label>
+            <select hidden id="depthSelect">
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+            </select>
+        </div>
+
+        <button id="submitButton" data-testid="submit-button">Search</button>
         <p>
             <!--
                 Commed out until app supports verse preview
                 <span id="selectedVerseDisplay"/>Click Below!</span>
             -->
         </p>
-        <button id="submitButton">Submit</button>
-        <br>
-        <br>
-        <div id="traversalResults">
+        <div id="traversalResults" data-testid="traversal-results">
         </div>
     `;
     
@@ -315,14 +319,14 @@ async function handleSubmitButtonClick() {
         const layerDiv = document.createElement("div");
         layerDiv.classList.add("traversal-layer")
 
-        const layerSpan = document.createElement("span");
-        layerSpan.classList.add("traversal-layer-number")
-        layerSpan.textContent = `Layer ${layer + 1}`; // +1 is used for user-readability
-
-        layerDiv.appendChild(layerSpan);
-
         // All verses in this layer
         const verses = verseTraversalResults[layer];
+        
+        const layerSpan = document.createElement("span");
+        layerSpan.classList.add("traversal-layer-number")
+        layerSpan.textContent = getDegreeLabel(layer, verses.length);
+
+        layerDiv.appendChild(layerSpan);
 
         for (const verse of verses) {
             const verseDiv = document.createElement("div");
@@ -348,4 +352,14 @@ async function handleSubmitButtonClick() {
     }
 
     bumpSubmissionCounter();
+}
+
+function getDegreeLabel(layer, verseCount) {
+    if (layer === 0) {
+        return "Selected Scripture";
+    }
+
+    const noun = verseCount === 1 ? "Connection" : "Connections";
+    const degree = degreeNames[layer] || `Degree ${layer}`;
+    return `${degree} ${noun}`;
 }
