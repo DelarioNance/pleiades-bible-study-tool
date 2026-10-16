@@ -119,23 +119,15 @@ public class IndexPage {
      * on describing and interacting with the Index page’s UI.</p>
      */
     public IndexPage(Page page) {
-        this.titleHeader = page.getByRole(
-            AriaRole.HEADING, 
-            new Page.GetByRoleOptions().setName("Pleiades Bible Study Tool")
-        );
+        this.titleHeader = page.getByTestId("title");
         this.bookDropdown = page.getByLabel("Book");
         this.chapterDropdown = page.getByLabel("Chapter");
         this.verseDropdown = page.getByLabel("Verse");
         this.depthDropdown = page.getByLabel("Depth");
-        this.submitButton = page.getByRole(
-            AriaRole.BUTTON, 
-            new Page.GetByRoleOptions().setName("Submit")
-        );
-        
+        this.submitButton = page.getByTestId("submit-buton");
         this.selectionCounter = page.getByPlaceholder("selectionCounter");
         this.submissionCounter = page.getByPlaceholder("submissionCounter");
-
-        this.resultsDisplay = page.locator("#traversalResults");
+        this.resultsDisplay = page.getByTestId("traversal-results");
     }
 
     ///////////////////////////////////////
@@ -194,27 +186,25 @@ public class IndexPage {
         return this.depthDropdown.locator("option:checked").innerText();
     }
 
-    public List<Map<String, String>> getDisplayedVerses() {
-        List<Map<String, String>> results = new ArrayList<>();
+    public List<Map<String, Object>> getDisplayedVerses() {
+        List<Map<String, Object>> results = new ArrayList<>();
 
-        List<Locator> layers = this.resultsDisplay.locator(".traversal-layer").all();
+        List<Locator> layers = this.resultsDisplay.locator(".traversal-layer").all(); // note: all() is not lazy
 
-        for (Locator layer : layers) {
-            String layerNumber = layer.locator(".traversal-layer-number").innerText().trim();
+        for (int degree = 0; degree < layers.size(); degree++) {
+            Locator layer = layers.get(degree);
 
-            List<Locator> verses = layer.locator(".traversal-verse").all();
-
-            for (Locator verse : verses) {
+            for (Locator verse : layer.locator(".traversal-verse").all()) {
                 results.add(Map.of(
-                    "layer", layerNumber,
+                    "degree_connection", degree,
                     "scripture_identifier", verse.locator(".traversal-verse-identifier").innerText().trim(),
                     "scripture_text", verse.locator(".traversal-verse-text").innerText().trim()
                 ));
             }
-        }
-        
-        return results;
     }
+
+    return results;
+}
 
     private int getSelectionCount() {
         return getCount(this.selectionCounter, SELECTION_COUNTER_ATTRIBUTE_NAME);
