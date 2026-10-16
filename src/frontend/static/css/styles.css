@@ -1,24 +1,103 @@
-.traversal-layer {
-    margin-bottom: 2rem;
+body {
+    background: #000;   /* pure black to match the image exactly */
+    color: #dce8f8;
+    font-family: "Lora";
+    font-size: 1.25rem;
+    line-height: 1.6;
 }
 
-.traversal-layer-title {
+h1 {
+    text-align: center;
+    margin: 0;
+}
+
+#logo {
     display: block;
-    font-size: 1.25rem;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-top: 1rem;           /* space under the logo */
+    margin-bottom: 1.5rem;      /* space above the dropdowns */
+}
+
+#scriptureSelection {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 0.5rem;
+    row-gap: 0.75rem;
+    width: fit-content; /* at a high-level, sets fit-content uses the minimum width necessary*/
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#scriptureSelection label {
+    text-align: right;
+    align-self: center;         /* lines each label up with the middle of its dropdown */
+    font-size: 0.9rem;
     font-weight: bold;
-    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8fa3c4;             /* same muted blue-gray as the layer labels */
+}
+
+#scriptureSelection select {
+    font-size: 1rem;
+}
+
+#scriptureSelection select:focus {
+    border-color: #5fa8ff;       /* border turns bright blue when clicked */
+    outline: none;
+}
+
+#submitButton {
+    display: block;
+    margin: 1.5rem auto 0 auto; /* space between the dropdowns and the button */
+    padding: 10px 32px;
+    font-size: 1.1rem;
+    color: #dce8f8;
+    background-color: #1e63e0;
+    border: 1px solid #8fc7ff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#submitButton:hover {
+    background-color: #2f7bff;
+}
+
+select,
+button {
+    font-family: inherit;
+}
+
+#traversalResults {
+    max-width: 40rem;
+    margin: 3.5rem auto 0 auto;   /* 3rem of space between the button and the results */
+    padding: 0 1rem 3rem 1rem;
+}
+
+.traversal-layer {
+    margin-bottom: 3.5rem;        /* big gap between one layer and the next */
+}
+
+.traversal-layer-number {
+    display: block;             /* a span needs this for the border and margins to work */
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8fa3c4;             /* muted blue-gray so it reads as a label, not scripture */
+    border-bottom: 1px solid #2a4a80;   /* thin divider under the label */
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;      /* space between the divider and the first verse */
 }
 
 .traversal-verse {
-    margin-bottom: 1rem;
-    padding-left: 1rem;
-}
-
-.traversal-reference {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.traversal-text {
-    color: #a42121;
+    margin-bottom: 1.75rem;        /* space between verses inside a layer */
 }
