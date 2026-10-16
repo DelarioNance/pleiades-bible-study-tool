@@ -331,13 +331,14 @@ async function handleSubmitButtonClick() {
             const referenceElement = document.createElement("span");
             referenceElement.classList.add("traversal-verse-identifier");
             referenceElement.textContent =
-                `${verse.book_name} ${verse.chapter_number}:${verse.verse_number}`;
+                `${verse.book_name} ${verse.chapter_number}:${verse.verse_number} KJV`;
 
             const textElement = document.createElement("span");
             textElement.classList.add("traversal-verse-text");
             textElement.textContent = verse.verse_text;
 
             verseDiv.appendChild(referenceElement);
+            verseDiv.appendChild(document.createElement("br"));
             verseDiv.appendChild(textElement);
     
             layerDiv.appendChild(verseDiv);
