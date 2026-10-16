@@ -12,7 +12,7 @@ export async function getIndexScreen() {
     const app = document.getElementById("app");
 
     app.innerHTML = `
-        <h2>Select a Verse and Connection Depth</h2>
+        <h2>Choose a Scripture to See Related Verses!</h2>
 
         <label for="bookSelect">Book:</label>
         <select id="bookSelect"></select>
@@ -29,12 +29,11 @@ export async function getIndexScreen() {
             <option value=2>2</option>
             <option value=3>3</option>
         </select>
-        <p>
-            <!--
-                Commed out until app supports verse preview
-                <span id="selectedVerseDisplay"/>Click Below!</span>
-            -->
-        </p>
+        <br>
+        <div id="scripturePreview">
+            <span id="scriptureTextPreview"></span>
+        </div>
+        <br>
         <button id="submitButton">Submit</button>
         <br>
         <br>
@@ -43,7 +42,7 @@ export async function getIndexScreen() {
     `;
     
     await initializeSelections();
-    // await displaySelectedVerse();
+    displaySelectedVerse();
     attachEventListeners();
 }
 
@@ -114,15 +113,6 @@ async function populateVerseSelect(chapterOptionValue) {
         option.dataset.text = verse.text; // Store verse text for later display
         verseSelect.appendChild(option);
     })
-}
-;
-
-
-function displaySelectedVerse() {
-    const verseSelect = getVerseSelectElement();
-    const selectedVerseText = verseSelect.options[verseSelect.selectedIndex].dataset.text;
-    const selectedVerseDisplay = document.getElementById("selectedVerseDisplay");
-    selectedVerseDisplay.textContent = selectedVerseText;
 }
 
 
@@ -223,6 +213,7 @@ async function handleBookSelectChange(event) {
 
         const verseSelect = getVerseSelectElement();
         selectVerseByValue(verseSelect.value, verseSelect);
+        displaySelectedVerse();
     }
 
     bumpSelectionCounter();
@@ -240,6 +231,7 @@ async function handleChapterSelectChange(event) {
 
         const verseSelect = getVerseSelectElement();
         selectVerseByValue(verseSelect.value, verseSelect);
+        displaySelectedVerse();
     }
 
     bumpSelectionCounter();
@@ -252,6 +244,7 @@ async function handleVerseSelectChange(event) {
 
     if (newValue !== currentSelections.verse.value) {
         selectVerseByValue(newValue, verseSelect);
+        displaySelectedVerse();
     }
 
     bumpSelectionCounter();
@@ -298,6 +291,15 @@ function selectDepthByValue(newValue, selectElement) {
 
     currentSelections.depth.value = newValue;
     currentSelections.depth.name = newName;
+}
+
+
+function displaySelectedVerse() {
+    const verseSelect = getVerseSelectElement();
+    const selectedOption = verseSelect.options[verseSelect.selectedIndex];
+
+    const textElement = document.getElementById("scriptureTextPreview");
+    textElement.textContent = `"${selectedOption.dataset.text}"`;
 }
 
 
