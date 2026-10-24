@@ -78,8 +78,8 @@ button {
 
 #traversalResults {
     max-width: 40rem;
-    margin: 3.5rem auto 0 auto;   /* 3rem of space between the button and the results */
-    padding: 0 1rem 3rem 1rem;
+    margin: 3.5rem auto 0 auto;
+    padding: 0 1rem 1rem 1rem;            /* was 0 1rem 3rem 1rem; the footer now supplies the gap */
 }
 
 .traversal-layer {
@@ -100,4 +100,36 @@ button {
 
 .traversal-verse {
     margin-bottom: 1.75rem;        /* space between verses inside a layer */
+}
+
+footer {
+    max-width: 40rem;
+    margin: 2rem auto 0 auto;          /* was 4rem */
+    padding: 1.25rem 1rem 2rem 1rem;   /* bottom padding trimmed from 3rem */
+    border-top: 1px solid #2a4a80;
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #8fa3c4;
+}
+
+footer p {
+    margin: 0 0 1rem 0;
+}
+
+footer p:last-child {
+    margin-bottom: 0;
+}
+
+footer a {
+    color: #5fa8ff;                    /* same bright blue as the focused dropdown border */
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    overflow-wrap: anywhere;           /* keeps the long URLs from overflowing on narrow screens */
+}
+
+footer a:hover,
+footer a:focus {
+    color: #8fc7ff;                    /* same light blue as the button border */
+    border-bottom-color: #8fc7ff;
 }
