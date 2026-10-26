@@ -1,0 +1,23 @@
+# Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
+name: Production Deployment
+
+# Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
+run-name: ${{ github.actor }} is running Production Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deployment: # Job definition
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    steps: # Steps executed on the runner
+      - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
+      - name: Install FastAPI
+        run: pip install fastapi[standard]
+      - name: Install ETL and API dependencies
+        run: pip install -r requirements.txt
+      - name: Deploy to Staging Environment
+        run: fastapi deploy
+        env: # The FASTAPI_CLOUD_TOKEN and FASTAPI_CLOUD_APP_ID environment variables are required for deployment to FastAPI Cloud. They are stored as GitHub secrets for security.
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_STAGING_DEPLOY_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_STAGING_APP_ID }}
