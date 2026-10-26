@@ -6,9 +6,7 @@ run-name: ${{ github.actor }} is running Production Deployment
 
 on:
   workflow_dispatch:
-  push:
-    branches: [mvp-prod-release] # remove after initial prod deployment test
-
+    
 jobs:
   deployment: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
