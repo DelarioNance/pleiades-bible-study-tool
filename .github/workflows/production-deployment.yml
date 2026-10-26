@@ -6,6 +6,8 @@ run-name: ${{ github.actor }} is running Production Deployment
 
 on:
   workflow_dispatch:
+  push:
+    branches: [mvp-prod-release] # remove after initial prod deployment test
 
 jobs:
   deployment: # Job definition
