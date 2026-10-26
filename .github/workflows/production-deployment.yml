@@ -12,6 +12,12 @@ on:
 jobs:
   deployment: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    env:
+      PLEIADES_ENV: prod 
+      DB_HOST_PROD: ${{ secrets.DB_HOST_PROD }}
+      DB_USER_PROD: ${{ secrets.DB_USER_PROD }} 
+      DB_PASSWORD_PROD: ${{ secrets.DB_PASSWORD_PROD }}
+      DB_NAME_PROD: ${{ secrets.DB_NAME_PROD }}
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - name: Install FastAPI
