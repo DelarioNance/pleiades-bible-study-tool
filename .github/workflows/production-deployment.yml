@@ -18,8 +18,10 @@ jobs:
         run: pip install fastapi[standard]
       - name: Install ETL and API dependencies
         run: pip install -r requirements.txt
-      - name: Deploy to Staging Environment
+      - name: Run ETL
+        run: python -m src.etl.run_etl prod
+      - name: Deploy to Prod Environment
         run: fastapi deploy
         env: # The FASTAPI_CLOUD_TOKEN and FASTAPI_CLOUD_APP_ID environment variables are required for deployment to FastAPI Cloud. They are stored as GitHub secrets for security.
-          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_STAGING_DEPLOY_TOKEN }}
-          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_STAGING_APP_ID }}
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_PROD_DEPLOY_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }}
