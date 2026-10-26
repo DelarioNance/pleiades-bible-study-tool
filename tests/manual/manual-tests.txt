@@ -1,0 +1,5 @@
+Before pushing changes to prod, verify that the following text appears at the bottom of the staging UI:
+
+"Bible Cross References" by OpenBible.info[https://www.openbible.info/], sourced from https://www.openbible.info/labs/cross-references/, licensed under CC BY 4.0[https://creativecommons.org/licenses/by/4.0/]; extracted, transformed, and loaded into a SQL database.
+
+"Free Use Bible API" by AO Lab[https://www.helloao.org/free-api.html], sourced from https://bible.helloao.org/docs/[https://bible.helloao.org/docs/], licensed under CCO 1.0[https://creativecommons.org/publicdomain/zero/1.0/]; extracted, transformed, and loaded into a SQL database.
