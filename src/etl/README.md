@@ -1,4 +1,4 @@
-# Extract-Transform-Load (ETL) Pipeline
+# Extract-Transform-Load (ETL) Layer
 
 ## Purpose
 Initialize the production, staging, and sandbox Pleiades databases with a normalized schema of KJV book, chapter, verse, and verse cross-reference data.
@@ -13,7 +13,7 @@ python -m src.etl.run_etl staging
 python -m src.etl.run_etl prod
 ```
 
-## Possible Enhancements
+## Notable Areas for Improvment
 
 ### DDL Management
 
