@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from api.queries.utils import fetch_all
+from src.api.queries.utils import fetch_all
 
 
 def run_bfs(start_verse_id: int, max_depth_limit: int = 2):

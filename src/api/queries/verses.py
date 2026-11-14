@@ -1,4 +1,4 @@
-from api.queries.utils import fetch_all, fetch_one
+from src.api.queries.utils import fetch_all, fetch_one
 
 
 def get_verses_from_chapter_id(chapter_id):
@@ -17,7 +17,7 @@ def get_verses_from_chapter_id(chapter_id):
     rows = fetch_all(sql, params)
 
     return [
-        {"id": row.id, "number": row.verse_number, "text": row.verse_text}
+        {"verse_id": row.id, "verse_number": row.verse_number, "verse_text": row.verse_text}
         for row in rows
     ]
 
@@ -41,7 +41,7 @@ def get_verses_from_book_id_and_chapter_number(book_id, chapter_number):
     rows = fetch_all(sql, params)
 
     return [
-        {"id": row.id, "number": row.verse_number, "text": row.verse_text}
+        {"verse_id": row.id, "verse_number": row.verse_number, "verse_text": row.verse_text}
         for row in rows
     ]
 
@@ -62,7 +62,7 @@ def get_verse_from_chapter_id_and_verse_number(chapter_id, verse_number):
     params = {"chapter_id": chapter_id, "verse_number": verse_number}
     row = fetch_one(sql, params)
 
-    return {"id": row.id, "number": row.verse_number, "text": row.verse_text}
+    return {"verse_id": row.id, "verse_number": row.verse_number, "verse_text": row.verse_text}
 
 
 def get_verses_from_verse_text(verse_text: str):
@@ -76,4 +76,4 @@ def get_verses_from_verse_text(verse_text: str):
     params = {"verse_text": verse_text}
     rows = fetch_all(sql, params)
 
-    return [{"id": row.id} for row in rows]
+    return [{"verse_id": row.id} for row in rows]

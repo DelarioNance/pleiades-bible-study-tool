@@ -1,4 +1,4 @@
-from api.queries.utils import fetch_all, fetch_one
+from src.api.queries.utils import fetch_all, fetch_one
 
 
 def get_chapters_from_book_id(book_id):
@@ -15,7 +15,7 @@ def get_chapters_from_book_id(book_id):
     params = {"book_id": book_id}
     rows = fetch_all(sql, params)
 
-    return [{"id": row.id, "number": row.chapter_number} for row in rows]
+    return [{"chapter_id": row.id, "chapter_number": row.chapter_number} for row in rows]
 
 
 def get_chapter_from_book_id_and_chapter_number(book_id, chapter_number):
@@ -33,4 +33,4 @@ def get_chapter_from_book_id_and_chapter_number(book_id, chapter_number):
     params = {"book_id": book_id, "chapter_number": chapter_number}
     row = fetch_one(sql, params)
 
-    return {"id": row.id, "number": row.chapter_number}
+    return {"chapter_id": row.id, "chapter_number": row.chapter_number}

@@ -1,4 +1,4 @@
-from api.queries.utils import fetch_all, fetch_one
+from src.api.queries.utils import fetch_all, fetch_one
 
 
 def get_books(is_test: bool = False):
@@ -15,7 +15,7 @@ def get_books(is_test: bool = False):
     rows = fetch_all(sql, params)
 
     return [
-        {"id": row.id, "name": row.common_name, "order": row.canonical_order}
+        {"book_id": row.id, "book_name": row.common_name, "book_order": row.canonical_order}
         for row in rows
     ]
 
@@ -34,4 +34,4 @@ def get_book_from_book_name(book_name):
     params = {"book_name": book_name}
     row = fetch_one(sql, params)
 
-    return {"id": row.id, "name": row.common_name, "order": row.canonical_order}
+    return {"book_id": row.id, "book_name": row.common_name, "book_order": row.canonical_order}
