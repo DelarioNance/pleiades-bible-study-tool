@@ -8,18 +8,11 @@ Pleiades is a scripture analysis app for the King James Version (KJV) Bible. Sel
 
 ## Table of Contents
 
-- [Screenshots](#screenshots)
 - [Tech Stack](#tech-stack)
 - [Repository Layout](#repository-layout)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Setup](#setup)
-  - [Configure the Environment](#configure-the-environment)
-  - [Load the Data](#load-the-data)
-  - [Run the App](#run-the-app)
-- [Running the Tests](#running-the-tests)
 - [CI/CD](#cicd)
 - [Known Limitations](#known-limitations)
+- [Data Sources and Citations](#data-sources-and-citations)
 
 ## Tech Stack
 
