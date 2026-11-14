@@ -37,6 +37,7 @@ def read_index(
     default_verse_number: int = 31,
     default_depth: int = 3,  # depth is currently not supported
 ):
+    # The default scripture is arbitrary
     default_book_id = get_book_info_from_book_name(default_book_name)["id"]
     default_chapter_id = get_chapter_info_from_book_id_and_chapter_number(default_book_id, default_chapter_number)["id"]
     default_verse_id = get_verse_info_from_chapter_id_and_verse_number(default_chapter_id, default_verse_number)["id"]
