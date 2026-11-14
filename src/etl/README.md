@@ -13,7 +13,7 @@ python -m src.etl.run_etl staging
 python -m src.etl.run_etl prod
 ```
 
-## Future Enhancements
+## Possible Enhancements
 
 ### DDL Management
 
