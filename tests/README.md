@@ -6,7 +6,6 @@ Overview of the Pleiades automated test suites.
 |-------|------|----------|---------|
 | etl   | unit, integration, e2e | `pytest tests/etl` | [etl/README.md](etl/README.md) |
 | api   | contract, integration, client/server error | `pytest tests/api` | [api/README.md](api/README.md) |
-| db    | unit | `pytest tests/db` | [db/README.md](db/README.md) |
 | ui    | browser (Playwright) | `cd tests/ui && mvn clean package` | [ui/README.md](ui/README.md) |
 
 ## Notable Prerequisite(s)
@@ -14,5 +13,3 @@ Overview of the Pleiades automated test suites.
 
 ## Run order in CI
 ETL, then API, then UI.
-
-(DB is ommitted due to low priority)
