@@ -1,6 +1,4 @@
-def transform_books(
-    books_in
-):
+def transform_books(books_in):
     books_out = [
         {
             "book_id": book_info["id"],
