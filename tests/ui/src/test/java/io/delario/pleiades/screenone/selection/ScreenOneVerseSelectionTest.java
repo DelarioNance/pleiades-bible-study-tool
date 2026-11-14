@@ -2,19 +2,12 @@ package io.delario.pleiades.screenone.selection;
 
 import io.delario.pleiades.pages.IndexPage;
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
-import static io.delario.pleiades.utils.BibleCanon.getOrderedVerseNumberStringsInChapter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import java.util.List;
-
-import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.SelectOption;
 
 
 public class ScreenOneVerseSelectionTest extends AbstractScreenOneTest{
@@ -95,7 +88,6 @@ public class ScreenOneVerseSelectionTest extends AbstractScreenOneTest{
 
         String preSelectBookSelection = indexPage.getSelectedBook();
         String preSelectChapterSelection = indexPage.getSelectedChapter();
-        String preSelectVerseSelection = indexPage.getSelectedVerse();
         String preSelectDepthSelection = indexPage.getSelectedDepth();
 
         indexPage.selectVerse(newVerse);

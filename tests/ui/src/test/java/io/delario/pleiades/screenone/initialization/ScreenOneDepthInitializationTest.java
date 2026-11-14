@@ -4,7 +4,6 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import io.delario.pleiades.pages.IndexPage;
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 

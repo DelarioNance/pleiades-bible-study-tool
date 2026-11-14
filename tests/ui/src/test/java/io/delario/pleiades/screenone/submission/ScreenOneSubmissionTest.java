@@ -2,12 +2,7 @@ package io.delario.pleiades.screenone.submission;
 
 import io.delario.pleiades.pages.IndexPage;
 import io.delario.pleiades.screenone.AbstractScreenOneTest;
-import static io.delario.pleiades.utils.BibleCanon.getOrderedVerseNumberStringsInChapter;
-import static io.delario.pleiades.utils.BibleCanon.getOrderedChapterNumberStringsInBook;
-import static io.delario.pleiades.utils.BibleCanon.BOOKS_IN_NUMBER_ORDER;
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 import org.junit.jupiter.api.Test;
@@ -20,15 +15,12 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Route;
-import com.microsoft.playwright.options.SelectOption;
 
 
 public class ScreenOneSubmissionTest extends AbstractScreenOneTest{
