@@ -8,6 +8,7 @@ Serves the Pleiades UI and exposes a API for retrieving book data, chapter data,
 Run from the project root. Interactive API docs are served at `/docs`.
 
 ```bash
+source venv/bin/activate
 fastapi dev src/api/main.py
 ```
 

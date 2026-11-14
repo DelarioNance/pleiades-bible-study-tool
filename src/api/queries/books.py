@@ -9,6 +9,8 @@ def get_books(is_test: bool = False):
             , b.canonical_order
         FROM books b
         WHERE b.is_test = :is_test
+        ORDER BY
+            b.canonical_order
         ;
     """
     params = {"is_test": is_test}

@@ -10,6 +10,8 @@ def get_chapters_from_book_id(book_id):
         INNER JOIN chapters c
             ON c.book_id = b.id 
         WHERE b.id = :book_id
+        ORDER BY
+            c.chapter_number
         ;
     """
     params = {"book_id": book_id}

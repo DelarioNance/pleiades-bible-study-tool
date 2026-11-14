@@ -11,6 +11,8 @@ def get_verses_from_chapter_id(chapter_id):
         INNER JOIN verses v
             ON v.chapter_id = c.id 
         WHERE c.id = :chapter_id
+        ORDER BY
+            v.verse_number
         ;
     """
     params = {"chapter_id": chapter_id}
@@ -35,6 +37,8 @@ def get_verses_from_book_id_and_chapter_number(book_id, chapter_number):
             ON v.chapter_id = c.id 
         WHERE b.id = :book_id
             AND c.chapter_number = :chapter_number
+        ORDER BY
+            v.verse_number
         ;
     """
     params = {"book_id": book_id, "chapter_number": chapter_number}

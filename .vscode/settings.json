@@ -2,5 +2,6 @@
     "python.analysis.extraPaths": [
         "./src"
     ],
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }

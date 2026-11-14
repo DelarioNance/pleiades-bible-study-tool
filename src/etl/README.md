@@ -8,6 +8,7 @@ Initialize the production, staging, and sandbox Pleiades databases with a normal
 Run any of the following commands from the project root to initialize the respective database:
 
 ```bash
+source venv/bin/activate
 python -m src.etl.run_etl sandbox
 python -m src.etl.run_etl staging
 python -m src.etl.run_etl prod
