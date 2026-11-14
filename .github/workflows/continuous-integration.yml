@@ -1,20 +1,25 @@
-# """
-# Python Test Runner with Postgres Service
+# ---------------------------------------------------------------------------
+# Continuous Integration (CI): Test Suite
 #
-# This workflow runs the project's Python test suite inside GitHub Actions.
-# GitHub Actions provides a fresh Ubuntu runner (virtual machine) 
-# for each job, and service containers allow additional processes—such as 
-# a Postgres database—to run alongside the runner in isolated Docker containers.
+# Purpose:
+#   Runs the Pleiades automated test suite (ETL, API, and UI tests)
+#   against a temporary Postgres database on every pull request.
 #
-# In this workflow:
-#   - A Postgres 16 service container is started and made reachable at the
-#     hostname `postgres`.
-#   - The runner installs Python, project dependencies, and executes pytest.
+# Triggers:
+#   - Any pull request (not limited to PRs targeting main).
 #
-# This setup ensures tests run against a real Postgres instance in a clean,
-# reproducible environment for every pull request.
-# """
-
+# Required secrets:
+#   - CI_DB_USER, CI_DB_PASSWORD, CI_DB_NAME: credentials used both to create
+#     the Postgres service container and for the app and tests to connect to it.
+#
+# Notes:
+#   - A Postgres 16 service container is started for the run and discarded
+#     afterward, so no real database is touched.
+#   - The admin and test database variables use the same CI credentials, and
+#     they must match the credentials the Postgres container is created with.
+#   - Tests run in order: ETL, API, then UI. The UI tests need the app running,
+#     so it is started in the background on port 8000 before they run.
+# ---------------------------------------------------------------------------
 
 # Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
 name: Run Continuous Integration (CI)
@@ -60,16 +65,16 @@ jobs:
       - name: Install ETL and API test dependencies
         run: pip install -r requirements.txt
       - name: Run ETL Tests
-        run: pytest tests/backend/etl
+        run: pytest tests/etl
       - name: Run API Tests
-        run: pytest tests/backend/api
+        run: pytest tests/api
       - name: Run app in background
         run: nohup uvicorn src.api.main:app --host 0.0.0.0 --port 8000 &
       - name: Install UI test dependencies
         run: |
           sudo apt update
           sudo apt install openjdk-17-jdk # install Java 17
-        working-directory: tests/frontend
+        working-directory: tests/ui
       - name: Run UI Tests
         run: mvn clean package
-        working-directory: tests/frontend
+        working-directory: tests/ui

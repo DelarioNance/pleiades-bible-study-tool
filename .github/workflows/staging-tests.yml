@@ -1,3 +1,26 @@
+# ---------------------------------------------------------------------------
+# Staging Tests
+#
+# Purpose:
+#   Runs the Pleiades UI test suite against the deployed staging environment
+#   after a successful staging deployment.
+#
+# Triggers:
+#   - Completion of the "Continuous Deployment (CD)" workflow, but only when
+#     that run succeeded. The workflow name in the trigger must match the
+#     name in the CD workflow exactly.
+#
+# Required secrets:
+#   - URL_STAGING: base URL of the staging app that the UI tests run against.
+#
+# Notes:
+#   - Only the UI tests run here. They hit the live staging site, so the app
+#     does not need to be started on the runner and no database service is
+#     created.
+#   - The citations at the bottom of the screen are not covered by automated
+#     tests and should still be checked manually in staging.
+# ---------------------------------------------------------------------------
+
 # Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
 name: Run Staging Tests
 
@@ -22,7 +45,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install openjdk-17-jdk # install Java 17
-        working-directory: tests/frontend
+        working-directory: tests/ui
       - name: Run UI Tests
         run: mvn clean package
-        working-directory: tests/frontend
+        working-directory: tests/ui
