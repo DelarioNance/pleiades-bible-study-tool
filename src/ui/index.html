@@ -1,0 +1,72 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pleaides Bible Study Tool</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
+    <link rel="stylesheet" href="src/ui/static/css/styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>
+            <img id="logo" src="/src/ui/static/img/pleiades-logo.png" alt="Pleiades Bible Study Tool">
+        </h1>
+    </header>
+
+    <div id="app">
+        <!-- Dynamic content will be put here-->
+    </div>
+
+    <input type="hidden" id="selectionCounter" placeholder="selectionCounter" data-counter="0">
+    <input type="hidden" id="submissionCounter" placeholder="submissionCounter" data-counter="0">
+
+    <input type="hidden" id="defaultBookID" placeholder="defaultBookIDPlaceholder" value="{{ defaultBookID }}">
+    <input type="hidden" id="defaultBookName" placeholder="defaultBookNamePlaceholder" value="{{ defaultBookName }}">
+
+    <input type="hidden" id="defaultChapterID" placeholder="defaultChapterIDPlaceholder" value="{{ defaultChapterID }}">
+    <input type="hidden" id="defaultChapterNumber" placeholder="defaultChapterNumberPlaceholder" value="{{ defaultChapterNumber }}">
+
+    <input type="hidden" id="defaultVerseID" placeholder="defaultVerseIDPlaceholder" value="{{ defaultVerseID }}">
+    <input type="hidden" id="defaultVerseNumber" placeholder="defaultVerseNumberPlaceholder" value="{{ defaultVerseNumber }}">
+    
+    <input type="hidden" id="defaultDepth" placeholder="defaultDepthPlaceholder" value="{{ defaultDepth }}">
+
+    <footer>
+        <p>
+            "Bible Cross References" by
+            <a href="https://www.openbible.info/" target="_blank" rel="noopener noreferrer">
+                OpenBible.info
+            </a>,
+            sourced from
+            <a href="https://www.openbible.info/labs/cross-references/" target="_blank" rel="noopener noreferrer">
+                https://www.openbible.info/labs/cross-references/
+            </a>,
+            licensed under
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">
+                CC BY 4.0
+            </a>;
+            extracted, transformed, and loaded into a SQL database.
+        </p>
+
+        <p>
+            "Free Use Bible API" by
+            <a href="https://www.helloao.org/free-api.html" target="_blank" rel="noopener noreferrer">
+                AO Lab
+            </a>,
+            sourced from
+            <a href="https://bible.helloao.org/docs/" target="_blank" rel="noopener noreferrer">
+                https://bible.helloao.org/docs/
+            </a>,
+            licensed under
+            <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">
+                CCO 1.0
+            </a>;
+            extracted, transformed, and loaded into a SQL database.
+        </p>
+    </footer>
+    <script type="module" src="src/ui/static/js/app.js"></script>
+</body>
+
+</html>
