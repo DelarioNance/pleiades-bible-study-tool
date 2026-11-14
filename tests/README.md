@@ -1,4 +1,4 @@
-# Tests
+# Automated Tests
 
 Overview of the Pleiades automated test suites.
 
