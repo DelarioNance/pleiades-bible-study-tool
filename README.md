@@ -12,14 +12,14 @@ Delario Nance Jr. ([GitHub](https://github.com/DelarioNance) · [LinkedIn](http:
 
 ## Table of Contents
 
-- [Walkthrough](#walkthrough)
+- [App Walkthrough](#app-walkthrough)
 - [Tech Stack](#tech-stack)
 - [Repository Layout](#repository-layout)
 - [CI/CD](#cicd)
 - [Known Limitations](#known-limitations)
 - [Data Sources and Citations](#data-sources-and-citations)
 
-## Walkthrough
+## App Walkthrough
 
 | 1. Choose a scripture |
 |:---:|
