@@ -1,10 +1,14 @@
 # Pleiades Bible Study Tool
 
-Pleiades is a scripture analysis app for the King James Version (KJV) Bible. Select a book, chapter, verse, and depth, and Pleiades traverses verse cross-references to show how that passage connects to others.
+Pleiades is a scripture analysis app for the King James Version (KJV) Bible. Select a book, chapter, and verse; then, then explore scripture connections.
 
 **Live app:** [https://pleiades-bible-study-tool.fastapicloud.dev/](https://pleiades-bible-study-tool.fastapicloud.dev/)
 
 > **Note:** The first request after a period of inactivity may be slow during startup. Please allow a few seconds for the page to load.
+
+## Author
+
+Delario Nance Jr. ([GitHub](https://github.com/DelarioNance) · [LinkedIn](http://www.linkedin.com/in/delario-nance-jr/))
 
 ## Table of Contents
 
@@ -29,27 +33,29 @@ Pleiades is a scripture analysis app for the King James Version (KJV) Bible. Sel
 |:---:|
 | ![Landing page](screenshots/pleiades-2nd-degree-connections.png) |
 
+
+> **Note on degrees:** Connections are counted by number of cross-reference steps from the selected scripture. In Pleiades, a scripture can appear as both a 1st-degree and a 2nd-degree connection. This differs from LinkedIn's definition of 2nd-degree connections, which excludes anyone who is already a 1st-degree connection.
+
 ## Tech Stack
 
 | Layer | Tools |
 |-------|-------|
 | Database | PostgreSQL, Supabase |
-| ETL | Python, SQLAlchemy |
-| API | Python, FastAPI |
-| UI | HTML, CSS, JavaScript |
-| ETL and API tests | Pytest |
-| UI tests | Java, Playwright, Maven |
+| ETL source code | Python, SQL |
+| API source code | Python, FastAPI |
+| UI source code | HTML, CSS, JavaScript |
+| ETL tests | Pytest, Python, SQL |
+| API tests | Pytest, Python, FastAPI |
+| UI tests | Playwright, Java, Maven |
 | CI/CD | GitHub Actions, FastAPI Cloud |
 
 ## Repository Layout
 
 | Folder | Contents | Details |
 |--------|----------|---------|
-| `src/` | Application code: ETL, API, UI, and shared database utilities | [src/README.md](src/README.md) |
-| `tests/` | Automated tests for each layer | [tests/README.md](tests/README.md) |
+| `src/` | Application code | [src/README.md](src/README.md) |
+| `tests/` | Automated tests | [tests/README.md](tests/README.md) |
 | `.github/workflows/` | CI, staging and production deployment, and staging test pipelines | [.github/workflows/README.md](.github/workflows/README.md) |
-
-See the [tests README](tests/README.md) for what each suite covers.
 
 ## CI/CD
 
@@ -59,9 +65,9 @@ Pull requests run the full test suite against a temporary database. Merging to `
 
 Each layer's README lists its own planned improvements. Notable ones include:
 
-- Verse passages are taken from the Free Use Bible API, and Pleiades relies on the correctness of this data
-- Support for additional data sources beyond the current KJV source data
-- The ETL runs as a single transaction, so staging and production may be blocked while a deployment is running
+- **Verse text accuracy depends on an external source.** Verse passages come from the Free Use Bible API, and Pleiades does not independently verify them, so any errors in that data may appear in the app as is.
+- **New data sources are not supported.** The ETL is built around the current KJV source data, so adding another translation or source would require reworking the ETL.
+- **Deployments can briefly block the app.** The ETL rebuilds the database in a transaction, so staging and production may be unavailable or slow to respond while a deployment is running.
 
 ## Data Sources and Citations
 

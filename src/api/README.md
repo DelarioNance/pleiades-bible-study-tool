@@ -1,7 +1,7 @@
 # Application Programming Interface (API) Layer
 
 ## Purpose
-Serves the Pleiades UI and exposes a API for retrieving book data, chapter data, and verse data and for traversing verse cross-references. Only one HTML template is served, per Pleiades's identity as a Single Page Application (SPA). Routers handle HTTP requests, and query modules run the SQL against the Pleiades database.
+Serves the Pleiades UI and exposes an API for retrieving book data, chapter data, and verse data and for traversing verse cross-references. Only one HTML template is served, per Pleiades's identity as a Single Page Application (SPA). Routers handle HTTP requests, and query modules run the SQL against the Pleiades database.
 
 ## Entry Point
 

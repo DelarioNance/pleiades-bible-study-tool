@@ -1,7 +1,7 @@
 # Database (DB) Layer
 
 ## Purpose
-Centralizes connection handling for the Pleiades databases. It creates a SQLAlchemy engine for each environment (sandbox, staging, prod) and reads connection secrets from environment variables, so no credentials live in the code.
+Centralizes connection management for the Pleiades databases. It creates a SQLAlchemy engine for each environment (sandbox, staging, prod) and reads connection secrets from environment variables, so no credentials live in the code.
 
 ## Key Functions
 

@@ -1,16 +1,16 @@
 # GitHub Actions Workflows
 
 ## Purpose
-Automation for testing and deploying Pleiades. Each workflow file begins with a header comment describing its triggers, required secrets, and notes, so this README covers only how the workflows fit together.
+Automation for testing and deploying Pleiades with Continuous Integration / Continuous Delivery (CI/CD).
 
 ## Workflows
 
 | Workflow | Runs when | What it covers |
 |----------|-----------|----------------|
-| **Continuous Integration (CI)** | A pull request is opened or updated | ETL, API, and UI tests against a temporary database |
-| **Continuous Delivery (CD)** | A pull request into main is merged, or manually | Rebuilds the staging database and deploys to staging |
-| **Staging Tests** | CD finishes successfully | UI tests against the live staging site |
-| **Production Deployment** | Manually, from the Actions tab | Rebuilds the production database and deploys to production |
+| **Continuous Integration (CI)** | A pull request is opened or updated | ETL, API, and UI tests |
+| **Continuous Delivery (CD)** | A pull request into main is merged (or manual run) | Rebuilds the staging database and deploys to staging |
+| **Staging Tests** | CD finishes successfully | UI tests against staging |
+| **Production Deployment** | Manual run | Rebuilds the production database and deploys to prod |
 
 ## How They Fit Together
 
@@ -24,8 +24,8 @@ CD and Production Deployment can both be started by hand from the Actions tab. F
 ## Environments
 
 - **CI** uses a throwaway database that exists only for the duration of the run.
-- **Staging** is a persistent environment on FastAPI Cloud with its own database. It is rebuilt on every deployment.
-- **Production** is a persistent environment on FastAPI Cloud with its own database. It is rebuilt on every deployment, and only deployed when someone runs Production Deployment manually.
+- **Staging** is a persistent environment on FastAPI Cloud with its own Supabase database. This environment acts as a dry run of production.
+- **Production** is a persistent environment on FastAPI Cloud with its own Supabase database.
 
 ## Things to Know
 

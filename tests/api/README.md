@@ -33,4 +33,4 @@ Check what happens when something fails on the server side, such as a database p
 ### URL Management
 
 - **Current Approach:** API endpoint URLs are written directly in the tests, so a change to a route means updating every test that uses it.
-- **Planned Enhancement:** Introduce a structure similar to page objects, such as a small API client layer that owns the endpoint URLs and request logic. Tests would call methods like "get chapters for a book" instead of building URLs themselves, so a URL change only needs to be fixed in one place.
+- **Planned Enhancement:** Introduce a structure similar to page objects, such as a small API client layer that owns the endpoint URLs and request logic.

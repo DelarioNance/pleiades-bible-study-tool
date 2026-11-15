@@ -31,7 +31,7 @@ Run against a database populated by the full ETL and check the real loaded data.
 
 - **Canon tests:** Confirm the books, chapters, and verses loaded match the expected canonical structure of the KJV.
 - **Integrity tests:** Confirm the loaded data is internally consistent, including for books, chapters, verses, and verse cross-references.
-- **Seed data test:** Confirms the database is seeded with the expected data after the ETL runs.
+- **Seed data test:** Confirms the database is seeded with test data after the ETL runs (not added in prod).
 
 A shared fixture runs the ETL process and makes its results available to multiple test runs. This avoids re-running the full pipeline for every test, which keeps the E2E tests faster and ensures every test checks the same loaded data.
 

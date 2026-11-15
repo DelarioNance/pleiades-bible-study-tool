@@ -1,7 +1,7 @@
 # User Interface (UI) Layer
 
 ## Purpose
-The browser-based front end for Pleiades. It lets users pick a book, chapter, and verse, then displays the results returned by the API layer. The UI is a Single Page Application (SPA): one HTML page is loaded, and JavaScript swaps content in and out from there.
+The browser-based front end for Pleiades. It lets users pick a book, chapter, and verse, then displays the results returned by the API layer. The UI is a Single Page Application (SPA): one HTML page is loaded, and JavaScript controls the displayed content.
 
 ## Organization
 
@@ -25,4 +25,4 @@ A JavaScript folder holds the user-facing functionality, split into a few small 
 ## Design Decisions
 
 ### Why a Single Page Instead of Multiple Pages
-Pleiades uses one page rather than several server-rendered pages to keep the UI decoupled from the API layer. The UI only needs to know how to request data and display it, so if the API layer moves from FastAPI to a different tool in the future, the UI should require less changes.
+Pleiades uses one page rather than several server-rendered pages to keep the UI decoupled from the API layer. The UI only needs to know how to request data and display it, so if the API layer moves from FastAPI to a different tool in the future, the UI should require less rework.
