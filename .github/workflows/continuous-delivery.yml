@@ -38,7 +38,7 @@ on:
 
 jobs:
   deployment: # Job definition
-    runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    runs-on: ubuntu-24.04 # Explictly use an Ubuntu runner that Python supports to avoid using a newer Ubuntu runner that Python does not support
     env: # not ideal to have staging variables in github actions and fastapi cloud
       PLEIADES_ENV: staging
       DB_HOST_STAGING: ${{ secrets.DB_HOST_STAGING }}
