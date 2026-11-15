@@ -11,6 +11,7 @@ venv/
 .fastapicloud
 nohup.out
 .pytest_cache/
+.vscode/
 
 # Node artifact files
 node_modules/

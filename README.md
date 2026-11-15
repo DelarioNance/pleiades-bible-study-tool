@@ -8,11 +8,26 @@ Pleiades is a scripture analysis app for the King James Version (KJV) Bible. Sel
 
 ## Table of Contents
 
+- [Walkthrough](#walkthrough)
 - [Tech Stack](#tech-stack)
 - [Repository Layout](#repository-layout)
 - [CI/CD](#cicd)
 - [Known Limitations](#known-limitations)
 - [Data Sources and Citations](#data-sources-and-citations)
+
+## Walkthrough
+
+| 1. Choose a scripture |
+|:---:|
+| ![Landing page](screenshots/pleiades-landing-page.png) |
+
+| 2. View the scripture and its 1st-degree connections |
+|:---:|
+| ![Landing page](screenshots/pleiades-selected-verse-and-1st-degree-connections.png) |
+
+| 3. Explore 2nd-degree connections |
+|:---:|
+| ![Landing page](screenshots/pleiades-2nd-degree-connections.png) |
 
 ## Tech Stack
 

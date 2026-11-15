@@ -1,5 +1,0 @@
-Add rollback functionality to continuous-delivery.yml
-Work on Screen #2
-Add test reporting
-Add Playwright tracing
-Quicken the cascade
