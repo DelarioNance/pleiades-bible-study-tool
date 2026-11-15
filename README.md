@@ -1,6 +1,6 @@
 # Pleiades Bible Study Tool
 
-Pleiades is a scripture analysis app for the King James Version (KJV) Bible. Select a book, chapter, and verse; then, then explore scripture connections.
+Pleiades is a scripture analysis app for the King James Version (KJV) Bible. Select a book, chapter, and verse; then, explore scripture connections.
 
 **Live app:** [https://pleiades-bible-study-tool.fastapicloud.dev/](https://pleiades-bible-study-tool.fastapicloud.dev/)
 
