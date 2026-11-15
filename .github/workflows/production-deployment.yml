@@ -34,7 +34,7 @@ on:
     
 jobs:
   deployment: # Job definition
-    runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    runs-on: ubuntu-24.04 # Explictly use an Ubuntu runner that Python supports to avoid using a newer Ubuntu runner that Python does not support
     env:
       PLEIADES_ENV: prod 
       DB_HOST_PROD: ${{ secrets.DB_HOST_PROD }}
