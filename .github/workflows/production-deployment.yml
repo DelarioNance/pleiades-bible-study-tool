@@ -1,0 +1,56 @@
+# ---------------------------------------------------------------------------
+# Production Deployment
+#
+# Purpose:
+#   Rebuilds the production database and deploys the Pleiades app to the
+#   production environment on FastAPI Cloud.
+#
+# Triggers:
+#   - Manual run from the Actions tab (workflow_dispatch) only. Production is
+#     never deployed automatically.
+#
+# Required secrets:
+#   - DB_HOST_PROD, DB_USER_PROD, DB_PASSWORD_PROD, DB_NAME_PROD:
+#     production database connection details used by the ETL.
+#   - FASTAPI_CLOUD_PROD_DEPLOY_TOKEN: authentication token for deployment.
+#   - FASTAPI_CLOUD_PROD_APP_ID: ID of the production app on FastAPI Cloud.
+#
+# Notes:
+#   - The production database variables are also configured in FastAPI Cloud,
+#     so they currently live in two places: GitHub Actions and FastAPI Cloud.
+#   - The ETL rebuilds the production tables on every run. Since the ETL is
+#     transactional, production may be blocked while the transaction is
+#     running.
+# ---------------------------------------------------------------------------
+
+# Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
+name: Production Deployment
+
+# Name shown in the GitHub Actions UI for each workflow run (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#run-name
+run-name: ${{ github.actor }} is running Production Deployment
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  deployment: # Job definition
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
+    env:
+      PLEIADES_ENV: prod 
+      DB_HOST_PROD: ${{ secrets.DB_HOST_PROD }}
+      DB_USER_PROD: ${{ secrets.DB_USER_PROD }} 
+      DB_PASSWORD_PROD: ${{ secrets.DB_PASSWORD_PROD }}
+      DB_NAME_PROD: ${{ secrets.DB_NAME_PROD }}
+    steps: # Steps executed on the runner
+      - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
+      - name: Install FastAPI
+        run: pip install fastapi[standard]
+      - name: Install ETL and API dependencies
+        run: pip install -r requirements.txt
+      - name: Run ETL
+        run: python -m src.etl.run_etl prod
+      - name: Deploy to Prod Environment
+        run: fastapi deploy
+        env: # The FASTAPI_CLOUD_TOKEN and FASTAPI_CLOUD_APP_ID environment variables are required for deployment to FastAPI Cloud. They are stored as GitHub secrets for security.
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_PROD_DEPLOY_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }}

@@ -1,3 +1,27 @@
+# ---------------------------------------------------------------------------
+# Continuous Deployment (CD): Staging
+#
+# Purpose:
+#   Rebuilds the staging database and deploys the Pleiades app to the staging
+#   environment on FastAPI Cloud.
+#
+# Triggers:
+#   - A pull request into main is closed.
+#   - Manual run from the Actions tab (workflow_dispatch).
+#
+# Required secrets:
+#   - DB_HOST_STAGING, DB_USER_STAGING, DB_PASSWORD_STAGING, DB_NAME_STAGING:
+#     staging database connection details used by the ETL.
+#   - FASTAPI_CLOUD_STAGING_DEPLOY_TOKEN: authentication token for deployment.
+#   - FASTAPI_CLOUD_STAGING_APP_ID: ID of the staging app on FastAPI Cloud.
+#
+# Notes:
+#   - The staging database variables are also configured in FastAPI Cloud, so
+#     they currently live in two places: GitHub Actions and FastAPI Cloud.
+#   - The ETL rebuilds the staging tables on every run. Since the ETL is
+#     transactional, staging may be blocked while the transaction is running.
+# ---------------------------------------------------------------------------
+  
 # Name of this GitHub Actions workflow (https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#name)
 name: Continuous Deployment (CD)
 
@@ -5,20 +29,20 @@ name: Continuous Deployment (CD)
 run-name: ${{ github.actor }} is running CD
 
 on:
-    workflow_dispatch:
-    pull_request:
-      types:
-        - closed
-      branches:
-        - main
+  workflow_dispatch:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
   deployment: # Job definition
     runs-on: ubuntu-latest # Use the latest Ubuntu runner as the execution environment
     env: # not ideal to have staging variables in github actions and fastapi cloud
-      PLEIADES_ENV: staging 
+      PLEIADES_ENV: staging
       DB_HOST_STAGING: ${{ secrets.DB_HOST_STAGING }}
-      DB_USER_STAGING: ${{ secrets.DB_USER_STAGING }} 
+      DB_USER_STAGING: ${{ secrets.DB_USER_STAGING }}
       DB_PASSWORD_STAGING: ${{ secrets.DB_PASSWORD_STAGING }}
       DB_NAME_STAGING: ${{ secrets.DB_NAME_STAGING }}
     steps: # Steps executed on the runner

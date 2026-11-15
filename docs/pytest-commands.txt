@@ -1,2 +1,0 @@
-pytest -x                                           # stops after the 1st failure
-pytest path/to/test_file.py::test_function_name     # run a specific function

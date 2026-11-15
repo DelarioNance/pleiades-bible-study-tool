@@ -1,0 +1,74 @@
+package io.delario.pleiades.screenone.submission;
+
+import io.delario.pleiades.pages.IndexPage;
+import io.delario.pleiades.screenone.AbstractScreenOneTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microsoft.playwright.Route;
+
+
+public class ScreenOneSubmissionTest extends AbstractScreenOneTest{
+    @Test
+    public void testSubmissionDoesNotBreakUI() {
+        IndexPage indexPage = super.goToIndexPage();
+
+        List<String> preSubmitBookOptions = indexPage.getBookOptions();
+        List<String> preSubmitChapterOptions = indexPage.getChapterOptions();
+        List<String> preSubmitVerseOptions = indexPage.getVerseOptions();
+        List<String> preSubmitDepthOptions = indexPage.getDepthOptions();
+
+        indexPage.submitScriptureSelection();
+
+        List<String> postSubmitBookOptions = indexPage.getBookOptions();
+        List<String> postSubmitChapterOptions = indexPage.getChapterOptions();
+        List<String> postSubmitVerseOptions = indexPage.getVerseOptions();
+        List<String> postSubmitDepthOptions = indexPage.getDepthOptions();
+
+        assertEquals(preSubmitBookOptions, postSubmitBookOptions);
+        assertEquals(preSubmitChapterOptions, postSubmitChapterOptions);
+        assertEquals(preSubmitVerseOptions, postSubmitVerseOptions);
+        assertEquals(preSubmitDepthOptions, postSubmitDepthOptions);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "src/test/java/io/delario/pleiades/mocks/traversal_api_response/single_layer_mock.json, src/test/java/io/delario/pleiades/mocks/traversal_api_response/single_layer_expected.json",
+        "src/test/java/io/delario/pleiades/mocks/traversal_api_response/dense_tree_mock.json, src/test/java/io/delario/pleiades/mocks/traversal_api_response/dense_tree_expected.json",
+        "src/test/java/io/delario/pleiades/mocks/traversal_api_response/no_tree_mock.json, src/test/java/io/delario/pleiades/mocks/traversal_api_response/no_tree_expected.json",
+    })
+    public void testSubmissionDisplaysCorrectResults(String mockDataPathStr, String expectedDataPathStr) throws StreamReadException, DatabindException, IOException {
+        Path mockDataPath = FileSystems.getDefault().getPath(mockDataPathStr);
+
+        super.page.route("**/traversal_results", route -> {
+            route.fulfill(new Route.FulfillOptions().setPath(mockDataPath));
+        });
+        
+        IndexPage indexPage = super.goToIndexPage();
+        indexPage.submitScriptureSelection();
+
+        List<Map<String, Object>> displayedVerses = indexPage.getDisplayedVerses();
+
+        List<Map<String, Object>> expected = new ObjectMapper().readValue(
+            new File(expectedDataPathStr),
+            new TypeReference<List<Map<String, Object>>>() {}
+        );
+
+        assertEquals(expected, displayedVerses);
+    }
+}
