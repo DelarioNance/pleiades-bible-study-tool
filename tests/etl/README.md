@@ -14,7 +14,7 @@ pytest tests/etl
 
 ## Organization
 
-The tests are divided into three levels, moving from the smallest piece of the pipeline to the whole thing.
+The tests are divided into two levels, moving from the smallest piece of the pipeline to the whole thing.
 
 ### Unit Tests
 Test individual pieces of the pipeline in isolation, using mock data instead of a real database or real data sources. They are grouped by pipeline stage:
@@ -22,9 +22,6 @@ Test individual pieces of the pipeline in isolation, using mock data instead of 
 - **Extract:** Reading data from the source files and sources. Mock classes stand in for the asynchronous functionality, which allows the async verse retrieval to be validated without making real requests.
 - **Tranform / Derive:** Converting and shaping the extracted data into the structure the database expects.
 - **Load:** Inserting the prepared data into the database.
-
-### Integration Tests
-Test the ETL's interaction with the database. These cover creating the tables and dropping them, confirming that the schema setup and teardown work.
 
 ### End-to-End (E2E) Tests
 Run against a database populated by the full ETL and check the real loaded data. They are grouped by the kind of check:
