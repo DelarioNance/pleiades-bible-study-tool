@@ -10,9 +10,15 @@ on:
 jobs:
     LoopMatrix:
         strategy:
-            max-parallel: 1 # using sequential runs to prevent the possibility of concurrent race conditions between UI tests
+            max-parallel: 2 # using sequential runs to prevent the possibility of concurrent race conditions between UI tests
             matrix:
-                iteration: [1, 2, 3]
+                iteration: [
+                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 
+                    10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 
+                    20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 
+                    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 
+                    40, 41, 42, 43, 44, 45, 46, 47, 48, 49
+                ]
         uses: ./.github/workflows/staging-tests.yml
         secrets:
             URL_STAGING: ${{ secrets.URL_STAGING }}
