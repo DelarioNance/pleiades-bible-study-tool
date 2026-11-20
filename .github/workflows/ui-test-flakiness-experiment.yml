@@ -14,3 +14,5 @@ jobs:
             matrix:
                 iteration: [1, 2, 3]
         uses: ./.github/workflows/staging-tests.yml
+        secrets:
+            URL_STAGING: ${{ secrets.URL_STAGING }}

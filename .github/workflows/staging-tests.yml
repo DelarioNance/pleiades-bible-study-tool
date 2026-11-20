@@ -33,6 +33,14 @@ on:
     workflows: [Continuous Deployment (CD)] # must match the name in the CD pipeline
     types: [completed]
   workflow_call: # allows this workflow to be called by another workflow
+    secrets:
+      # Callers must pass the repository's URL_STAGING secret unchanged
+      # The caller supplies this value, so passing a different one would 
+      # point the tests at another environment and cause results to 
+      # drift from what CD deploys to. Not sure why GitHub Actions allows
+      # for such drift.
+      URL_STAGING:
+        required: true
 
 jobs:
   tests: # Job definition
