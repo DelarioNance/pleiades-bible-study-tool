@@ -4,6 +4,8 @@ run-name: ${{ github.actor }} is measuring UI test flakiness
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ui-test-flakiness-experiment] # temporarily using so I can test the workflow in the feature branch without needing to first merge PR to main
 
 jobs:
     LoopMatrix:
