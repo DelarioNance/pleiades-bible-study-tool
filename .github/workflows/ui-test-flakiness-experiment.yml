@@ -1,0 +1,14 @@
+name: UI Test Flakiness Experiment
+
+run-name: ${{ github.actor }} is measuring UI test flakiness
+
+on:
+  workflow_dispatch:
+
+jobs:
+    LoopMatrix:
+        strategy:
+            max-parallel: 1 # using sequential runs to prevent the possibility of concurrent race conditions between UI tests
+            matrix:
+                iteration: [1, 2, 3]
+        uses: ./.github/workflows/staging-tests.yml
