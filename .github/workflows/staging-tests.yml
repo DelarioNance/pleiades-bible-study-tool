@@ -32,30 +32,10 @@ on:
   workflow_run:
     workflows: [Continuous Deployment (CD)] # must match the name in the CD pipeline
     types: [completed]
-  workflow_call: # allows this workflow to be called by another workflow
-    secrets:
-      # Callers must pass the repository's URL_STAGING secret unchanged
-      # The caller supplies this value, so passing a different one would 
-      # point the tests at another environment and cause results to 
-      # drift from what CD deploys to. Not sure why GitHub Actions allows
-      # for such drift.
-      URL_STAGING:
-        required: true
-
 jobs:
   tests: # Job definition
     runs-on: ubuntu-24.04 # Explictly use an Ubuntu runner that Playwright supports to avoid using a newer Ubuntu runner that Playwright does not support
-    
-    # Run after a successful CD run (workflow_run), or when a caller workflow is
-    # started manually (workflow_dispatch). A called workflow inherits the caller's
-    # event, so this is what lets the UI test flakiness experiment run these tests.
-    # TEMPORARY: 'push' is also allowed so the flakiness experiment can be tested
-    # from its feature branch before it is merged. Remove it, along with the push
-    # trigger in the experiment workflow, once the experiment is on main.
-    # Note: the behavior for failed CD runs started via workflow_dispatch has not
-    # been verified. Running tests after a failed deployment is undesirable, but
-    # the impact is low enough that preventing it is not a priority.
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'  || github.event_name == 'push' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       PLEIADES_ENV: staging
       URL_STAGING: ${{ secrets.URL_STAGING }}
