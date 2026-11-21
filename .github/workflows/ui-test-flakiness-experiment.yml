@@ -22,8 +22,8 @@ jobs:
         working-directory: tests/ui
       - name: Run UI Tests 50 Times
         run: |
-            num_iterations = 50
-            for (( i=0; i < num_iterations; i++ ))
+            num_iterations=50
+            for (( i=1; i<=num_iterations; i++ ))
             do
                 echo "========== Iteration $i =========="
                 mvn clean package || exit 1
