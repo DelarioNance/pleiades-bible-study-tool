@@ -10,6 +10,7 @@ from .cases_extract_books import ExtractCases
 @pytest.mark.parametrize("case", ExtractCases.VALID)
 @patch("requests.get")
 def test_extract_books_valid(mock_get, case):
+    assert 1 == 5
     mock_response = Mock()
     mock_response.json.return_value = case["api_output"]
     mock_get.return_value = mock_response
