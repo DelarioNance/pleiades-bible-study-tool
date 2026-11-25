@@ -19,6 +19,7 @@ public class ScreenOneBookInitializationTest extends AbstractScreenOneTest {
     public void testBookDrowndownIsVisibleWhenDefaultsNotProvided() {
         IndexPage indexPage = super.goToIndexPage();
         Locator bookDropdown = indexPage.bookDropdown;
+        assertEquals(1,6);
         assertThat(bookDropdown).isVisible();
     }
 

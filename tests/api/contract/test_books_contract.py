@@ -6,7 +6,6 @@ client = TestClient(app)
 
 
 def test_get_books_contract():
-    assert 1 == 3
     response = client.get("/v1/books")
 
     # status code check
