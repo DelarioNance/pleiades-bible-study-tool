@@ -80,7 +80,7 @@ jobs:
           sudo apt install openjdk-17-jdk # install Java 17
         working-directory: tests/ui
       - name: Run UI Tests
-        run: mvn clean package
+        run: mvn clean package -Dallure.results.directory="$ALLURE_RESULTS_DIR"
         working-directory: tests/ui
       - name: Install Allure and generate Allure report
         if: always()
