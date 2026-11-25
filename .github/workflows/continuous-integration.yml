@@ -93,4 +93,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }} # a token automatically created for each workflow run
           publish_branch: gh-pages
           publish_dir: ./allure-report
-          destination_dir: ./reports/continuous-integration
+          destination_dir: ./test-reports/continuous-integration/run-${{ github.run_number }}
