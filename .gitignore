@@ -12,6 +12,11 @@ venv/
 nohup.out
 .pytest_cache/
 .vscode/
+node_modules/
+allure-results/
+allure-report/
+package.json
+package-lock.json
 
 # Node artifact files
 node_modules/

@@ -30,6 +30,9 @@ run-name: ${{ github.actor }} is running CI
 # Trigger this workflow on PRs (not sure if it's specific to PRs targeting main)
 on: pull_request
 
+permissions:
+  contents: write # used to allow GitHub Actions to push files to the repo (for GitHub Pages)
+
 jobs:
   tests: # Job definition
     runs-on: ubuntu-24.04 # Explictly use an Ubuntu runner that Playwright supports to avoid using a newer Ubuntu runner that Playwright does not support
@@ -43,6 +46,7 @@ jobs:
       DB_USER_TEST: ${{ secrets.CI_DB_USER }} # this and the two below must match credential chosen when creating Postgres service container (needed for src code to connect to the create DB via its credentials)
       DB_PASSWORD_TEST: ${{ secrets.CI_DB_PASSWORD }}
       DB_NAME_TEST: ${{ secrets.CI_DB_NAME }}
+      ALLURE_RESULTS_DIR: ${{ github.workspace }}/allure-results
     services:
       postgres: # Start a Postgres 16 service container for the test suite (https://docs.github.com/en/actions/tutorials/use-containerized-services/create-postgresql-service-containers)
         image: postgres:16
@@ -65,9 +69,9 @@ jobs:
       - name: Install ETL and API test dependencies
         run: pip install -r requirements.txt
       - name: Run ETL Tests
-        run: pytest tests/etl
+        run: pytest tests/etl --alluredir="$ALLURE_RESULTS_DIR"
       - name: Run API Tests
-        run: pytest tests/api
+        run: pytest tests/api --alluredir="$ALLURE_RESULTS_DIR"
       - name: Run app in background
         run: nohup uvicorn src.api.main:app --host 0.0.0.0 --port 8000 &
       - name: Install UI test dependencies
@@ -76,5 +80,18 @@ jobs:
           sudo apt install openjdk-17-jdk # install Java 17
         working-directory: tests/ui
       - name: Run UI Tests
-        run: mvn clean package
+        run: mvn clean package -Dallure.results.directory="$ALLURE_RESULTS_DIR"
         working-directory: tests/ui
+      - name: Install Allure and generate Allure report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --single-file --clean -o allure-report
+      - name: Publish Allure report
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # a token automatically created for each workflow run
+          publish_branch: gh-pages
+          publish_dir: ./allure-report
+          destination_dir: ./test-reports/continuous-integration/run-${{ github.run_number }}

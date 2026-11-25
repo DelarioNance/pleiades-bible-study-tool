@@ -39,6 +39,7 @@ jobs:
     env:
       PLEIADES_ENV: staging
       URL_STAGING: ${{ secrets.URL_STAGING }}
+      ALLURE_RESULTS_DIR: ${{ github.workspace }}/allure-results
     steps: # Steps executed on the runner
       - uses: actions/checkout@v4 # Access (checkout) the repository code (https://github.com/actions/checkout)
       - name: Install UI test dependencies
@@ -47,5 +48,18 @@ jobs:
           sudo apt install openjdk-17-jdk # install Java 17
         working-directory: tests/ui
       - name: Run UI Tests
-        run: mvn clean package
+        run: mvn clean package -Dallure.results.directory="$ALLURE_RESULTS_DIR"
         working-directory: tests/ui
+      - name: Install Allure and generate Allure report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --single-file --clean -o allure-report
+      - name: Publish Allure report
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # a token automatically created for each workflow run
+          publish_branch: gh-pages
+          publish_dir: ./allure-report
+          destination_dir: ./test-reports/staging-tests/run-${{ github.run_number }}
