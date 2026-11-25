@@ -32,3 +32,17 @@ CD and Production Deployment can both be started by hand from the Actions tab. F
 - **Secrets live in repository settings.** Each workflow header lists the secrets it needs. Staging and production database values are also configured in FastAPI Cloud, so changing them means updating both places.
 - **Deployments can block the app.** The ETL runs as a single transaction, so staging and production may be blocked while it is running.
 - **Production deployment is manual for now.** Because the app is in its MVP stage, production is deployed by a deliberate manual run instead of automatically.
+
+## Test Reports
+
+Allure reports are automatically generated and published for Continuous Integration and Staging Test workflow runs.
+
+Report URLs follow these patterns:
+
+- Continuous Integration:
+  https://delarionance.github.io/pleiades-bible-study-tool/test-reports/continuous-integration/run-{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}
+
+- Staging Tests:
+  https://delarionance.github.io/pleiades-bible-study-tool/test-reports/staging-tests/run-{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}
+
+Replace `{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}` with the workflow run number from the GitHub Actions run you want to see results for.

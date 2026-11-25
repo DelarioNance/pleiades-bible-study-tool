@@ -13,3 +13,17 @@ Overview of the Pleiades automated test suites.
 
 ## Run order in CI
 ETL, then API, then UI.
+
+## Test Reports
+
+Allure reports are automatically generated and published for Continuous Integration and Staging Test workflow runs.
+
+Report URLs follow these patterns:
+
+- Continuous Integration:
+  https://delarionance.github.io/pleiades-bible-study-tool/test-reports/continuous-integration/run-{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}
+
+- Staging Tests:
+  https://delarionance.github.io/pleiades-bible-study-tool/test-reports/staging-tests/run-{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}
+
+Replace `{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}` with the workflow run number from the GitHub Actions run you want to see results for.

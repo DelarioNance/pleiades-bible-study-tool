@@ -16,6 +16,7 @@ Delario Nance Jr. ([GitHub](https://github.com/DelarioNance) · [LinkedIn](http:
 - [Tech Stack](#tech-stack)
 - [Repository Layout](#repository-layout)
 - [CI/CD](#cicd)
+- [Test Reports](#test-reports)
 - [Known Limitations](#known-limitations)
 - [Data Sources and Citations](#data-sources-and-citations)
 
@@ -60,6 +61,20 @@ Delario Nance Jr. ([GitHub](https://github.com/DelarioNance) · [LinkedIn](http:
 ## CI/CD
 
 Pull requests run the full test suite against a temporary database. Merging to `main` deploys to staging and runs the UI tests against it. Production is deployed by a manual run. See the [workflows README](.github/workflows/README.md) for details.
+
+## Test Reports
+
+Allure reports are automatically generated and published for Continuous Integration and Staging Test workflow runs.
+
+Report URLs follow these patterns:
+
+- Continuous Integration:
+  https://delarionance.github.io/pleiades-bible-study-tool/test-reports/continuous-integration/run-{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}
+
+- Staging Tests:
+  https://delarionance.github.io/pleiades-bible-study-tool/test-reports/staging-tests/run-{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}
+
+Replace `{GITHUB_ACTIONS_WORKFLOW_RUN_NUMBER}` with the workflow run number from the GitHub Actions run you want to see results for.
 
 ## Known Limitations
 
