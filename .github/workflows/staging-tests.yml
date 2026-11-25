@@ -32,6 +32,10 @@ on:
   workflow_run:
     workflows: [Continuous Deployment (CD)] # must match the name in the CD pipeline
     types: [completed]
+
+permissions:
+  contents: write # used to allow GitHub Actions to push files to the repo (for GitHub Pages)
+
 jobs:
   tests: # Job definition
     runs-on: ubuntu-24.04 # Explictly use an Ubuntu runner that Playwright supports to avoid using a newer Ubuntu runner that Playwright does not support
