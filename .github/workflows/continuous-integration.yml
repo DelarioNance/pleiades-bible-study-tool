@@ -88,6 +88,7 @@ jobs:
           npm install -g allure-commandline
           allure generate allure-results --single-file --clean -o allure-report
       - name: Publish Allure report
+        if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # a token automatically created for each workflow run
